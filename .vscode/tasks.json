@@ -146,8 +146,8 @@
             "command": "powershell",
             "args": [
                 "-NoProfile",
-                "-Command",
-                "$src = 'C:\\Users\\KOREA\\Desktop\\Hercules'; $dst = 'C:\\Users\\KOREA\\Desktop\\Hercules'; Write-Host 'Copiando arquivos do servidor...'; Copy-Item -Path \"$src\\*.exe\" -Destination $dst -Force; Copy-Item -Path \"$src\\*.dll\" -Destination $dst -Force; foreach ($folder in @('conf','db','npc','data','maps','plugins','save','log')) { $s = \"$src\\$folder\"; $d = \"$dst\\$folder\"; if (Test-Path $s) { robocopy $s $d /E /NFL /NDL /NJH /NJS | Out-Null; Write-Host \" -> $folder OK\" } }; Write-Host 'Copia concluida.'"
+                "-ExecutionPolicy", "Bypass",
+                "-File", "${workspaceFolder}\\.vscode\\copy-server-files.ps1"
             ],
             "group": "build",
             "presentation": {
