@@ -2,7 +2,7 @@
 	end;
 
 OnWarpMvP:
-mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 mes "Olá "+strcharinfo(0)+",";
 mes "Deseja ser teletransportado?";
 switch(select("- Imperador de Morocc:- Beelzebub:- Nidhoggr's Shadow:- Valkyrie:- Ifrit:- Laborátorio de Samatologia:- Nada, Obrigado")) {

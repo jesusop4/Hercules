@@ -18,7 +18,7 @@ if(getgmlevel()>=1)	{
 	mes "Se você for VIP não precisa pagar nada para remover suas cartas.";
 	next;
 	mes "[Removedor de Cartas]";
-	mes "Já que você não é VIP, custa 500.000 zeny para cada carta removida de seus ítens.";
+	mes "Já que você não é VIP, custa 500.000 Zeny para cada carta removida de seus ítens.";
 	next;
 	mes "[Removedor de Cartas]";
 	mes "Gostaria de remover suas cartas ?";
@@ -101,7 +101,7 @@ if(getgmlevel()>=1)	{
 	set @cardcount,getequipcardcnt(@part);
 	if(@cardcount > 1) goto CARDNUMMULTIMSG;
 	mes "[Removedor de Cartas]";
-	mes "Esse ítem tem 1 carta equipado em sí. É necessário 500.000 zeny.";
+	mes "Esse ítem tem 1 carta equipado em sí. É necessário 500.000 Zeny.";
 	goto CARDNUMPOSTMSG;
 CARDNUMMULTIMSG:
 if(getgmlevel()>=1)	{ 
@@ -110,7 +110,7 @@ if(getgmlevel()>=1)	{
 	goto CARDNUMPOSTMSG;
 }
 	mes "[Removedor de Cartas]";
-	mes "Esse ítem tem " + @cardcount + " cartas equipado em sí. É necessário " + (0+(@cardcount * 500000)) + " zeny";
+	mes "Esse ítem tem " + @cardcount + " cartas equipado em sí. É necessário " + (0+(@cardcount * 500000)) + " Zeny";
 
 CARDNUMPOSTMSG:
 	next;
@@ -120,8 +120,8 @@ REMOVECARD:
 	if (getgmlevel() >= 1) goto VIP2;
 	mes "[Removedor de Cartas]";
 	mes "Muito bem. Vamos nessa!";
-	if((zeny < (@cardcount * 500000))) goto DENYMATERIAL;
-	set zeny,zeny - (@cardcount * 500000);
+	if((Zeny < (@cardcount * 500000))) goto DENYMATERIAL;
+	set Zeny,Zeny - (@cardcount * 500000);
 VIP2:	
 	successremovecards @part;
 	next;

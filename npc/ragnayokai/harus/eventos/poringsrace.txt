@@ -23,7 +23,7 @@ que_qaru01,125,134,6	script	Corrida de MvPs#prace0	716,{
 	mes "Desculpe, mas a Corrida dos MvP está fechada.";
 	close;
 	}
-	mes "Olá "+StrCharInfo(0)+", você quer ir";
+	mes "Olá "+strcharinfo(0)+", você quer ir";
 	mes "para a Corrida dos MvPs?";
 	if(select("Sim, claro.:Não, obrigado.") == 2) close;
 	close2; warp "p_track02",55,41; end;

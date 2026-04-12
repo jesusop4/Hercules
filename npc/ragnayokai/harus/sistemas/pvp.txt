@@ -45,7 +45,7 @@
 //| v1.0.6 : Correção no comando !exit.					(Mooka)	     |
 //| v1.0.5 : Correção no bug de enviar o som "end" causando erro.	(Mooka)	     |
 //| v1.0.4 : Implementado Sons do Unreal Tournament.			(Mooka)	     |
-//| v1.0.3 : Adicionado novo tipo de contagem de Pontos com Announce.	(Mooka)	     |
+//| v1.0.3 : Adicionado novo tipo de contagem de Pontos com announce.	(Mooka)	     |
 //| v1.0.2 : Adicionada opção para servidores PK.			(Mooka)	     |
 //| v1.0.1 : Adicionado PvP Baby.					(Mooka)	     |
 //| v1.0.0 : Desenvolvida Versão.					(Mooka)	     |
@@ -144,7 +144,7 @@ set $@lostEXP,0;								  // |
 //|--> 3: Ativar ambos.								     |
 set $@CountPointsInWoE,0;							  // |
 //| 										     |
-//|=> Configuração do Som e Announce!						     |
+//|=> Configuração do Som e announce!						     |
 //|---> Nota 1: Os sons devem ser colocados na pasta data/wav em formato .wav	     |
 //|---> Nota 2: Se desativar o som do UT, desativará o broadcast dele também.(2)     |
 //|--> 0 : Desativar Todas Opções.						     |
@@ -685,7 +685,7 @@ function	script	pvpm_func	{
 		if(!@annc) query_sql "update pvpm_data set annc=annc+"+getarg(2)+" where id="+getcharid(getarg(1))+" and type="+getarg(1);
 			if (@points >= @annc)
 			{
-			Announce strcharinfo(getarg(1))+" | "+@points+" "+callfunc("getMesPM",76)+"! ["+getarg(3)+"]",bc_all,0xFF7F50;
+			announce strcharinfo(getarg(1))+" | "+@points+" "+callfunc("getMesPM",76)+"! ["+getarg(3)+"]",bc_all,0xFF7F50;
 			query_sql "update pvpm_data set annc=annc+"+getarg(2)+" where id="+getcharid(getarg(1))+" and type="+getarg(1);
 			if($@sound==1||$@sound==3) soundeffectall "Monster Kill.wav",0;
 			} if(!$@sound||$@sound==1) return;

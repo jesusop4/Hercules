@@ -17,7 +17,7 @@ if(BaseLevel <= 80) { // Buff de UP ate 80
 	sc_start SC_ANGELUS,360000,10;
  	sc_start SC_BLESSING,360000,10;
 	sc_start SC_INCREASEAGI,360000,10;
-	if(getbrokenid(1)==NULL) {
+	if(getbrokenid(1)==null) {
    		dispbottom "[Curandeira]: Você não tem itens para consertar!";
   	} else {
   		repairall;
@@ -33,7 +33,7 @@ if(BaseLevel >= 80 && getgmlevel() >= 1) { // VIP
 	sc_start SC_ANGELUS,360000,10;
  	sc_start SC_BLESSING,360000,10;
 	sc_start SC_INCREASEAGI,360000,10;
-	if(getbrokenid(1)==NULL) {
+	if(getbrokenid(1)==null) {
    		dispbottom "[Curandeira]: Você não tem itens para consertar!";
   	} else {
   		repairall;
@@ -44,7 +44,7 @@ if(BaseLevel >= 80 && getgmlevel() >= 1) { // VIP
 }
 	sc_start SC_BLESSING,180000,10;
 	sc_start SC_INCREASEAGI,180000,10;
-	if(getbrokenid(1)==NULL) {
+	if(getbrokenid(1)==null) {
    		dispbottom "[Curandeira]: Você não tem itens para consertar!";
   	} else {
   		repairall;
@@ -76,7 +76,7 @@ if(BaseLevel <= 80) { // Buff de UP ate 80
 	sc_start SC_ANGELUS,360000,10;
  	sc_start SC_BLESSING,360000,10;
 	sc_start SC_INCREASEAGI,360000,10;
-	if(getbrokenid(1)==NULL) {
+	if(getbrokenid(1)==null) {
    		dispbottom "[Curandeira]: Você não tem itens para consertar!";
   	} else {
   		repairall;
@@ -92,7 +92,7 @@ if(BaseLevel >= 79 && getgmlevel() >= 1) { // VIP
 	sc_start SC_ANGELUS,360000,10;
  	sc_start SC_BLESSING,360000,10;
 	sc_start SC_INCREASEAGI,360000,10;
-	if(getbrokenid(1)==NULL) {
+	if(getbrokenid(1)==null) {
    		dispbottom "[Curandeira]: Você não tem itens para consertar!";
   	} else {
   		repairall;
@@ -103,7 +103,7 @@ if(BaseLevel >= 79 && getgmlevel() >= 1) { // VIP
 }
 	sc_start SC_BLESSING,180000,10;
 	sc_start SC_INCREASEAGI,180000,10;
-	if(getbrokenid(1)==NULL) {
+	if(getbrokenid(1)==null) {
    		dispbottom "[Curandeira]: Você não tem itens para consertar!";
   	} else {
   		repairall;

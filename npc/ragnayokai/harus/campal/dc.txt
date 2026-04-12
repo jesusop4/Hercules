@@ -36,7 +36,7 @@ OnPCLoadMapEvent:
 end;
 
 OnInit:
-	setmapflag strnpcinfo(4), mf_loadevent; // Ativa flag load event ao mapa.
+	setmapflag strnpcinfo(4), MF_LOADEVENT; // Ativa flag load event ao mapa.
 end;	
 }
 

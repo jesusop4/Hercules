@@ -62,7 +62,7 @@ OnTouch:
 		end;
 	}
 	if(getareausers(.@map$,.@x,.@y,.@x,.@y) > 1){
-		Warp "prontera", 156, 169;
+		warp "prontera", 156, 169;
 		end;
 	}else{
 		mes "[^010849===^000000 ^016B14Comércio^000000 ^010849===^000000]";

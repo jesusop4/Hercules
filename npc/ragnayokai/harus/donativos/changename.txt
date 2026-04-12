@@ -11,7 +11,7 @@ next;
 			mes "OBS 2: ^016B14Não serão aceitos caracteres especiais!^000000";
 			input .@nick$;
 			next;
-			Query_Sql "SELECT `name` FROM `char` WHERE `name`= '"+.@nick$+"'", .@exist$;
+			query_sql "SELECT `name` FROM `char` WHERE `name`= '"+.@nick$+"'", .@exist$;
 			mes "[^010849===^000000 ^016B14Mudança de Nome^000000 ^010849===^000000]";
 			if(.@exist$[0]!="")
 			{
@@ -65,7 +65,7 @@ next;
 			sleep2 1000;
 			mes "...";
 
-			Query_sql "UPDATE `char` SET `name` = '"+.@nick$+"' WHERE `char_id` = '"+getcharid(0)+"'";
+			query_sql "UPDATE `char` SET `name` = '"+.@nick$+"' WHERE `char_id` = '"+getcharid(0)+"'";
 			atcommand "@kick "+strcharinfo(0);
 			End();
 

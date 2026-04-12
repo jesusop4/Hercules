@@ -7,7 +7,7 @@ sec_in02,35,171,4	script	Rastreador de Lixos[GM]	50,{
 
 	if(getgmlevel() < 60) end;
 	
-	set .name$, "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	set .name$, "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 	
 	mes .name$;
 	mes "Gostaria de encontrar as esferas do dragão?";

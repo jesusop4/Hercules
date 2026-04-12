@@ -541,7 +541,7 @@ switch( select( ( .BMMode & 1 )?"^0000FFBuilds já Salvas^000000":"",
 	Case 3:
 		next;
 	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-		ResetStatus;
+		resetstatus;
 		mes "Seu status foi resetado com sucesso. Você ganhou de volta seus ^FF0000pontos de status padrões.^000000";
 		next;
 		break;
@@ -559,7 +559,7 @@ switch( select( ( .BMMode & 1 )?"^0000FFBuilds já Salvas^000000":"",
 function	script	SaveBuild	{
 	setd "STR_"+getarg(0),readparam(bStr);
 	setd "AGI_"+getarg(0),readparam(bAgi);
-	setd "VIT_"+getarg(0),readparam(bVIT);
+	setd "VIT_"+getarg(0),readparam(bVit);
 	setd "INT_"+getarg(0),readparam(bInt);
 	setd "DEX_"+getarg(0),readparam(bDex);
 	setd "LUK_"+getarg(0),readparam(bLuk);
@@ -575,7 +575,7 @@ return;
 }
 
 function	script	SwitchBuild	{
-	ResetStatus;
+	resetstatus;
 	statusup2 bStr,getd( "STR_"+getarg(0) )-1;
 	statusup2 bAgi,getd( "AGI_"+getarg(0) )-1;
 	statusup2 bVit,getd( "VIT_"+getarg(0) )-1;

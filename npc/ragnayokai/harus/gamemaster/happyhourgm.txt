@@ -1,6 +1,6 @@
 sec_in02,20,168,5	script	Happy Hour[GM]	728,{
 			
-		if (GetGmLevel() != 99) end;
+		if (getgmlevel() != 99) end;
 		
 		mes "[Bônus Campal]";
 		mes "Olá administrador!";
@@ -9,7 +9,7 @@ sec_in02,20,168,5	script	Happy Hour[GM]	728,{
 		switch(select("Ativar Bônus:Desativar Bônus"))
 		{
 			case 1:
-				if (getBattleFlag("bg_ranked_mode") != 0)
+				if (getbattleflag("bg_ranked_mode") != 0)
 				{
 					mes "[Bônus Campal]";	
 					mes "O Bônus já está ativado!!";
