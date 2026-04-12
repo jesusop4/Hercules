@@ -21,6 +21,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "api-server", "vcproj\api-se
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-HPMHooking_api", "vcproj\plugin-HPMHooking_api.vcxproj", "{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-harus_pvp", "vcproj\plugin-harus_pvp.vcxproj", "{A1B20001-E5F6-7891-ABCD-EF1234567891}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-harus_vending", "vcproj\plugin-harus_vending.vcxproj", "{A1B20002-E5F6-7892-ABCD-EF1234567892}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-harus_bg", "vcproj\plugin-harus_bg.vcxproj", "{A1B20003-E5F6-7893-ABCD-EF1234567893}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-harus_premium", "vcproj\plugin-harus_premium.vcxproj", "{A1B20004-E5F6-7894-ABCD-EF1234567894}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plugin-harus_misc", "vcproj\plugin-harus_misc.vcxproj", "{A1B20005-E5F6-7895-ABCD-EF1234567895}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -63,6 +73,26 @@ Global
 		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Debug|Win32.Build.0 = Debug|Win32
 		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Release|Win32.ActiveCfg = Release|Win32
 		{69D5A06C-67C9-4EB1-BA5A-A001AE69838B}.Release|Win32.Build.0 = Release|Win32
+		{A1B20001-E5F6-7891-ABCD-EF1234567891}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A1B20001-E5F6-7891-ABCD-EF1234567891}.Debug|Win32.Build.0 = Debug|Win32
+		{A1B20001-E5F6-7891-ABCD-EF1234567891}.Release|Win32.ActiveCfg = Release|Win32
+		{A1B20001-E5F6-7891-ABCD-EF1234567891}.Release|Win32.Build.0 = Release|Win32
+		{A1B20002-E5F6-7892-ABCD-EF1234567892}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A1B20002-E5F6-7892-ABCD-EF1234567892}.Debug|Win32.Build.0 = Debug|Win32
+		{A1B20002-E5F6-7892-ABCD-EF1234567892}.Release|Win32.ActiveCfg = Release|Win32
+		{A1B20002-E5F6-7892-ABCD-EF1234567892}.Release|Win32.Build.0 = Release|Win32
+		{A1B20003-E5F6-7893-ABCD-EF1234567893}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A1B20003-E5F6-7893-ABCD-EF1234567893}.Debug|Win32.Build.0 = Debug|Win32
+		{A1B20003-E5F6-7893-ABCD-EF1234567893}.Release|Win32.ActiveCfg = Release|Win32
+		{A1B20003-E5F6-7893-ABCD-EF1234567893}.Release|Win32.Build.0 = Release|Win32
+		{A1B20004-E5F6-7894-ABCD-EF1234567894}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A1B20004-E5F6-7894-ABCD-EF1234567894}.Debug|Win32.Build.0 = Debug|Win32
+		{A1B20004-E5F6-7894-ABCD-EF1234567894}.Release|Win32.ActiveCfg = Release|Win32
+		{A1B20004-E5F6-7894-ABCD-EF1234567894}.Release|Win32.Build.0 = Release|Win32
+		{A1B20005-E5F6-7895-ABCD-EF1234567895}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A1B20005-E5F6-7895-ABCD-EF1234567895}.Debug|Win32.Build.0 = Debug|Win32
+		{A1B20005-E5F6-7895-ABCD-EF1234567895}.Release|Win32.ActiveCfg = Release|Win32
+		{A1B20005-E5F6-7895-ABCD-EF1234567895}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

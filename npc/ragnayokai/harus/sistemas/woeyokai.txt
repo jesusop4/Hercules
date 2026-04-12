@@ -1,0 +1,104 @@
+-	script	Check	-1,{
+OnPCLoadMapEvent:
+	set @GID,getcharid(2);
+	query_sql("select count(guild_id) from woe_26xMB where guild_id = "+@GID,.@g); // MB
+	if ( .@g ) {
+	if( CallFunc("count",@GID) > 2 ){
+		warp getsavepoint(0),getsavepoint(1),getsavepoint(2);
+		end;
+	}
+	end;
+	}
+	end;
+}
+
+aru_gld,155,274,0	script	Entrada#WOEDOM	45,1,1,{
+OnTouch:
+ set @GID,getcharid(2);
+ if(!@GID){
+		mes "[^010849===^000000 ^016B14GdE ragnaYOKAI^000000 ^010849===^000000]";
+		mes "Você não pertence a nenhum clã. :/";
+		mes "Procure um e venha participar da Guerra do Emperium do RagnaYOKAI!";
+		mes "Até mais. ^.^";
+		goto L_out;
+}
+ // QUERY SQL
+ query_sql("select count(guild_id) from woe_26x where guild_id = "+@GID,.@q); // MAIN
+ query_sql("select count(guild_id) from woe_26xMB where guild_id = "+@GID,.@g); // MB
+ if( !.@q && !.@g ){
+  mes "[^010849===^000000 ^016B14GdE ragnaYOKAI^000000 ^010849===^000000]";
+  mes "O seu clã não esta cadastrado no nosso sistema de Guerra do Emperium, por favor peça ao lider para entrar em contato com o Admin.";
+  mes "Até mais.";
+  goto L_out;
+ }
+ else if ( .@g ) {
+    if( CallFunc("count",@GID) >= 2){
+    mes "[^010849===^000000 ^016B14GdE ragnaYOKAI^000000 ^010849===^000000]";
+    mes "Pelas novas regras da Guerra do Emperium, um clã só pode ter 2 membros participando.";
+    mes "Aguarde até alguem sair do castelo.";
+    goto L_out;
+ }
+ warp "arug_cas01",275,93; //... mudar aqui
+ end;
+}
+ warp "arug_cas01",275,93; //... mudar aqui
+ end;
+
+L_out:
+close2;
+warp "aru_gld",164,264;
+end;
+}
+
+aru_gld,67,151,0	script	Entrada#WOESAB	45,1,1,{
+OnTouch:
+ set @GID,getcharid(2);
+ if(!@GID){
+		mes "[^010849===^000000 ^016B14GdE ragnaYOKAI^000000 ^010849===^000000]";
+		mes "Você não pertence a nenhum clã. :/";
+		mes "Procure um e venha participar da Guerra do Emperium do RagnaYOKAI!";
+		mes "Até mais. ^.^";
+		goto L_out;
+}
+ // QUERY SQL
+ query_sql("select count(guild_id) from woe_26x where guild_id = "+@GID,.@q); // MAIN
+ query_sql("select count(guild_id) from woe_26xMB where guild_id = "+@GID,.@g); // MB
+ if( !.@q && !.@g ){
+  mes "[^010849===^000000 ^016B14GdE ragnaYOKAI^000000 ^010849===^000000]";
+  mes "O seu clã não esta cadastrado no nosso sistema de Guerra do Emperium, por favor peça ao lider para entrar em contato com o Admin.";
+  mes "Até mais.";
+  goto L_out;
+ }
+ else if ( .@g ) {
+    if( CallFunc("count",@GID) >= 2){
+    mes "[^010849===^000000 ^016B14GdE ragnaYOKAI^000000 ^010849===^000000]";
+    mes "Pelas novas regras da Guerra do Emperium, um clã só pode ter 2 membros participando.";
+    mes "Aguarde até alguem sair do castelo.";
+    goto L_out;
+ }
+ warp "arug_cas03",141,43; //... mudar aqui
+ end;
+}
+ warp "arug_cas03",141,43; //... mudar aqui
+ end;
+
+L_out:
+close2;
+warp "aru_gld",67,161;
+end;
+}
+
+/*========================================================
+ * Função que contará o numero de players nos castelos.
+ *=======================================================*/
+function	script	count	{
+	//Definir os mapas que será feita a contagem.
+	setarray .mapas$[1],"prtg_cas01","arug_cas01","arug_cas03";
+	set @qtd, 0;
+	for( set .@i, 1; .@i <= getarraysize(.mapas$) - 1; set .@i, .@i + 1){
+		set @qtd, @qtd + getMapGuildUsers (.mapas$[.@i],GetArg(0));
+	}
+	return @qtd;
+}
+
+arug_cas03	mapflag	loadevent

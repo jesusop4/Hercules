@@ -1,0 +1,7 @@
+-	script	Warp Evento	-1,{
+	end;
+
+OnWarpEvento:
+warp "que_qaru01",131,129;
+end;
+}		

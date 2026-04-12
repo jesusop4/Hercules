@@ -1,0 +1,125 @@
+//==============================================================
+// @killcount / @kc — Mob Kill Count Tracker
+//
+// Builtins (C):
+//   killcountget(idx)      — mob_id at slot idx (1-based); 0 = empty
+//   killcountname(idx)     — mob name at slot idx
+//   killcountval(idx)      — kills at slot idx
+//   killcountadd(mob_id)   — 1=ok, 0=already tracked, -1=full, -2=invalid
+//   killcountremove(idx)   — remove slot, shift left
+//   killcountreset()       — clear all tracking + total
+//   killcounttotal()       — total kills this session
+//==============================================================
+
+-	script	KillCount	-1,{
+
+OnRequest:
+	mes "^4040FF[ Mob Kill Count ]^000000";
+	mes "Tracking Following Mobs:";
+	mes " ";
+	set @_kc_cnt, 0;
+	set @_kc_i, 1;
+	while (@_kc_i <= 5) {
+		if (killcountget(@_kc_i) > 0) {
+			mes " ^00AA00" + killcountname(@_kc_i) + "^000000 — ^FF8800" + killcountval(@_kc_i) + " kills^000000";
+			set @_kc_cnt, @_kc_cnt + 1;
+		}
+		set @_kc_i, @_kc_i + 1;
+	}
+	if (@_kc_cnt == 0)
+		mes " ^888888(none)^000000";
+	mes " ";
+	mes "Total this session: ^FF8800" + killcounttotal() + " kills^000000";
+	next;
+	set @_kc_sel, select("Add Monster to Track", "Remove Monster", "Reset All", "Close");
+	if (@_kc_sel == 1) goto L_Add;
+	if (@_kc_sel == 2) goto L_Remove;
+	if (@_kc_sel == 3) goto L_Reset;
+	end;
+
+//--- Add Monster ---------------------------------------------------
+L_Add:
+	if (@_kc_cnt >= 5) {
+		mes "^4040FF[ Mob Kill Count ]^000000";
+		mes "Tracking list is full (max 5).";
+		mes "Remove a monster first.";
+		next;
+		goto OnRequest;
+	}
+	mes "^4040FF[ Add Monster to Track ]^000000";
+	mes "Enter the Monster ID:";
+	mes "^888888(e.g. 1002 = Poring)^000000";
+	next;
+	input @_kc_mid, 1, 99999;
+	set @_kc_result, killcountadd(@_kc_mid);
+	mes "^4040FF[ Add Monster to Track ]^000000";
+	if (@_kc_result == 1) {
+		mes "^00AA00Tracking started!^000000";
+	} else if (@_kc_result == 0) {
+		mes "^FF8800Already tracking that monster.^000000";
+	} else if (@_kc_result == -1) {
+		mes "^FF0000Tracking list is full (max 5).^000000";
+	} else {
+		mes "^FF0000Invalid Monster ID.^000000";
+	}
+	next;
+	goto OnRequest;
+
+//--- Remove Monster ------------------------------------------------
+L_Remove:
+	if (@_kc_cnt == 0) {
+		mes "^4040FF[ Remove Monster ]^000000";
+		mes "No monsters are being tracked.";
+		next;
+		goto OnRequest;
+	}
+	// Build menu string from active slots
+	set @_kc_rmenu$, "";
+	set @_kc_i, 1;
+	while (@_kc_i <= 5) {
+		if (killcountget(@_kc_i) > 0) {
+			if (@_kc_rmenu$ != "") set @_kc_rmenu$, @_kc_rmenu$ + ":";
+			set @_kc_rmenu$, @_kc_rmenu$ + killcountname(@_kc_i) + " (" + killcountval(@_kc_i) + " kills)";
+		}
+		set @_kc_i, @_kc_i + 1;
+	}
+	set @_kc_rmenu$, @_kc_rmenu$ + ":[ Cancel ]";
+	mes "^4040FF[ Remove Monster ]^000000";
+	mes "Select a monster to stop tracking:";
+	next;
+	set @_kc_rsel, select(@_kc_rmenu$);
+	// Map the selection back to the actual filled slot
+	set @_kc_found, 0;
+	set @_kc_i, 1;
+	set @_kc_j, 0;
+	while (@_kc_i <= 5) {
+		if (killcountget(@_kc_i) > 0) {
+			set @_kc_j, @_kc_j + 1;
+			if (@_kc_j == @_kc_rsel) {
+				set @_kc_found, @_kc_i;
+			}
+		}
+		set @_kc_i, @_kc_i + 1;
+	}
+	if (@_kc_found > 0) {
+		killcountremove(@_kc_found);
+		mes "^4040FF[ Remove Monster ]^000000";
+		mes "^00AA00Monster removed from tracking.^000000";
+		next;
+	}
+	goto OnRequest;
+
+//--- Reset All -----------------------------------------------------
+L_Reset:
+	mes "^4040FF[ Reset All ]^000000";
+	mes "Are you sure you want to clear all tracked kills and the session total?";
+	next;
+	set @_kc_confirm, select("Yes, reset everything", "Cancel");
+	if (@_kc_confirm == 1) {
+		killcountreset();
+		mes "^4040FF[ Reset All ]^000000";
+		mes "^00AA00Kill tracking has been reset.^000000";
+		next;
+	}
+	goto OnRequest;
+}

@@ -1,0 +1,99 @@
+prontera,137,170,6	script	Arrecadação Global	790,{
+	dispbottom "Você tem "+#TRIUMPHPOINTS+" Pontos Kafra";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	if($yglobalon == 1) {
+		if( arrecadou == 1) set arrecadou,0;
+		mes "Arrecadação Global atualmente insdisponivel...";
+		mes "Horários de funcionamento:";
+		mes "^016B1421hs^000000 às ^016B1402hrs^000000";
+	if(select("Mais Informações...:- Ih, cliquei aqui sem querer. Adeus!") == 2) close;
+		next;
+		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		mes "Aqui você pode investir 200 Pontos Kafra para ativar um Happy Hour de 2 horas.";
+		mes "Não entendeu ? Deixe-me explicar detalhadamente...";
+		mes "Todos os dias entre as 21h e 2h da manhã, eu estarei arrecadando Pontos Kafra.";
+		mes "Cada pessoa pode doar 200 Pontos Kafra e eu preciso de um total de 5.000 Pontos.";
+		mes "Quando a marca de 5.000 Pontos for atingida, eu ativo o Happy Hour 100% na BG por 2 horas, não é incrível ??";
+		mes ">>APENAS UM HH POR DIA<<";
+		close;
+	}
+	mes "Olá "+strcharinfo(0)+",";
+	mes "Bem Vindo ao sistema de Arrecadação Global do ragna^016B14YOKAI^000000.";
+	mes "Atualmente temos: ^016B14"+$yarreca+"^000000 Pontos Kafra arrecadados.";
+	set $faltam, 5000 - $yarreca;
+	mes "Faltam: ^016B14"+$faltam+"^000000 Pontos Kafra.";
+	if( arrecadou == 1 ) {
+	mes "HOW, percebi que já fez uma doação. Muito OBRIGADO!";
+	close;
+	}
+	mes "Deseja ajudar com ^016B14200x^000000 Pontos Kafra?";
+	switch(select("- Claro!:- Mais Informações...:- Ih, cliquei aqui sem querer. Adeus!")) {
+		next;
+		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		case 1:
+			mes "Vamos lá...";
+			next;
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			if( #TRIUMPHPOINTS < 200) {
+				mes "Infelizmente você não possui 200x Kafra Points...";
+				close;
+			}
+			set #TRIUMPHPOINTS, #TRIUMPHPOINTS - 200;
+			set arrecadou,1;
+			set $yarreca, $yarreca + 200;
+			if( $yarreca >= 5000) {
+				mes "Parabéns, com sua doação atingimos "+$yarreca+" Pontos Kafra!";
+				mes "Happy Hour será iniciado!";
+				callsub OnHappyGo;
+			}
+			mes "Prontinho, você investiu 200x Pontos Kafra.";
+			set $faltam, 5000 - $yarreca;
+			mes "Agora faltam "+$faltam+" Pontos Kafra para o inicio do Evento";
+			announce "["+strcharinfo(0)+"] acaba de realizar uma doação! Faltam "+$faltam+" Pontos Kafra para o Happy Hour 100%. Colabore você também em bat_room 159 140 - Arrecadação Global.",8;
+			close;
+		case 2:
+			mes "Aqui você pode investir 200 Pontos Kafra para ativar um Happy Hour de 2 horas.";
+			mes "Não entendeu ? Deixe-me explicar detalhadamente...";
+			mes "Todos os dias entre as 21h e 2h da manhã, eu estarei arrecadando Pontos Kafra.";
+			mes "Cada pessoa pode doar 200 Pontos Kafra e eu preciso de um total de 5.000 Pontos.";
+			mes "Quando a marca de 5.000 Pontos for atingida, eu ativo o Happy Hour 100% na BG por 2 horas, não é incrível ??";
+			mes ">>APENAS UM HH POR DIA<<";
+			close;
+		case 3:
+			mes "Volte se mudar de ideia.";
+			close;
+	}
+	
+OnClock2100:
+	announce "[ ragnaYOKAI ]: Arrencadação Global aberta! Corram pra garantir o Happy Hour!",8;
+	set $yglobalon,0;
+	end;
+	
+OnClock0200:
+	if($yglobalon == 1) end;
+	announce "[ ragnaYOKAI ]: Arrencadação Global fechada! Infelizmente não antingimos a cota hoje...",8;
+	set $yarreca,0;
+	set $yglobalon,1;
+	end;
+	
+OnHappyGo:
+	set $yglobalon,1;
+	set $yarreca,0;
+		announce "[ ragnaYOKAI ]: Arrencadação Global completa! Happy Hour iniciado!",8;
+		setbattleflag "bg_reward_rates",200;
+		setbattleflag "bg_ranked_mode",1;
+		initnpctimer;
+		close;
+		
+	OnTimer7200000: // 2 Horas
+		announce "[ ragnaYOKAI ]: Happy Hour da Arrecadação Global ENCERRADO!",8;
+		setbattleflag "bg_reward_rates",100;
+		setbattleflag "bg_ranked_mode",0;
+		stopnpctimer;
+		end;
+OnInit:
+	if(gettime(3) >= 21 && gettime(3) < 02) end;
+	set $yglobalon,1;
+	set $yarreca,0;
+	end;
+}

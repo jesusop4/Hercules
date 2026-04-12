@@ -1,0 +1,65 @@
+ -	script	pegaSafadaum	-1,{
+OnSafadaum:
+	mes "[^010849===^000000 ^016B14Anti DC^000000 ^010849===^000000]";
+	atcommand "@battleignore";
+	sleep2 1000;
+	mes "TE PEGUEI OTÁRIO .l.";
+	sleep2 1000;
+	atcommand "@kick "+strcharinfo(0);
+	close2;
+	end;
+
+OnPCLoadMapEvent:
+	if( strcharinfo(3) == strnpcinfo(4) ) // Pra evitar um bug esquisito. u.u
+	{
+		set .@safadaum, 0;
+		set .@invokeid, getcharid(3);
+		
+		query_sql("SELECT account_id FROM `login` where last_mac = (SELECT last_mac FROM `login` WHERE account_id = '"+getcharid(3)+"')",.@account_id);
+		
+		detachrid;
+		
+		for(set .@i, 0; .@i < getarraysize(.@account_id); set .@i, .@i + 1)
+		{
+			if( .@account_id[.@i] && attachrid(.@account_id[.@i]) && .@account_id[.@i] != .@invokeid)
+				if( strcharinfo(3) == strnpcinfo(4) )
+				{
+					set .@safadaum, 1;
+					detachrid;
+					break;
+				}
+		}
+		
+		if( attachrid(.@invokeid) )
+			if( .@safadaum ) { attachrid(.@invokeid); goto OnSafadaum;}
+	}
+end;
+
+OnInit:
+	setmapflag strnpcinfo(4), mf_loadevent; // Ativa flag load event ao mapa.
+end;	
+}
+
+/*
+	Duplicates
+*/
+
+// Rush
+rush_cas01,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#1	-1
+rush_cas02,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#2	-1
+rush_cas03,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#3	-1
+rush_cas04,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#4	-1
+
+// Conquest
+schg_cas06,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#5	-1
+schg_cas07,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#6	-1
+schg_cas08,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#7	-1
+arug_cas06,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#8	-1
+arug_cas07,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#9	-1
+arug_cas08,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#10	-1
+
+// TD
+bat_b03,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#11	-1
+
+guild_vs3,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#12	-1
+pvp_n_1-5,0,0,1	duplicate(pegaSafadaum)	pegaSafadaum#13	-1

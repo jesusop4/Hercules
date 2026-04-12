@@ -1,0 +1,107 @@
+-	script	RagnaYokai#bonus2	-1,{
+OnPCLoginEvent:
+if(#bonus2 == 1) { end; }
+query_sql("Select count(packfidelidade.userid) from packfidelidade left join login on packfidelidade.userid = login.userid Where login.account_id = '" + getcharid(3)+"'",@packfidelidade);
+if( getarraysize(@packfidelidade) == 1) {
+mes "[^010849===^000000 ^016B14Pack Veterano^000000 ^010849===^000000]";
+mes "Obrigado por ter escolhido novamente o nosso Servidor,";
+mes "desde j� a Equipe RagnaYokai agradece sua preferencia!";
+next;
+query_sql "UPDATE `login` SET `level`='1',`diasvip`='7' WHERE `account_id` = '"+ getcharid(3) +"'";
+mes "[^010849===^000000 ^016B14Pack Veterano^000000 ^010849===^000000]";
+mes "Iremos te presentiar com um Pack de Itens,";
+mes "onde eles s�o bloqueados em sua conta.";
+mes "e 7 dias VIP.";
+close2;
+getitem 10234,3;
+getitem 10235,3;
+itembound 5293,1;
+itembound 2202,1;
+itembound 5775,1;
+itembound2 1202,1,1,0,0,4004,4004,4004,4004;
+itembound2 2115,1,1,0,0,4045,0,0,0;
+itembound2 2366,1,1,0,0,4141,0,0,0;
+itembound2 2528,1,1,0,0,4334,0,0,0;
+itembound2 2624,1,1,0,0,4064,0,0,0;
+itembound2 2624,1,1,0,0,4064,0,0,0;
+itembound2 2424,1,1,0,0,4381,0,0,0;
+itembound2 2102,1,1,0,0,4045,0,0,0;
+itembound2 2306,1,1,0,0,4141,0,0,0;
+itembound2 2504,1,1,0,0,4334,0,0,0;
+itembound2 2404,1,1,0,0,4381,0,0,0;
+getitem 7773,250;
+getitem 7828,500;
+getitem 7829,500;
+} else {
+mes "[^010849===^000000 ^016B14Pack Inciante^000000 ^010849===^000000]";
+mes "Obrigado por ter escolhido nosso Servidor,";
+mes "desde j� a Equipe RagnaYokai agradece sua preferencia!";
+next;
+query_sql "UPDATE `login` SET `level`='1',`diasvip`='4' WHERE `account_id` = '"+ getcharid(3) +"'";
+mes "[^010849===^000000 ^016B14Pack Inciante^000000 ^010849===^000000]";
+mes "Iremos te presentiar com um Pack de Itens,";
+mes "onde eles s�o bloqueados em sua conta.";
+mes "e 4 dias VIP.";
+close2;
+getitem 10234,3;
+getitem 10235,3;
+itembound 2285,1;
+itembound 2202,1;
+itembound 5775,1;
+itembound2 1202,1,1,0,0,4004,4004,4004,4004;
+itembound2 2102,1,1,0,0,4045,0,0,0;
+itembound2 2306,1,1,0,0,4141,0,0,0;
+itembound2 2504,1,1,0,0,4334,0,0,0;
+itembound2 2624,1,1,0,0,4064,0,0,0;
+itembound2 2624,1,1,0,0,4064,0,0,0;
+itembound2 2404,1,1,0,0,4381,0,0,0;
+}
+set #bonus2,1;
+end;
+}
+
+-	script	ControlLogin	-1,{
+end;
+ 
+OnPCLoginEvent:
+	query_sql "SELECT `diasvip` FROM `login` WHERE `account_id` = '"+ getcharid(3) +"'", @dias;
+	if(getgmlevel() >= 20) {
+			atcommand "@hide";
+			atcommand "@speed 150";
+	}
+	mes "[^010849===^000000 ^016B14Comandos Importantes^000000 ^010849===^000000]";
+	mes "@^016B14security^000000: Senha de seguran�a da sua conta.";
+	mes "@^016B14vip^000000: Atalho para os benef�cios ViP.";
+	mes "@^016B14mvp^000000: Warp para os mapa MvPs bloqueados.";
+	mes "@^016B14restock^000000: Reestocagem de consum�veis.";
+	mes "@^016B14entrarbg^000000: Entrar na queue BG.";
+	mes "@^016B14go 26^000000: Shopping Kafra Points";
+	close2;
+	dispbottom "===========================";
+	if( #SECURITYCODE ) dispbottom "C�digo de Seguran�a(@Security): Ativado"; else dispbottom "C�digo de Seguran�a(@Security): Desativado";
+	dispbottom "===========================";
+	dispbottom "Voc� possui:";
+	if (@dias[0] == 0){
+	dispbottom "  - Voc� n�o � um us�rio ViP. Saiba como se tornar em www.ragnayokai.com.br.";
+	} else {		
+	dispbottom "  - "+@dias+"x dias ViPs";
+	}
+	dispbottom "  - "+#CASHPOINTS+"x Cash Points";
+	dispbottom "  - "+#TRIUMPHPOINTS+"x Pontos Kafra";
+	dispbottom "  - "+#mvp_points+"x Pontos MvP";
+	dispbottom "  - "+#point_presence+"x Pontos de Presen�a";
+	dispbottom "  - "+#PTEVENTO+"x Pontos de Evento";
+	dispbottom "===========================";	
+	end;
+}
+
+-	script	SVRO#T-1	-1,{
+
+OnClock0001:
+ query_sql "UPDATE `login` SET `diasvip`=`diasvip`-1 WHERE `level`='1'";
+ end;
+
+OnClock0002:
+ query_sql "UPDATE `login` SET `level`='0' WHERE `diasvip`<='0' AND `level`='1'";
+ end;
+}

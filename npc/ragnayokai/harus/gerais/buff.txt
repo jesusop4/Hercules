@@ -1,0 +1,145 @@
+prontera,153,193,6	script	Curandeira#hG1-1::HealerG	650,{
+	if(#curadelay > gettimetick(2)) {
+		dispbottom "[Curandeira]: Volte em 5 segundos!";
+		end;
+	}
+	set #curadelay,gettimetick(2)+5;
+if(BaseLevel <= 80) { // Buff de UP ate 80
+	sc_start SC_FOOD_STR, 360000, 10;
+	sc_start SC_FOOD_AGI, 360000, 10;
+	sc_start SC_FOOD_LUK, 360000, 10;
+	sc_start SC_FOOD_INT, 360000, 10;
+	sc_start SC_FOOD_DEX, 360000, 10;
+	sc_start SC_FOOD_VIT, 360000, 10;
+ 	sc_start SC_MAGNIFICAT,360000,5;
+ 	sc_start SC_GLORIA,360000,5;
+ 	sc_start SC_IMPOSITIO,360000,5;
+	sc_start SC_ANGELUS,360000,10;
+ 	sc_start SC_BLESSING,360000,10;
+	sc_start SC_INCREASEAGI,360000,10;
+	if(getbrokenid(1)==NULL) {
+   		dispbottom "[Curandeira]: Você não tem itens para consertar!";
+  	} else {
+  		repairall;
+   	}
+	percentheal 100,100;
+	dispbottom "[Curandeira]: Continue se esforçando até chegar ao level 99! Bom jogo!";
+	end;
+}
+if(BaseLevel >= 80 && getgmlevel() >= 1) { // VIP
+ 	sc_start SC_MAGNIFICAT,360000,5;
+ 	sc_start SC_GLORIA,360000,5;
+ 	sc_start SC_IMPOSITIO,360000,5;
+	sc_start SC_ANGELUS,360000,10;
+ 	sc_start SC_BLESSING,360000,10;
+	sc_start SC_INCREASEAGI,360000,10;
+	if(getbrokenid(1)==NULL) {
+   		dispbottom "[Curandeira]: Você não tem itens para consertar!";
+  	} else {
+  		repairall;
+   	}
+	percentheal 100,100;
+	dispbottom "[Curandeira]: Obrigado por ajudar o servidor e ser jogador ViP! Bom jogo!"; 
+	end;
+}
+	sc_start SC_BLESSING,180000,10;
+	sc_start SC_INCREASEAGI,180000,10;
+	if(getbrokenid(1)==NULL) {
+   		dispbottom "[Curandeira]: Você não tem itens para consertar!";
+  	} else {
+  		repairall;
+   	}
+	percentheal 100,100;
+	dispbottom "[Curandeira]: Quer mais buffs? Seja jogador ViP! Mais informações: www.ragnaYokai.com";
+	end;
+}
+// Curar em Aréa
+prontera,156,190,0	script	Curandpenis#4	139,4,4,{
+OnTouch:
+callfunc "curand";
+}
+prontera,142,173,0	script	Curandpenis#5	139,4,4,{
+OnTouch:
+callfunc "curand";
+}
+function	script	curand	{
+if(BaseLevel <= 80) { // Buff de UP ate 80
+	sc_start SC_FOOD_STR, 360000, 10;
+	sc_start SC_FOOD_AGI, 360000, 10;
+	sc_start SC_FOOD_LUK, 360000, 10;
+	sc_start SC_FOOD_INT, 360000, 10;
+	sc_start SC_FOOD_DEX, 360000, 10;
+	sc_start SC_FOOD_VIT, 360000, 10;
+ 	sc_start SC_MAGNIFICAT,360000,5;
+ 	sc_start SC_GLORIA,360000,5;
+ 	sc_start SC_IMPOSITIO,360000,5;
+	sc_start SC_ANGELUS,360000,10;
+ 	sc_start SC_BLESSING,360000,10;
+	sc_start SC_INCREASEAGI,360000,10;
+	if(getbrokenid(1)==NULL) {
+   		dispbottom "[Curandeira]: Você não tem itens para consertar!";
+  	} else {
+  		repairall;
+   	}
+	percentheal 100,100;
+	dispbottom "[Curandeira]: Continue se esforçando até chegar ao level 99! Bom jogo!";
+	end;
+}
+if(BaseLevel >= 79 && getgmlevel() >= 1) { // VIP
+ 	sc_start SC_MAGNIFICAT,360000,5;
+ 	sc_start SC_GLORIA,360000,5;
+ 	sc_start SC_IMPOSITIO,360000,5;
+	sc_start SC_ANGELUS,360000,10;
+ 	sc_start SC_BLESSING,360000,10;
+	sc_start SC_INCREASEAGI,360000,10;
+	if(getbrokenid(1)==NULL) {
+   		dispbottom "[Curandeira]: Você não tem itens para consertar!";
+  	} else {
+  		repairall;
+   	}
+	percentheal 100,100;
+	dispbottom "[Curandeira]: Obrigado por ajudar o servidor e ser jogador ViP! Bom jogo!"; 
+	end;
+}
+	sc_start SC_BLESSING,180000,10;
+	sc_start SC_INCREASEAGI,180000,10;
+	if(getbrokenid(1)==NULL) {
+   		dispbottom "[Curandeira]: Você não tem itens para consertar!";
+  	} else {
+  		repairall;
+   	}
+	percentheal 100,100;
+	dispbottom "[Curandeira]: Quer mais buffs? Seja jogador ViP! Mais informações: www.ragnaYokai.com";
+	end;
+}
+
+//
+//CIDADES
+//
+// CASTELOS
+//
+sch_gld,94,189,7	duplicate(HealerG)	Curandeira#hGf1	650,4,4
+aru_gld,72,156,1	duplicate(HealerG)	Curandeira#hGf2	650,2,2
+aru_gld,166,265,3	duplicate(HealerG)	Curandeira#hGf4	650,2,2
+prt_gld,138,71,6	duplicate(HealerG)	Curandeira#hGf3	650,2,2
+// BG
+bat_room,148,153,5	duplicate(HealerG)	Curandeira#hGbg1	650,2,2
+mora,190,171,5	duplicate(HealerG)	Curandeira#moraZ	650,2,2
+
+// Batalha Campal Team Deathmach
+bat_b03,10,293,5	duplicate(HealerG)	Curandeira#BGTD3	650,8,8
+bat_b03,390,13,5	duplicate(HealerG)	Curandeira#BGTD4	97,8,8
+
+// Batalha Campal Conquest
+schg_cas06,260,383,5	duplicate(HealerG)	Curandeira#BGC13	650,8,8
+schg_cas06,299,383,3	duplicate(HealerG)	Curandeira#BGC14	650,8,8
+schg_cas07,86,315,5	duplicate(HealerG)	Curandeira#BGC15	650,8,8
+schg_cas07,117,315,3	duplicate(HealerG)	Curandeira#BGC16	650,8,8
+schg_cas08,23,50,6	duplicate(HealerG)	Curandeira#BGC17	650,8,8
+schg_cas08,92,50,4	duplicate(HealerG)	Curandeira#BGC18	650,8,8
+arug_cas06,26,385,5	duplicate(HealerG)	Curandeira#BGC19	650,8,8
+arug_cas06,122,361,5	duplicate(HealerG)	Curandeira#BGC20	650,8,8
+arug_cas07,304,342,3	duplicate(HealerG)	Curandeira#BGC21	650,8,8
+arug_cas07,304,305,1	duplicate(HealerG)	Curandeira#BGC22	650,8,8
+arug_cas08,310,154,6	duplicate(HealerG)	Curandeira#BGC23	650,8,8
+arug_cas08,333,154,4	duplicate(HealerG)	Curandeira#BGC24	650,8,8

@@ -1,0 +1,3179 @@
+-	script	RXB_Init	-1,{
+
+OnInit:
+	set $rxb_event,0;					//Informa se o Evento está Ativo
+	set $rxb_event_type,0;				//Tipo de Evento (0 = DM. 1 = KotH)
+	set $rxb_event_players,0;			//Quantidade de Jogadores que já se Inscreveram
+	set $rxb_event_cont,0;				//Quantidade de jogos consecutivos realizados sem a interveção do GM
+	set $rxb_event_cont_m,5;			//Limite de partidas consecutivas sem a intervenção do GM (MAX-1)
+	set $rxb_players_max,0;				//Quantidade Máxima de Jogadores que podem Participar
+	set $rxb_max_p,0;					//Quantidade Máxima de Jogadores por Grupo
+	set $rxb_winner,0;					//Resetando o ultimo vencedor
+	set $rxb_running,0;					//Informa se a Partida já está ocorrendo
+	set $rxb_running_sd,0;				//Morte Súbita
+	set $rxb_arena_killed,0;			//ID da Party do ultimo jogador morto
+	set $rxb_red,0;						//Quantidade de Jogadores no Grupo Vermelho
+	set $rxb_red_leader$,"";			//Líder do Grupo Vermelho
+	set $rxb_red_ready_temp,0;			//Informa se o Líder já clicou 1x no Ajudante
+	set $rxb_red_ready,0;				//Informa se o Grupo Vermelho já está Pronto
+	set $rxb_red_ready_team,0;			//ID da Party do Líder do Grupo Vermelho
+	set $rxb_red_alive,0;				//Quantidade de Players Vivos no Grupo Vermelho
+	set $rxb_red_killed,0;				//Quantidade que o time Vermelho matou na Arena
+	set $rxb_blue,0;					//Quantidade de Jogadores no Grupo Azul
+	set $rxb_blue_leader$,"";			//Líder do Grupo Azul
+	set $rxb_blue_ready_temp,0;			//Informa se o Líder já clicou 1x no Ajudante
+	set $rxb_blue_ready,0;				//Informa se o Grupo Azul já está Pronto
+	set $rxb_blue_ready_team,0;			//ID da Party do Líder do Grupo Azul
+	set $rxb_blue_alive,0;				//Quantidade de Players Vivos no Grupo Azul
+	set $rxb_blue_killed,0;				//Quantidade que o time Azul matou na Arena
+	set $rxb_winner_talked,0;			//Informa se o Líder decidiu se vai ou não continuar
+	set $rxb_winner_con,0;				//Informa se o Líder decidiu se vai ou não continuar
+	set $rxb_winner_streak,0;			//Quantidade de Winning Streak
+	set $rxb_arena_used,0;				//Informa qual Arena será utilizada (DM)
+	
+	set $rxb_gm,20;						//Nível de GM que pode entrar no Menu de GMs
+	set $rxb_sys,40;					//Nível de GM que pode controlar o Evento
+	
+	//King of the Hill
+	delwaitingroom "Ajudante Azul";	delwaitingroom "Ajudante Vermelho";
+	if( $@KOTH_RXB_Blue ) { bg_destroy $@KOTH_RXB_Blue; set $@KOTH_RXB_Blue, 0; }
+	if( $@KOTH_RXB_Red ) { bg_destroy $@KOTH_RXB_Red; set $@KOTH_RXB_Red, 0; }
+	
+	set $rxb_blue_wait_r$,"2007rwc_r";	//Sala de Espera Azul
+	set $rxb_blue_wait_x,90;			//Sala de Espera Azul - Coord X
+	set $rxb_blue_wait_y,163;			//Sala de Espera Azul - Coord Y
+	set $rxb_red_wait_r$,"2007rwc_r";	//Sala de Espera Vermelha
+	set $rxb_red_wait_x,126;			//Sala de Espera Vermelha - Coord X
+	set $rxb_red_wait_y,23;				//Sala de Espera Vermelha - Coord Y
+
+	set $rxb_blue_sin,0;	set $rxb_red_sin,0;		set $rxb_blue_monk,0;	set $rxb_red_monk,0;
+	set $rxb_blue_alch,0;	set $rxb_red_alch,0;	set $rxb_blue_sl,0;		set $rxb_red_sl,0;
+	set $rxb_blue_priest,0;	set $rxb_red_priest,0;	set $rxb_blue_wiz,0;	set $rxb_red_wiz,0;
+	set $rxb_blue_sage,0;	set $rxb_red_sage,0;	set $rxb_blue_clgy,0;	set $rxb_red_clgy,0;
+
+	set $rxb_vagas_blue,0;
+	for ( set .@i,0; .@i <= 11; set .@i,.@i + 1 ) {
+		if($rxb_array_slot_blue[.@i] == 1) { set $rxb_array_slot_blue[.@i],0; }
+		if($rxb_array_classe_blue_join[.@i] != 0) { set $rxb_array_classe_blue_join[.@i],0; }
+	}
+	set $rxb_vagas_red,0;
+	for ( set .@i,0; .@i <= 11; set .@i,.@i + 1 ) {
+		if($rxb_array_slot_red[.@i] == 1) { set $rxb_array_slot_red[.@i],0; }
+		if($rxb_array_classe_red_join[.@i] != 0) { set $rxb_array_classe_red_join[.@i],0; }
+	}
+	set $rxb_teams_locked,0;
+	
+	//Travando células para que os Participantes não fiquem andando pela Sala de Espera
+	setcell "2007rwc_r",89,172,92,175,cell_walkable,0;	setcell "2007rwc_r",71,176,129,183,cell_walkable,0;		//Sala Azul
+	setcell "2007rwc_r",66,154,79,171,cell_walkable,0;	setcell "2007rwc_r",102,154,115,171,cell_walkable,0;	//Sala Azul
+	setcell "2007rwc_r",125,32,128,35,cell_walkable,0;	setcell "2007rwc_r",71,36,129,43,cell_walkable,0;		//Sala Vermelha
+	setcell "2007rwc_r",102,14,115,31,cell_walkable,0;															//Sala Vermelha
+	
+	//Desabilita o NPC de Participação
+	disablenpc "Participar#rvb";
+	delwaitingroom "Participar#rvb";
+
+	//Premiação - NÃO ESQUEÇA DE CADASTRAR TODOS OS VALORES, MÁXIMO DE 10 PRÊMIOS
+	setarray $rxb_prizes_name$[0]	,"1x Helmet of Orc Hero [0]","1x Valkyrie Helm [1]","1x Kitsune Mask [0]","1x Boy's Cap [0]","1x Espelho Convexo","1x VIP 10 dias","1x Roupas de Praia","1x Capsula de Bombardeio","1x Elmo de Anubis";
+	setarray $rxb_prizes_ids[0]		,5094,5171,5069,5016,12214,10139,12260,12258,5490;
+	setarray $rxb_prizes_qtd[0]		,1,1,1,1,1,1,1,1,1;
+	setarray $rxb_prize_points[0]	,400,300,150,100,50,30,2,1,300;
+	
+	//Arenas
+	setarray $rxb_arena_m$[0]	,"rwc03"	,"2009rwc_01"	,"2009rwc_04";	//Arena
+	setarray $rxb_arena_bx[0]	,88			,29				,8;				//Coord X - Blue
+	setarray $rxb_arena_by[0]	,50			,49				,49;			//Coord Y - Blue
+	setarray $rxb_arena_rx[0]	,11			,70				,91;			//Coord X - Red
+	setarray $rxb_arena_ry[0]	,49			,49				,49;			//Coord Y - Red
+	
+	//Travando células nas Arenas
+	setcell "2009rwc_01",10,46,26,56,cell_walkable,0;	setcell "2009rwc_01",72,43,89,53,cell_walkable,0;
+	setcell "2009rwc_03",15,46,19,53,cell_walkable,0;	setcell "2009rwc_03",80,47,83,53,cell_walkable,0;
+	end;
+	
+OnReset:
+	set $rxb_event,0;					//Informa se o Evento está Ativo
+	set $rxb_event_players,0;			//Quantidade de Jogadores que já se Inscreveram
+	set $rxb_event_cont,0;				//Quantidade de jogos consecutivos realizados sem a interveção do GM
+	set $rxb_event_cont_m,5;			//Limite de partidas consecutivas sem a intervenção do GM (MAX-1)
+	set $rxb_players_max,0;				//Quantidade Máxima de Jogadores que podem Participar
+	set $rxb_max_p,0;					//Quantidade Máxima de Jogadores por Grupo
+	set $rxb_winner,0;					//Resetando o ultimo vencedor
+	set $rxb_running,0;					//Informa se a Partida já está ocorrendo
+	set $rxb_running_sd,0;				//Morte Súbita
+	set $rxb_arena_killed,0;			//ID da Party do ultimo jogador morto
+	set $rxb_red,0;						//Quantidade de Jogadores no Grupo Vermelho
+	set $rxb_red_leader$,"";			//Líder do Grupo Vermelho
+	set $rxb_red_ready_temp,0;			//Informa se o Líder já clicou 1x no Ajudante
+	set $rxb_red_ready,0;				//Informa se o Grupo Vermelho já está Pronto
+	set $rxb_red_ready_team,0;			//ID da Party do Líder do Grupo Vermelho
+	set $rxb_red_alive,0;				//Quantidade de Players Vivos no Grupo Vermelho
+	set $rxb_red_killed,0;				//Quantidade que o time Vermelho matou na arena
+	set $rxb_blue,0;					//Quantidade de Jogadores no Grupo Azul
+	set $rxb_blue_leader$,"";			//Líder do Grupo Azul
+	set $rxb_blue_ready_temp,0;			//Informa se o Líder já clicou 1x no Ajudante
+	set $rxb_blue_ready,0;				//Informa se o Grupo Azul já está Pronto
+	set $rxb_blue_ready_team,0;			//ID da Party do Líder do Grupo Azul
+	set $rxb_blue_alive,0;				//Quantidade de Players Vivos no Grupo Azul
+	set $rxb_blue_killed,0;				//Quantidade que o time Azul matou na arena
+	set $rxb_winner_talked,0;			//Informa se o Líder decidiu se vai ou não continuar
+	set $rxb_winner_con,0;				//Informa se o Líder decidiu se vai ou não continuar
+	set $rxb_winner_streak,0;			//Quantidade de Winning Streak
+	set $rxb_arena_used,0;				//Informa qual Arena será utilizada (DM)
+
+	set $rxb_blue_wait_r$,"2007rwc_r";	//Sala de Espera Azul
+	set $rxb_blue_wait_x,90;			//Sala de Espera Azul - Coord X
+	set $rxb_blue_wait_y,163;			//Sala de Espera Azul - Coord Y
+	set $rxb_red_wait_r$,"2007rwc_r";	//Sala de Espera Vermelha
+	set $rxb_red_wait_x,126;			//Sala de Espera Vermelha - Coord X
+	set $rxb_red_wait_y,23;				//Sala de Espera Vermelha - Coord Y
+	
+	//King of the Hill
+	delwaitingroom "Ajudante Azul";	delwaitingroom "Ajudante Vermelho";
+	if( $@KOTH_RXB_Blue ) { bg_destroy $@KOTH_RXB_Blue; set $@KOTH_RXB_Blue, 0; }
+	if( $@KOTH_RXB_Red ) { bg_destroy $@KOTH_RXB_Red; set $@KOTH_RXB_Red, 0; }
+
+	set $rxb_blue_sin,0;	set $rxb_red_sin,0;		set $rxb_blue_monk,0;	set $rxb_red_monk,0;
+	set $rxb_blue_alch,0;	set $rxb_red_alch,0;	set $rxb_blue_sl,0;		set $rxb_red_sl,0;
+	set $rxb_blue_priest,0;	set $rxb_red_priest,0;	set $rxb_blue_wiz,0;	set $rxb_red_wiz,0;
+	set $rxb_blue_sage,0;	set $rxb_red_sage,0;	set $rxb_blue_clgy,0;	set $rxb_red_clgy,0;
+
+	set $rxb_vagas_blue,0;
+	for ( set .@i,0; .@i <= 11; set .@i,.@i + 1 ) {
+		if($rxb_array_slot_blue[.@i] == 1) { set $rxb_array_slot_blue[.@i],0; }
+		if($rxb_array_classe_blue_join[.@i] != 0) { set $rxb_array_classe_blue_join[.@i],0; }
+	}
+	set $rxb_vagas_red,0;
+	for ( set .@i,0; .@i <= 11; set .@i,.@i + 1 ) {
+		if($rxb_array_slot_red[.@i] == 1) { set $rxb_array_slot_red[.@i],0; }
+		if($rxb_array_classe_red_join[.@i] != 0) { set $rxb_array_classe_red_join[.@i],0; }
+	}
+	set $rxb_teams_locked,0;
+	
+	//Desabilita o NPC de Participação
+	disablenpc "Participar#rvb";
+	delwaitingroom "Participar#rvb";
+	end;
+	
+OnReset_B:
+	set $rxb_event,0;					//Informa se o Evento está Ativo
+	set $rxb_event_players,$rxb_max_p;	//Quantidade de Jogadores que já se Inscreveram
+	set $rxb_running,0;					//Informa se a Partida já está ocorrendo
+	set $rxb_running_sd,0;				//Morte Súbita
+	set $rxb_arena_killed,0;			//ID da Party do ultimo jogador morto
+	set $rxb_red,0;						//Quantidade de Jogadores no Grupo Vermelho
+	set $rxb_red_leader$,"";			//Líder do Grupo Vermelho
+	set $rxb_red_ready_temp,0;			//Informa se o Líder já clicou 1x no Ajudante
+	set $rxb_red_ready,0;				//Informa se o Grupo Vermelho já está Pronto
+	set $rxb_red_ready_team,0;			//ID da Party do Líder do Grupo Vermelho
+	set $rxb_red_alive,0;				//Quantidade de Players Vivos no Grupo Vermelho
+	set $rxb_red_killed,0;				//Quantidade que o time Vermelho matou na arena
+	set $rxb_blue,$rxb_max_p;			//Quantidade de Jogadores no Grupo Azul
+	set $rxb_blue_ready_temp,0;			//Informa se o Líder já clicou 1x no Ajudante
+	set $rxb_blue_ready,0;				//Informa se o Grupo Azul já está Pronto
+	set $rxb_blue_ready_team,0;			//ID da Party do Líder do Grupo Azul
+	set $rxb_blue_alive,$rxb_max_p;		//Quantidade de Players Vivos no Grupo Azul
+	set $rxb_blue_killed,0;				//Quantidade que o time Azul matou na arena
+	set $rxb_winner_talked,0;			//Informa se o Líder decidiu se vai ou não continuar
+	set $rxb_winner_con,0;				//Informa se o Líder decidiu se vai ou não continuar
+	set $rxb_arena_used,0;				//Informa qual Arena será utilizada (DM)
+	
+	//King of the Hill
+	delwaitingroom "Ajudante Azul";	delwaitingroom "Ajudante Vermelho";
+	if( $@KOTH_RXB_Blue ) { bg_destroy $@KOTH_RXB_Blue; set $@KOTH_RXB_Blue, 0; }
+	if( $@KOTH_RXB_Red ) { bg_destroy $@KOTH_RXB_Red; set $@KOTH_RXB_Red, 0; }
+	
+	set $rxb_red_sin,0;		set $rxb_red_monk,0;	set $rxb_red_alch,0;	set $rxb_red_sl,0;
+	set $rxb_red_priest,0;	set $rxb_red_wiz,0;		set $rxb_red_sage,0;	set $rxb_red_clgy,0;
+	
+	set $rxb_vagas_red,0;
+	for ( set .@i,0; .@i <= 11; set .@i,.@i + 1 ) {
+		if($rxb_array_slot_red[.@i] == 1) { set $rxb_array_slot_red[.@i],0; }
+		if($rxb_array_classe_red_join[.@i] != 0) { set $rxb_array_classe_red_join[.@i],0; }
+	}
+	set $rxb_teams_locked,0;
+	end;
+	
+OnReset_R:
+	set $rxb_event,0;					//Informa se o Evento está Ativo
+	set $rxb_event_players,$rxb_max_p;	//Quantidade de Jogadores que já se Inscreveram
+	set $rxb_running,0;					//Informa se a Partida já está ocorrendo
+	set $rxb_running_sd,0;				//Morte Súbita
+	set $rxb_arena_killed,0;			//ID da Party do ultimo jogador morto
+	set $rxb_red,$rxb_max_p;			//Quantidade de Jogadores no Grupo Vermelho
+	set $rxb_red_ready_temp,0;			//Informa se o Líder já clicou 1x no Ajudante
+	set $rxb_red_ready,0;				//Informa se o Grupo Vermelho já está Pronto
+	set $rxb_red_ready_team,0;			//ID da Party do Líder do Grupo Vermelho
+	set $rxb_red_alive,$rxb_max_p;		//Quantidade de Players Vivos no Grupo Vermelho
+	set $rxb_red_killed,0;				//Quantidade que o time Vermelho matou na arena
+	set $rxb_blue,0;					//Quantidade de Jogadores no Grupo Azul
+	set $rxb_blue_leader$,"";			//Líder do Grupo Azul
+	set $rxb_blue_ready_temp,0;			//Informa se o Líder já clicou 1x no Ajudante
+	set $rxb_blue_ready,0;				//Informa se o Grupo Azul já está Pronto
+	set $rxb_blue_ready_team,0;			//ID da Party do Líder do Grupo Azul
+	set $rxb_blue_alive,0;				//Quantidade de Players Vivos no Grupo Azul
+	set $rxb_blue_killed,0;				//Quantidade que o time Azul matou na arena
+	set $rxb_winner_talked,0;			//Informa se o Líder decidiu se vai ou não continuar
+	set $rxb_winner_con,0;				//Informa se o Líder decidiu se vai ou não continuar
+	set $rxb_arena_used,0;				//Informa qual Arena será utilizada (DM)
+	
+	//King of the Hill
+	delwaitingroom "Ajudante Azul";	delwaitingroom "Ajudante Vermelho";
+	if( $@KOTH_RXB_Blue ) { bg_destroy $@KOTH_RXB_Blue; set $@KOTH_RXB_Blue, 0; }
+	if( $@KOTH_RXB_Red ) { bg_destroy $@KOTH_RXB_Red; set $@KOTH_RXB_Red, 0; }
+	
+	set $rxb_blue_sin,0;	set $rxb_blue_monk,0;	set $rxb_blue_alch,0;	set $rxb_blue_sl,0;
+	set $rxb_blue_priest,0;	set $rxb_blue_wiz,0;	set $rxb_blue_sage,0;	set $rxb_blue_clgy,0;
+	
+	set $rxb_vagas_blue,0;
+	for ( set .@i,0; .@i <= 11; set .@i,.@i + 1 ) {
+		if($rxb_array_slot_blue[.@i] == 1) { set $rxb_array_slot_blue[.@i],0; }
+		if($rxb_array_classe_blue_join[.@i] != 0) { set $rxb_array_classe_blue_join[.@i],0; }
+	}
+	end;
+	
+OnRXBStart:
+	set $rxb_event,1;
+	set $rxb_ticket,$rxb_ticket+1;								//Ticket da Partida Atual
+	//set $rxb_event_type,rand(0,1);							//Selecionando o Tipo da Arena (DM | KotH)
+	if($rxb_event_type == 0) { set $rxb_arena_used,rand(0,2); }	//Selecionando Arena (DM)
+	pvpon ""+$rxb_arena_m$[$rxb_arena_used]+"";
+	enablenpc "Participar#rvb";
+	donpcevent "Participar#rvb::OnWaitingRoomStart";
+	enablenpc "RXB_KillCount";
+	end;
+
+	// Desativando os NPCs das Arenas durante a WoE
+OnAgitStart:
+OnAgitStart2:
+	disablenpc "RXB_KillCount";
+	end;
+
+	// Reativando os NPCs das Arenas durante a WoE
+OnAgitEnd:
+OnAgitEnd2:
+	enablenpc "RXB_KillCount";
+	end;
+
+}
+
+/* Desativado sistema de remover buffs */
+/*
+// Função para Remover Buffs. Necessário adicionar os novos conforme forem aparecendo.
+-	script	RXB_RBuffs	-1,{
+
+function RXB_RBuff;
+
+OnInit:
+	freeloop(1);
+	RXB_RBuff(SC__SHADOWFORM);		RXB_RBuff(SC_CP_WEAPON);		RXB_RBuff(SC_GUILDAURA);		RXB_RBuff(SC_MELTDOWN);					RXB_RBuff(SC_SPIDERWEB);
+	RXB_RBuff(SC__STRIPACCESSORY);	RXB_RBuff(SC_DANCING);			RXB_RBuff(SC_HALLUCINATION);	RXB_RBuff(SC_MILLENNIUMSHIELD);			RXB_RBuff(SC_SPL_ATK);
+	RXB_RBuff(SC_ABUNDANCE);		RXB_RBuff(SC_FOOD_DEX);			RXB_RBuff(SC_HAWKEYES);			RXB_RBuff(SC_MIRACLE);					RXB_RBuff(SC_SPL_DEF);
+	RXB_RBuff(SC_ADJUSTMENT);		RXB_RBuff(SC_DODGE);			RXB_RBuff(SC_HELLPOWER);		RXB_RBuff(SC_NEN);						RXB_RBuff(SC_SPL_MATK);
+	RXB_RBuff(SC_ADRENALINE);		RXB_RBuff(SC_DONTFORGETME);		RXB_RBuff(SC_HIDING);			RXB_RBuff(SC_NEUTRALBARRIER);			RXB_RBuff(SC_STEALTHFIELD);
+	RXB_RBuff(SC_AETERNA);			RXB_RBuff(SC_DRUMBATTLE);		RXB_RBuff(SC_HITFOOD);			RXB_RBuff(SC_NEUTRALBARRIER_MASTER);	RXB_RBuff(SC_STEALTHFIELD_MASTER);
+	RXB_RBuff(SC_FOOD_AGI);			RXB_RBuff(SC_DUPLELIGHT);		RXB_RBuff(SC_HUMMING);			RXB_RBuff(SC_NIBELUNGEN);				RXB_RBuff(SC_STONEHARDSKIN);
+	RXB_RBuff(SC_ANGELUS);			RXB_RBuff(SC_EDP);				RXB_RBuff(SC_IMPOSITIO);		RXB_RBuff(SC_OVERTHRUST);				RXB_RBuff(SC_FOOD_STR);
+	RXB_RBuff(SC_APPLEIDUN);		RXB_RBuff(SC_ELECTRICSHOCKER);	RXB_RBuff(SC_INCATKRATE);		RXB_RBuff(SC_PNEUMA);					RXB_RBuff(SC_STRIPARMOR);
+	RXB_RBuff(SC_ASPDPOTION0);		RXB_RBuff(SC_ENCPOISON);		RXB_RBuff(SC_INCHEALRATE);		RXB_RBuff(SC_POEMBRAGI);				RXB_RBuff(SC_STRIPHELM);
+	RXB_RBuff(SC_ASPDPOTION1);		RXB_RBuff(SC_ENDURE);			RXB_RBuff(SC_INCHITRATE);		RXB_RBuff(SC_POISONREACT);				RXB_RBuff(SC_STRIPSHIELD);
+	RXB_RBuff(SC_ASPDPOTION2);		RXB_RBuff(SC_ETERNALCHAOS);		RXB_RBuff(SC_INCREASEAGI);		RXB_RBuff(SC_RAISINGDRAGON);			RXB_RBuff(SC_STRIPWEAPON);
+	RXB_RBuff(SC_ASPDPOTION3);		RXB_RBuff(SC_EXEEDBREAK);		RXB_RBuff(SC_INCREASING);		RXB_RBuff(SC_READYCOUNTER);				RXB_RBuff(SC_SUFFRAGIUM);
+	RXB_RBuff(SC_ASPERSIO);			RXB_RBuff(SC_EXPBOOST);			RXB_RBuff(SC_INSPIRATION);		RXB_RBuff(SC_READYDOWN);				RXB_RBuff(SC_TWOHANDQUICKEN);
+	RXB_RBuff(SC_ASSNCROS);			RXB_RBuff(SC_EXPIATIO);			RXB_RBuff(SC_FOOD_INT);			RXB_RBuff(SC_READYSTORM);				RXB_RBuff(SC_VITALITYACTIVATION);
+	RXB_RBuff(SC_ASSUMPTIO);		RXB_RBuff(SC_FIGHTINGSPIRIT);	RXB_RBuff(SC_INTOABYSS);		RXB_RBuff(SC_READYTURN);				RXB_RBuff(SC_FOOD_VIT);
+	RXB_RBuff(SC_ATKPOTION);		RXB_RBuff(SC_FLEEFOOD);			RXB_RBuff(SC_JEXPBOOST);		RXB_RBuff(SC_REFLECTDAMAGE);			RXB_RBuff(SC_WARM);
+	RXB_RBuff(SC_AUTOBERSERK);		RXB_RBuff(SC_FOOD_AGI_CASH);	RXB_RBuff(SC_KYRIE);			RXB_RBuff(SC_REFRESH);					RXB_RBuff(SC_WATKFOOD);
+	RXB_RBuff(SC_AUTOSPELL);		RXB_RBuff(SC_FOOD_DEX_CASH);	RXB_RBuff(SC_L_LIFEPOTION);		RXB_RBuff(SC_RICHMANKIM);				RXB_RBuff(SC_WEAPONPERFECTION);
+	RXB_RBuff(SC_AUTOTRADE);		RXB_RBuff(SC_FOOD_INT_CASH);	RXB_RBuff(SC_LAUDAAGNUS);		RXB_RBuff(SC_ROKISWEIL);				RXB_RBuff(SC_WHISTLE);
+	RXB_RBuff(SC_BANDING);			RXB_RBuff(SC_FOOD_LUK_CASH);	RXB_RBuff(SC_LAUDARAMUS);		RXB_RBuff(SC_S_LIFEPOTION);				RXB_RBuff(SC_RENOVATIO);
+	RXB_RBuff(SC_BATKFOOD);			RXB_RBuff(SC_FOOD_STR_CASH);	RXB_RBuff(SC_LEADERSHIP);		RXB_RBuff(SC_SAFETYWALL);				RXB_RBuff(SC_SECRAMENT);
+	RXB_RBuff(SC_BENEDICTIO);		RXB_RBuff(SC_FOOD_VIT_CASH);	RXB_RBuff(SC_LIFEINSURANCE);	RXB_RBuff(SC_SATURDAYNIGHTFEVER);	
+	RXB_RBuff(SC_BERSERK);			RXB_RBuff(SC_FORCEOFVANGUARD);	RXB_RBuff(SC_FOOD_LUK);			RXB_RBuff(SC_SERVICE4U);	
+	RXB_RBuff(SC_BLESSING);			RXB_RBuff(SC_FORTUNE);			RXB_RBuff(SC_MADNESSCANCEL);	RXB_RBuff(SC_SEVENWIND);	
+	RXB_RBuff(SC_CARTBOOST);		RXB_RBuff(SC_GATLINGFEVER);		RXB_RBuff(SC_MAGNIFICAT);		RXB_RBuff(SC_SIEGFRIED);	
+	RXB_RBuff(SC_CLOAKING);			RXB_RBuff(SC_GIANTGROWTH);		RXB_RBuff(SC_MANU_ATK);			RXB_RBuff(SC_SIGNUMCRUCIS);	
+	RXB_RBuff(SC_COMBO);			RXB_RBuff(SC_GLORIA);			RXB_RBuff(SC_MANU_DEF);			RXB_RBuff(SC_SLOWPOISON);	
+	RXB_RBuff(SC_CONCENTRATE);		RXB_RBuff(SC_GLORYWOUNDS);		RXB_RBuff(SC_MANU_MATK);		RXB_RBuff(SC_SMA);	
+	RXB_RBuff(SC_CP_ARMOR);			RXB_RBuff(SC_GT_CHANGE);		RXB_RBuff(SC_MATKFOOD);			RXB_RBuff(SC_SOULCOLD);	
+	RXB_RBuff(SC_CP_HELM);			RXB_RBuff(SC_GT_ENERGYGAIN);	RXB_RBuff(SC_MATKPOTION);		RXB_RBuff(SC_SPEEDUP0);	
+	RXB_RBuff(SC_CP_SHIELD);		RXB_RBuff(SC_GT_REVITALIZE);	RXB_RBuff(SC_MAXIMIZEPOWER);	RXB_RBuff(SC_SPEEDUP1);	
+	freeloop(0);
+	end;
+
+	function RXB_RBuff {
+		setd(".rxb_buff_" + .rxb_buffn, getarg(0));
+		.rxb_buffn += 1;
+		return;
+	}
+}
+
+*/
+
+prontera,156,170,5	script	Red vs Blue	856,{
+
+	if(getgmlevel() >= $rxb_gm) {
+RXB_MENU_G:
+		mes "["+.npc_name$+"]";
+		mes "Bem vindo ao sistema dos GMs";
+		mes "O que deseja fazer?";
+		mes "Ultima Partida: ^0000FF"+$rxb_last_partida$+"^000000.";
+		mes "^0000FFRed vs Blue 3.0 RV 016";
+		switch(select("Debug","Iniciar","Cancelar","Resetar Variáveis","Menu de Jogadores","Salas","Adicionar Pontos","Sair")) {
+			case 1:
+				next;
+				mes "["+.npc_name$+"]";
+				mes "Status do Evento: "+$rxb_event;
+				mes "ID Ultima Partida: "+$rxb_ticket;
+				mes "Jogadores no Evento: "+$rxb_event_players;
+				mes "Máximo: "+$rxb_players_max;
+				mes "Máximo P/Grupo: "+$rxb_max_p;
+				mes " ";
+				mes "Red Players: "+$rxb_red;
+				mes "Red Leader: "+$rxb_red_leader$;
+				mes " ";
+				mes "Blue Players: "+$rxb_blue;
+				mes "Blue Leader: "+$rxb_blue_leader$;
+				mes " ";
+				mes "Status da Partida: "+$rxb_running;
+				mes "Party ID Last Killed: "+$rxb_arena_killed;
+				next;
+				goto RXB_MENU_G;
+			case 2:
+				next;
+				if(getgmlevel() < $rxb_sys) {
+					mes "["+.npc_name$+"]";
+					mes "Seu Nível de GM não lhe da acesso a controlar o Evento.";
+					next;
+					goto RXB_MENU_G;
+				}
+				if($rxb_event == 1) {
+					mes "["+.npc_name$+"]";
+					mes "O Red vs Blue já foi iniciado. Caso deseje cancelar, utilize a opção apropriada.";
+					next;
+					goto RXB_MENU_G;
+				}
+				/*if (callfunc("WoE_Check",2) == 1) {
+					mes "["+.npc_name$+"]";
+					mes "O Red vs Blue não pode ser iniciado durante a WoE.";
+					next;
+					goto RXB_MENU_G;
+				}
+				if (callfunc("WoE_Check",2) == 2) {
+					mes "["+.npc_name$+"]";
+					mes "O Red vs Blue não pode ser iniciado durante as duas horas que antecedem a WoE.";
+					next;
+					goto RXB_MENU_G;
+				}
+				*/
+				mes "["+.npc_name$+"]";
+				mes "Tem certeza?";
+				switch(select("Sim","Não")) {
+					case 1:
+						RXB_INIT_PN:
+						next;
+						if(getmapusers($rxb_arena_m$[0]) > 0)	{ mapwarp $rxb_arena_m$[0],"prontera",155,155; }
+						if(getmapusers($rxb_arena_m$[1]) > 0)	{ mapwarp $rxb_arena_m$[1],"prontera",155,155; }
+						if(getmapusers($rxb_arena_m$[2]) > 0)	{ mapwarp $rxb_arena_m$[2],"prontera",155,155; }
+						if(getmapusers($rxb_blue_wait_r$) > 0)	{ mapwarp $rxb_blue_wait_r$,"prontera",155,155; }
+						if(getmapusers($rxb_red_wait_r$) > 0)	{ mapwarp $rxb_red_wait_r$,"prontera",155,155; }
+						mes "["+.npc_name$+"]";
+						mes "Informe o número total de participantes. Deve ser um número par entre 2 e 24.";
+						mes "0 Cancela.";
+						input .@rxb_total_players;
+						if (.@rxb_total_players < 2) close;
+						else if( .@rxb_total_players != 2 && .@rxb_total_players != 4 && .@rxb_total_players != 6 && .@rxb_total_players != 8 && .@rxb_total_players != 10 && 
+							.@rxb_total_players != 12 && .@rxb_total_players != 14 && .@rxb_total_players != 16 && .@rxb_total_players != 18 && .@rxb_total_players != 20 && 
+							.@rxb_total_players != 22 && .@rxb_total_players != 24) {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Quantidade inválida!";
+							goto RXB_INIT_PN;
+						}
+						next;
+						mes "["+.npc_name$+"]";
+						mes "Informe o número máximo de partidas consecutivas. Deve ser um número entre 1 e 6.";
+						mes "0 Cancela.";
+						input .@rxb_total_rounds;
+						if (.@rxb_total_rounds < 1) close;
+						if (.@rxb_total_rounds > 6) {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Quantidade inválida!";
+							goto RXB_INIT_PN;
+						}
+						else { set $rxb_event_cont_m,.@rxb_total_rounds; }
+						
+						//KING OF THE HILL - BETA
+						//mes "["+.npc_name$+"]";
+						//mes "Ativar King of the Hill (^FF0000BETA^000000)?";
+						//switch(select("Sim","Não")) {
+						//	case 1: set $rxb_event_type,1; break;
+						//	case 2: set $rxb_event_type,0; break;
+						//}
+						
+						announce "O Evento Red vs Blue foi iniciado. Para participar, dirija-se ao NPC em Prontera.",bc_all;
+						donpcevent "RXB_Init::OnReset";
+						donpcevent "RXB_Init::OnRXBStart";
+						
+						set $rxb_players_max,.@rxb_total_players;
+						set $rxb_max_p,$rxb_players_max/2;
+						set $rxb_last_partida$,gettimestr("%d-%m-%Y %H:%M:%S",21);
+						
+						next;
+						goto RXB_MENU_G;
+					case 2:
+						next;
+						goto RXB_MENU_G;
+				}
+			case 3:
+				next;
+				if(getgmlevel() < $rxb_sys) {
+					mes "["+.npc_name$+"]";
+					mes "Seu Nível de GM não lhe da acesso a controlar o Evento.";
+					next;
+					goto RXB_MENU_G;
+				}
+				if($rxb_event == 0) {
+					mes "["+.npc_name$+"]";
+					mes "O Red vs Blue ainda não foi iniciado. Caso deseje inicia-lo, utilize a opção apropriada.";
+					next;
+					goto RXB_MENU_G;
+				}
+				mes "["+.npc_name$+"]";
+				mes "Tem certeza?";
+				switch(select("Sim","Não")) {
+					case 1:
+						mes "Informe o motivo";
+						next;
+						input .@rxb_cancel_reason$;
+						announce "O Game Master "+strcharinfo(0)+" cancelou o Evento Red vs Blue. ",bc_all;
+						announce "Motivo: "+.@rxb_cancel_reason$+".",bc_all;
+						pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";
+						donpcevent "RXB_Init::OnReset";
+						mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Evento foi Cancelado. Dirija-se ao NPC Arena para voltar a Prontera.",bc_blue;
+						areaannounce "2007rwc_r",66,154,133,183,"O Evento foi Cancelado. Fale com o Assistente para voltar a Prontera.",bc_blue;
+						areaannounce "2007rwc_r",66,14,133,43,"O Evento foi Cancelado. Fale com o Assistente para voltar a Prontera.",bc_blue;
+						next;
+						goto RXB_MENU_G;
+					case 2:
+						next;
+						goto RXB_MENU_G;
+				}
+			case 4:
+				next;
+				if(getgmlevel() < $rxb_sys) {
+					mes "["+.npc_name$+"]";
+					mes "Seu Nível de GM não lhe da acesso a controlar o Evento.";
+					next;
+					goto RXB_MENU_G;
+				}
+				if($rxb_event != 0) {
+					mes "["+.npc_name$+"]";
+					mes "^FF0000Existe um jogo em andamento^000000. Fazer isso irá estragá-lo!";
+					mes " ";
+					mes "Se deseja cancelá-lo, utilize a opção de Cancelar.";
+					next;
+				}
+				mes "["+.npc_name$+"]";
+				mes "Tem certeza?";
+				switch(select("Sim","Não")) {
+					case 1:
+						if($rxb_event != 0) announce "O GM "+strcharinfo(0)+" resetou o Red vs Blue, cancelando o jogo anterior.",bc_all;
+						pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";
+						donpcevent "RXB_Init::OnReset";
+						mes "Variaveis resetadas.";
+						next;
+						goto RXB_MENU_G;
+					case 2:
+						next;
+						goto RXB_MENU_G;
+				}
+			case 5:
+				next;
+				goto RXB_MENU_P;
+			case 6:
+				next;
+				mes "["+.npc_name$+"]";
+				mes "Qual sala gostaria de ir?";
+				switch(select("Arena","Sala Azul","Sala Vermelha","Voltar")) {
+					case 1:	warp ""+$rxb_arena_m$[$rxb_arena_used]+"",0,0;						close;
+					case 2:	warp ""+$rxb_blue_wait_r$+"",$rxb_blue_wait_x,$rxb_blue_wait_y;		close;
+					case 3:	warp ""+$rxb_red_wait_r$+"",$rxb_red_wait_x,$rxb_red_wait_y;		close;
+					case 4:	next;																goto RXB_MENU_G;
+				}
+			case 7:
+				next;
+				if(getgmlevel() < 90) {
+					mes "["+.npc_name$+"]";
+					mes "Somente Administradores podem usar esta opção.";
+					close;
+				}
+				mes "["+.npc_name$+"]";
+				mes "Quantos pontos gostaria de adicionar a sua Conta?";
+				input @rxb_points_add;
+				next;
+				set #rxb_pontos,#rxb_pontos+@rxb_points_add;
+				mes "["+.npc_name$+"]";
+				mes "Pronto!";
+				next;
+				goto RXB_MENU_G;
+			case 8:
+				next;
+				mes "["+.npc_name$+"]";
+				mes "Até breve!";
+				close;
+		}
+	}
+
+RXB_MENU_P:
+	mes "["+.npc_name$+"]";
+	mes "Olá "+strcharinfo(0)+".";
+	mes "Bem vindo ao Red vs Blue.";
+	mes "O que gostaria de fazer?";
+	switch(select("Minhas Estatísticas","Estatísticas Gerais","Meus Pontos e Prêmios","Dúvidas","Nada")) {
+		case 1:
+			next;
+			if (#rxb_participated == null || #rxb_participated <= 0) {
+				mes "["+.npc_name$+"]";
+				mes "Você ainda não participou do Red vs Blue.";
+				next;
+				goto RXB_MENU_P;
+			}
+			else {
+				if (#rxb_participated != null) {
+					if (#rxb_participated > 0) set @rxb_aproveitamento_geral,#rxb_won*100/#rxb_participated;
+				}
+				if (#rxb_participated_blue != null) {
+					if (#rxb_participated_blue > 0) set @rxb_aproveitamento_blue,#rxb_participated_blue_won*100/#rxb_participated_blue;
+				}
+				if (#rxb_participated_red != null) {
+					if (#rxb_participated_red > 0) set @rxb_aproveitamento_red,#rxb_participated_red_won*100/#rxb_participated_red;
+				}
+				mes "["+.npc_name$+"]";
+				mes "Você já participou de^0000FF "+#rxb_participated+"^000000 partidas e venceu^0000FF "+#rxb_won+"^000000, com um aproveitamento de^0000FF "+@rxb_aproveitamento_geral+"^000000%.";
+				next;
+				mes "["+.npc_name$+"]";
+				mes "^0000FFGrupo Azul^000000: Participou de^0000FF "+#rxb_participated_blue+"^000000 e venceu^0000FF "+#rxb_participated_blue_won+"^000000. Aproveitamento de^0000FF "+@rxb_aproveitamento_blue+"^000000%.";
+				next;
+				mes "["+.npc_name$+"]";
+				mes "^FF0000Grupo Vermelho: ^000000Participou de^0000FF "+#rxb_participated_red+"^000000 e venceu^0000FF "+#rxb_participated_blue_red+"^000000. Aproveitamento de^0000FF "+@rxb_aproveitamento_red+"^000000%.";
+				next;
+				mes "["+.npc_name$+"]";
+				mes "Seu número de vitórias consecutivas é "+#rxb_win_streak;
+				next;
+				goto RXB_MENU_P;
+			}
+		case 2:
+			next;
+			if ($rxb_games == null || $rxb_games <= 0) {
+				mes "["+.npc_name$+"]";
+				mes "ainda não foram disputadas partidas do Red vs Blue";
+				next;
+				goto RXB_MENU_P;
+			}
+			else {
+				if ($rxb_games >= 1) {
+					set @rxb_aproveitamento_geral_red,$rxb_games_red*100/$rxb_games;
+					set @rxb_aproveitamento_geral_blue,$rxb_games_blue*100/$rxb_games;
+				}
+				mes "["+.npc_name$+"]";
+				mes "Já foram disputadas^0000FF "+$rxb_games+"^000000 partidas.";
+				mes "O ^FF0000Grupo Vermelho ^000000tem^0000FF "+$rxb_games_red+" ^000000vitórias, com^0000FF "+@rxb_aproveitamento_geral_red+"^000000% de aproveitamento.";
+				mes "O ^0000FFGrupo Azul ^000000tem^0000FF " +$rxb_games_blue+" ^000000vitórias, com^0000FF "+@rxb_aproveitamento_geral_blue+"^000000% de aproveitamento.";
+				next;
+				goto RXB_MENU_P;
+			}
+		case 3:
+			next;
+			mes "["+.npc_name$+"]";
+			if(#rxb_pontos >= 1) {
+				mes "Até o momento você tem^0000FF "+#rxb_pontos+" ^000000pontos.";
+				mes "Gostaria de trocá-los por algum prêmio?";
+				switch(select("Sim","Não")) {
+					case 1:
+						next;
+						mes "["+.npc_name$+"]";
+						mes "Qual prêmio você deseja?";
+						for( set .@i,0; .@i < getarraysize($rxb_prizes_name$); set .@i,.@i+1 ) {
+							set @menulist$[.@j],"["+$rxb_prize_points[.@i]+"] - ["+$rxb_prizes_name$[.@i]+"]";
+							set .@j,.@j+1;
+						}
+						menu	@menulist$[0],-,@menulist$[1],-,@menulist$[2],-,@menulist$[3],-,@menulist$[4],-,
+								@menulist$[5],-,@menulist$[6],-,@menulist$[7],-,@menulist$[8],-,@menulist$[9],-;
+						callsub RXB_Prize,$rxb_prizes_name$[@menu-1],$rxb_prize_points[@menu-1],$rxb_prizes_qtd[@menu-1],$rxb_prizes_ids[@menu-1];
+					case 2:
+						next;
+						goto RXB_MENU_P;
+				}
+			}
+			else {
+				mes "Você ainda não pontuou no Red vs Blue.";
+				next;
+				goto RXB_MENU_P;
+			}
+		case 4:
+			next;
+			mes "["+.npc_name$+"]";
+			mes "Esta seção está em manutenção. Desculpe o transtorno.";
+			close;
+		case 5:
+RXB_SAIR:
+			next;
+			mes "["+.npc_name$+"]";
+			mes "Até breve!";
+			close;
+	}
+
+RXB_Prize:		//Label do Sistema de Premiação. Somente acessível por um Callsub.
+	next;
+	mes "["+.npc_name$+"]";
+	mes "Para receber um pacote com^0000FF "+getarg(2)+" "+getarg(0)+" ^000000você precisa de^0000FF "+getarg(1)+" ^000000pontos.";
+	mes " ";
+	mes "Gostaria de quantos pacotes? Digite 0 para cancelar.";
+	next;
+	input @rxb_prize_qtd;
+	next;
+	if(@rxb_prize_qtd <= 0) {
+		goto RXB_MENU_P;
+	}
+	set @rxb_prize_points,@rxb_prize_qtd*getarg(1);		//Quantos Pontos vai Precisar
+	set @rxb_prize_qtd_give,@rxb_prize_qtd*getarg(2);	//Quantos Itens vai Receber
+	
+	if(checkweight(getarg(3),@rxb_prize_qtd_give) == 0) {	//Checa se o Player pode carregar tantos Itens
+		mes "["+.npc_name$+"]";
+		mes "Você não poderá carregar tantos^0000FF "+getarg(0)+" ^000000assim.";
+		next;
+		goto RXB_MENU_P;
+	}
+
+	mes "["+.npc_name$+"]";
+	mes "Para^0000FF "+@rxb_prize_qtd+" ^000000pacote(s) de^0000FF "+getarg(2)+" "+getarg(0)+" ^000000você vai precisar de^0000FF "+@rxb_prize_points+" ^000000pontos.";
+	mes " ";
+	mes "Tem certeza?";
+	switch(select("Sim","Não")) {
+		case 1:
+			next;
+			if(#rxb_pontos < @rxb_prize_points) {
+				mes "["+.npc_name$+"]";
+				mes "Desculpe mas você não tem pontos necessários para esta transação.";
+				next;
+				goto RXB_MENU_P;
+			}
+			set #rxb_pontos,#rxb_pontos-@rxb_prize_points;	//Retira os Pontos
+			getitem getarg(3),@rxb_prize_qtd_give;			//Recebe o Item
+			mes "["+.npc_name$+"]";
+			mes "Pronto! Lhe restaram^0000FF "+#rxb_pontos+" ^000000pontos.";
+			next;
+			goto RXB_MENU_P;
+		case 2:
+			next;
+			goto RXB_MENU_P;
+	}
+
+OnInit:
+	set .npc_name$,"Red vs Blue";
+	waitingroom .npc_name$,0;
+	end;
+
+}
+
+prontera,160,175,5	script	Participar#rvb	903,{
+
+	if(getgmlevel() >= 10) end;
+	
+	if($rxb_event == 0) goto RXB_ENTRY_OFF;							//Evento desligado.
+	if($rxb_running == 1 || $rxb_running == 2) goto RXB_RUNNING;	//Evento já na Arena (1) ou Terminado (2).
+	if($rxb_event_players == $rxb_players_max) goto RXB_ENTRY_FULL;	//Número máximo de participantes atendido.
+
+	//Restrições de Classe
+	if(Class >= 0 && Class <= 6) goto RXB_NOT_ALLOWED;			//Novice e 1-x
+	if(Class == 22) goto RXB_NOT_ALLOWED;						//Wedding
+	if(Class == 23) goto RXB_NOT_ALLOWED;						//Super Novice
+	if(Class == 26) goto RXB_NOT_ALLOWED;						//Xmas
+	if(Class >= 4001 && Class <= 4007) goto RXB_NOT_ALLOWED;	//Transclass Novice e 1-x
+	if(Class >= 4023 && Class <= 4045) goto RXB_NOT_ALLOWED;	//Baby
+	
+	//Restrição de Nível
+	if(BaseLevel <= 90) {
+		mes "["+.npc_name$+"]";
+		mes "Desculpe mas você precisa ter Nível 90 para participar.";
+		close;
+	}
+
+	if(SkillPoint >= 1) {
+		mes "["+.npc_name$+"]";
+		mes "Você não pode participar se tiver Pontos de Habilidade ainda não distribuidos.";
+		close;
+	}
+
+	mes "["+.npc_name$+"]";
+	mes "Deseja realmente participar?";
+	switch(select("Não","Sim")) {
+		case 1:
+			next;
+			mes "["+.npc_name$+"]";
+			mes "Até breve!";
+			close;
+		case 2:
+			next;
+			/* REMOVED!
+			//Restrição de Ultima Partida
+			if($rxb_ticket != 0) {
+				if($rxb_ticket_last != 0) {
+					if(#rxb_ticket != 0) {
+						if($rxb_ticket_last == #rxb_ticket) {
+							mes "["+.npc_name$+"]";
+							mes "Você participou da ultima partida do Red vs Blue.";
+							mes "Caso queira participar de novo, espere pela próxima partida.";
+							close;
+						}
+					}
+				}
+			}
+			*/
+			/* Removendo sistema de remover bufs */
+			/*
+			//Removendo Buffs
+			while(.@dp < getvariableofnpc(.rxb_buffn,"RXB_RBuffs")) {
+				sc_end getvariableofnpc(getd(".rxb_buff_" + .@dp),"RXB_RBuffs");
+				.@dp += 1;
+			}
+			*/
+			//Código de Seleção de Grupo. Se alguém inventar uma forma menos complexa, me avise XD
+		
+		RXB_ENTRY_LOOP:
+			if($rxb_event_players == $rxb_players_max) goto RXB_ENTRY_FULL;	//Número máximo de participantes atingido.
+			if($rxb_event == 0) goto RXB_ENTRY_OFF;							//Evento Desligado (Proteção contra Infinite Loop).
+			set @rxb_team,rand(1,2);										//1 = Blue. 2 = Red.
+
+			// SELEÇÃO DE CLASSES DESATIVADA
+			/*
+		RXB_ENTRY_CLASS_LOOP:
+			//Limitações de Classes por Time. Atualmente hardcoded, pois faz parte do escopo do Evento.
+			//Assassin Class: 1 por time. 	Monk Class: 1 por time.		Alchemist Class: 1 por time.
+			//Soul Linker: 1 por time.		Priest Class: 2 por time.	Wizard Class: 2 por time.
+			//Sage Class: 2 por time.		Clown/Gypsy: 1 por time.
+			
+			//Assassin
+			if(Class == 12 || Class == 4013) {
+				if($rxb_blue_sin == 1 && $rxb_red_sin == 1 ) {
+					next;
+					mes "["+.npc_name$+"]";
+					mes "Desculpe mas o Limite de Assassins já foi atingido.";
+					close;
+				}
+				if(@rxb_team == 1) {
+					if($rxb_blue_sin == 0) {
+						set $rxb_blue_sin,1;
+						goto RXB_ENTRY_BLUE;
+					} else {
+						if($rxb_red_sin == 0) {
+							set $rxb_red_sin,1;
+							goto RXB_ENTRY_RED;
+						} else {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Desculpe mas o Limite de Assassins já foi atingido.";
+							close;
+						}
+					}
+				}
+				if(@rxb_team == 2) {
+					if($rxb_red_sin == 0) {
+						set $rxb_red_sin,1;
+						goto RXB_ENTRY_RED;
+					} else {
+						if($rxb_blue_sin == 0) {
+							set $rxb_blue_sin,1;
+							goto RXB_ENTRY_BLUE;
+						} else {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Desculpe mas o Limite de Assassins já foi atingido.";
+							close;
+						}
+					}
+				}
+			}
+			
+			//Monk
+			if(Class == 15 || Class == 4016) {
+				if($rxb_blue_monk == 1 && $rxb_red_monk == 1 ) {
+					next;
+					mes "["+.npc_name$+"]";
+					mes "Desculpe mas o Limite de Monks/Champions já foi atingido.";
+					close;
+				}
+				if(@rxb_team == 1) {
+					if($rxb_blue_monk == 0) {
+						set $rxb_blue_monk,1;
+						goto RXB_ENTRY_BLUE;
+					} else {
+						if($rxb_red_monk == 0) {
+							set $rxb_red_monk,1;
+							goto RXB_ENTRY_RED;
+						} else {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Desculpe mas o Limite de Monks/Champions já foi atingido.";
+							close;
+						}
+					}
+				}
+				if(@rxb_team == 2) {
+					if($rxb_red_monk == 0) {
+						set $rxb_red_monk,1;
+						goto RXB_ENTRY_RED;
+					} else {
+						if($rxb_blue_monk == 0) {
+							set $rxb_blue_monk,1;
+							goto RXB_ENTRY_BLUE;
+						} else {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Desculpe mas o Limite de Monks/Champions já foi atingido.";
+							close;
+						}
+					}
+				}
+			}
+			
+			//Alchemist
+			if(Class == 18 || Class == 4019) {
+				if($rxb_blue_alch == 1 && $rxb_red_alch == 1 ) {
+					next;
+					mes "["+.npc_name$+"]";
+					mes "Desculpe mas o Limite de Alchemists/Creators já foi atingido.";
+					close;
+				}
+				if(@rxb_team == 1) {
+					if($rxb_blue_alch == 0) {
+						set $rxb_blue_alch,1;
+						goto RXB_ENTRY_BLUE;
+					} else {
+						if($rxb_red_alch == 0) {
+							set $rxb_red_alch,1;
+							goto RXB_ENTRY_RED;
+						} else {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Desculpe mas o Limite de Alchemists/Creators já foi atingido.";
+							close;
+						}
+					}
+				}
+				if(@rxb_team == 2) {
+					if($rxb_red_alch == 0) {
+						set $rxb_red_alch,1;
+						goto RXB_ENTRY_RED;
+					} else {
+						if($rxb_blue_alch == 0) {
+							set $rxb_blue_alch,1;
+							goto RXB_ENTRY_BLUE;
+						} else {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Desculpe mas o Limite de Alchemists/Creators já foi atingido.";
+							close;
+						}
+					}
+				}
+			}
+			
+			//Soul Linker
+			if(Class == 4049) {
+				if($rxb_blue_sl == 1 && $rxb_red_sl == 1 ) {
+					next;
+					mes "["+.npc_name$+"]";
+					mes "Desculpe mas o Limite de Soul Linkers já foi atingido.";
+					close;
+				}
+				if(@rxb_team == 1) {
+					if($rxb_blue_sl == 0) {
+						set $rxb_blue_sl,1;
+						goto RXB_ENTRY_BLUE;
+					} else {
+						if($rxb_red_sl == 0) {
+							set $rxb_red_sl,1;
+							goto RXB_ENTRY_RED;
+						} else {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Desculpe mas o Limite de Soul Linkers já foi atingido.";
+							close;
+						}
+					}
+				}
+				if(@rxb_team == 2) {
+					if($rxb_red_sl == 0) {
+						set $rxb_red_sl,1;
+						goto RXB_ENTRY_RED;
+					} else {
+						if($rxb_blue_sl == 0) {
+							set $rxb_blue_sl,1;
+							goto RXB_ENTRY_BLUE;
+						} else {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Desculpe mas o Limite de Soul Linkers já foi atingido.";
+							close;
+						}
+					}
+				}
+			}
+			
+			//Clown - Gypsy
+			if(Class == 19 || Class == 20 || Class == 4020 || Class == 4021) {
+				if($rxb_blue_clgy == 1 && $rxb_red_clgy == 1 ) {
+					next;
+					mes "["+.npc_name$+"]";
+					mes "Desculpe mas o Limite de Bard/Clown/Dancer/Gypsy já foi atingido.";
+					close;
+				}
+				if(@rxb_team == 1) {
+					if($rxb_blue_clgy == 0) {
+						set $rxb_blue_clgy,1;
+						goto RXB_ENTRY_BLUE;
+					} else {
+						if($rxb_red_clgy == 0) {
+							set $rxb_red_clgy,1;
+							goto RXB_ENTRY_RED;
+						} else {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Desculpe mas o Bard/Clown/Dancer/Gypsy já foi atingido.";
+							close;
+						}
+					}
+				}
+				if(@rxb_team == 2) {
+					if($rxb_red_clgy == 0) {
+						set $rxb_red_clgy,1;
+						goto RXB_ENTRY_RED;
+					} else {
+						if($rxb_blue_clgy == 0) {
+							set $rxb_blue_clgy,1;
+							goto RXB_ENTRY_BLUE;
+						} else {
+							next;
+							mes "["+.npc_name$+"]";
+							mes "Desculpe mas o Limite de Bard/Clown/Dancer/Gypsy já foi atingido.";
+							close;
+						}
+					}
+				}
+			}
+			
+			//Priest
+			if(Class == 8 || Class == 4009) {
+				if($rxb_blue_priest == 2 && $rxb_red_priest == 2 ) {
+					next;
+					mes "["+.npc_name$+"]";
+					mes "Desculpe mas o Limite de Priests/High Priests já foi atingido.";
+					close;
+				}
+				if(@rxb_team == 1) {
+					if($rxb_blue_priest == 0) {
+						set $rxb_blue_priest,1;
+						goto RXB_ENTRY_BLUE;
+					} else {
+						if($rxb_red_priest == 0) {
+							set $rxb_red_priest,1;
+							goto RXB_ENTRY_RED;
+						} else {
+							if($rxb_blue_priest == 1) {
+								set $rxb_blue_priest,2;
+								goto RXB_ENTRY_BLUE;
+							} else {
+								if($rxb_red_priest == 1) {
+									set $rxb_red_priest,2;
+									goto RXB_ENTRY_RED;
+								} else {
+									next;
+									mes "["+.npc_name$+"]";
+									mes "Desculpe mas o Limite de Priests/High Priests já foi atingido.";
+									close;
+								}
+							}
+						}
+					}
+				}
+				if(@rxb_team == 2) {
+					if($rxb_red_priest == 0) {
+						set $rxb_red_priest,1;
+						goto RXB_ENTRY_RED;
+					} else {
+						if($rxb_blue_priest == 0) {
+							set $rxb_blue_priest,1;
+							goto RXB_ENTRY_BLUE;
+						} else {
+							if($rxb_red_priest == 1) {
+								set $rxb_red_priest,2;
+								goto RXB_ENTRY_RED;
+							} else {
+								if($rxb_blue_priest == 1) {
+								set $rxb_blue_priest,2;
+									goto RXB_ENTRY_BLUE;
+								} else {
+									next;
+									mes "["+.npc_name$+"]";
+									mes "Desculpe mas o Limite de Priests/High Priests já foi atingido.";
+									close;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			//Wizard
+			if(Class == 9 || Class == 4010) {
+				if($rxb_blue_wiz == 2 && $rxb_red_wiz == 2 ) {
+					next;
+					mes "["+.npc_name$+"]";
+					mes "Desculpe mas o Limite de Wizards/High Wizards já foi atingido.";
+					close;
+				}
+				if(@rxb_team == 1) {
+					if($rxb_blue_wiz == 0) {
+						set $rxb_blue_wiz,1;
+						goto RXB_ENTRY_BLUE;
+					} else {
+						if($rxb_red_wiz == 0) {
+							set $rxb_red_wiz,1;
+							goto RXB_ENTRY_RED;
+						} else {
+							if($rxb_blue_wiz == 1) {
+								set $rxb_blue_wiz,2;
+								goto RXB_ENTRY_BLUE;
+							} else {
+								if($rxb_red_wiz == 1) {
+									set $rxb_red_wiz,2;
+									goto RXB_ENTRY_RED;
+								} else {
+									next;
+									mes "["+.npc_name$+"]";
+									mes "Desculpe mas o Limite de Wizards/High Wizards já foi atingido.";
+									close;
+								}
+							}
+						}
+					}
+				}
+				if(@rxb_team == 2) {
+					if($rxb_red_wiz == 0) {
+						set $rxb_red_wiz,1;
+						goto RXB_ENTRY_RED;
+					} else {
+						if($rxb_blue_wiz == 0) {
+							set $rxb_blue_wiz,1;
+							goto RXB_ENTRY_BLUE;
+						} else {
+							if($rxb_red_wiz == 1) {
+								set $rxb_red_wiz,2;
+								goto RXB_ENTRY_RED;
+							} else {
+								if($rxb_blue_wiz == 1) {
+									set $rxb_blue_wiz,2;
+									goto RXB_ENTRY_BLUE;
+								} else {
+									next;
+									mes "["+.npc_name$+"]";
+									mes "Desculpe mas o Limite de Wizards/High Wizards já foi atingido.";
+									close;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			//Sage
+			if(Class == 16 || Class == 4017) {
+				if($rxb_blue_sage == 2 && $rxb_red_sage == 2 ) {
+					next;
+					mes "["+.npc_name$+"]";
+					mes "Desculpe mas o Limite de Sage/Scholars já foi atingido.";
+					close;
+				}
+				if(@rxb_team == 1) {
+					if($rxb_blue_sage == 0) {
+						set $rxb_blue_sage,1;
+						goto RXB_ENTRY_BLUE;
+					} else {
+						if($rxb_red_sage == 0) {
+							set $rxb_red_sage,1;
+							goto RXB_ENTRY_RED;
+						} else {
+							if($rxb_blue_sage == 1) {
+								set $rxb_blue_sage,2;
+								goto RXB_ENTRY_BLUE;
+							} else {
+								if($rxb_red_sage == 1) {
+									set $rxb_red_sage,2;
+									goto RXB_ENTRY_RED;
+								} else {
+									next;
+									mes "["+.npc_name$+"]";
+									mes "Desculpe mas o Limite de Sage/Scholars já foi atingido.";
+									close;
+								}
+							}
+						}
+					}
+				}
+				if(@rxb_team == 2) {
+					if($rxb_red_sage == 0) {
+						set $rxb_red_sage,1;
+						goto RXB_ENTRY_RED;
+					} else {
+						if($rxb_blue_sage == 0) {
+							set $rxb_blue_sage,1;
+							goto RXB_ENTRY_BLUE;
+						} else {
+							if($rxb_red_sage == 1) {
+								set $rxb_red_sage,2;
+								goto RXB_ENTRY_RED;
+							} else {
+								if($rxb_blue_sage == 1) {
+									set $rxb_blue_sage,2;
+									goto RXB_ENTRY_BLUE;
+								} else {
+									next;
+									mes "["+.npc_name$+"]";
+									mes "Desculpe mas o Limite deSage/Scholars já foi atingido.";
+									close;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			//Finalização da Seleção de Times
+			*/
+			
+			
+			//Time Azul
+			if(@rxb_team == 1) {
+				RXB_ENTRY_BLUE:
+				if($rxb_blue == 0) {
+					set $rxb_blue,$rxb_blue+1;
+					set $rxb_blue_alive,$rxb_blue_alive+1;
+					set $rxb_blue_leader$,strcharinfo(0);
+					set $rxb_event_players,$rxb_event_players+1;
+					for ( set .@i,0; .@i <= 11; set .@i,.@i + 1 ) {
+						if($rxb_array_slot_blue[.@i] == 0) {
+							set $rxb_array_slot_blue_join$[.@i],strcharinfo(0);
+							set $rxb_array_classe_blue_join[.@i],Class;
+							set $rxb_array_slot_blue[.@i],1;
+							if($rxb_event_players == $rxb_players_max) { 
+								announce "Os times já foram formados. Boa sorte a todos!",bc_all;
+								disablenpc "Participar#rvb";
+								delwaitingroom "Participar#rvb";
+							}
+							warp "2007rwc_r",90,163;
+							close;
+						}
+					}
+				}
+				
+				if($rxb_blue == $rxb_max_p) goto RXB_ENTRY_LOOP;
+				set $rxb_blue,$rxb_blue+1;
+				set $rxb_blue_alive,$rxb_blue_alive+1;
+				set $rxb_event_players,$rxb_event_players+1;
+				for ( set .@i,0; .@i <= 11; set .@i,.@i + 1 ) {
+					if($rxb_array_slot_blue[.@i] == 0) {
+						set $rxb_array_slot_blue_join$[.@i],strcharinfo(0);
+						set $rxb_array_classe_blue_join[.@i],Class;
+						set $rxb_array_slot_blue[.@i],1;
+						if($rxb_event_players == $rxb_players_max) { 
+							announce "Os times já foram formados. Boa sorte a todos!",bc_all;
+							disablenpc "Participar#rvb";
+							delwaitingroom "Participar#rvb";
+						}
+						warp "2007rwc_r",90,163;
+						close;
+					}
+				}
+			}
+			
+			//Time Vermelho
+			if(@rxb_team == 2) {
+				RXB_ENTRY_RED:
+				if($rxb_red == 0) {
+					set $rxb_red,$rxb_red+1;
+					set $rxb_red_alive,$rxb_red_alive+1;
+					set $rxb_red_leader$,strcharinfo(0);
+					set $rxb_event_players,$rxb_event_players+1;
+					for ( set .@i,0; .@i <= 11; set .@i,.@i + 1 ) {
+						if($rxb_array_slot_red[.@i] == 0) {
+							set $rxb_array_slot_red_join$[.@i],strcharinfo(0);
+							set $rxb_array_classe_red_join[.@i],Class;
+							set $rxb_array_slot_red[.@i],1;
+							if($rxb_event_players == $rxb_players_max) { 
+								announce "Os times já foram formados. Boa sorte a todos!",bc_all;
+								disablenpc "Participar#rvb";
+								delwaitingroom "Participar#rvb";
+							}
+							warp "2007rwc_r",126,23;
+							close;
+						}
+					}
+				}
+				
+				if($rxb_red == $rxb_max_p) goto RXB_ENTRY_LOOP;
+				set $rxb_red,$rxb_red+1;
+				set $rxb_red_alive,$rxb_red_alive+1;
+				set $rxb_event_players,$rxb_event_players+1;
+				for ( set .@i,0; .@i <= 11; set .@i,.@i + 1 ) {
+					if($rxb_array_slot_red[.@i] == 0) {
+						set $rxb_array_slot_red_join$[.@i],strcharinfo(0);
+						set $rxb_array_classe_red_join[.@i],Class;
+						set $rxb_array_slot_red[.@i],1;
+						if($rxb_event_players == $rxb_players_max) {
+							announce "Os times já foram formados. Boa sorte a todos!",bc_all;
+							disablenpc "Participar#rvb";
+							delwaitingroom "Participar#rvb";
+						}
+						warp "2007rwc_r",126,23;
+						close;
+					}
+				}
+			}
+	}	
+
+	//Possíveis Erros durante a tentativa de Participar.
+RXB_RUNNING:
+	mes "["+.npc_name$+"]";
+	mes "Desculpe mas a partida já está em andamento ou em fase de término. Tente da próxima vez!";
+	close;
+
+RXB_ENTRY_FULL:
+	mes "["+.npc_name$+"]";
+	mes "Desculpe mas o número máximo de jogadores já foi atingido. Tente da próxima vez!";
+	close;
+
+RXB_ENTRY_OFF:
+	mes "["+.npc_name$+"]";
+	mes "Desculpe mas o evento não está ativo.";
+	close;
+
+RXB_NOT_ALLOWED:
+	mes "["+.npc_name$+"]";
+	mes "Desculpe mas sua classe não é permitida no evento.";
+	close;
+	
+OnInit:
+	set .npc_name$,"Coordenadora";
+	end;
+
+OnWaitingRoomStart:
+	waitingroom "Participar RxB",0;
+	end;
+
+}
+
+2007rwc_r,90,169,4	script	Ajudante Azul	745,10,10,{
+
+	if(getgmlevel() >= $rxb_gm) {
+RXB_MENU_G:
+		mes "["+.npc_name$+"]";
+		mes "Bem vindo ao Sistema de GMs.";
+		mes "O que deseja fazer?";
+		switch(select("Warp","Debug","Abrir Vagas","Trocar Líder","Nada")) {
+			case 1:
+				next;
+				mes "["+.npc_name$+"]";
+				mes "Qual sala deseja ir?";
+				switch(select("Prontera","Red","Arena","Esquece...")) {
+					case 1:	warp "prontera",155,155;							close;
+					case 2:	warp ""+$rxb_red_wait_r$+"",$rxb_red_wait_x,$rxb_red_wait_y;		close;
+					case 3:	warp ""+$rxb_arena_m$[$rxb_arena_used]+"",0,0;			close;
+					case 4:	next;												goto RXB_MENU_G;
+				}
+			case 2:
+				next;
+				mes "["+.npc_name$+"]";
+				mes "Líder: "+$rxb_blue_leader$;
+				mes "Jogadores Azul: "+$rxb_blue;
+				mes " ";
+				mes "Jogadores na Sala Azul (com GMs): "+getareausers("2007rwc_r",66,154,133,183);
+				mes "Jogadores no Evento :"+$rxb_event_players;
+				mes " ";
+				mes "Líder Avisado: "+$rxb_blue_ready_temp;
+				mes "Time Pronto: "+$rxb_blue_ready;
+				next;
+				goto RXB_MENU_G;
+			case 3:
+				next;
+				callsub RXB_ROTINE_CHECKS;
+				set $rxb_teams_locked,1;
+				mes "["+.npc_name$+"]";
+				mes "Deseja mesmo abrir vagas?";
+				switch(select("Não","Sim")) {
+					case 1:	set $rxb_teams_locked,0;	goto RXB_MENU_G;
+					case 2:
+RXB_FUNC_SLOTS:
+						next;
+						mes "["+.npc_name$+"]";
+						
+						//Abrindo Vagas no Time Azul
+						for ( set .@i,0; .@i < $rxb_max_p; set .@i,.@i + 1 ) {
+							getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_blue_join$[.@i]);
+							if(getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_blue_join$[.@i]) != 0) {
+								set $rxb_array_slot_blue[.@i],0;
+								set $rxb_vagas_blue,$rxb_vagas_blue+1;
+							}
+							else	if(.@rxb_slots_map$ != "2007rwc_r") {
+								set $rxb_array_slot_blue[.@i],0;
+								set $rxb_vagas_blue,$rxb_vagas_blue+1;
+							}
+							else if(@mapy < 50) {
+								set $rxb_array_slot_blue[.@i],0;
+								set $rxb_vagas_blue,$rxb_vagas_blue+1;
+							}
+						}
+						
+						//Abrindo Vagas no Time Vermelho
+						for ( set .@i,0; .@i < $rxb_max_p; set .@i,.@i + 1 ) {
+							getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_red_join$[.@i]);
+							if(getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_red_join$[.@i]) != 0) {
+								set $rxb_array_slot_red[.@i],0;
+								set $rxb_vagas_red,$rxb_vagas_red+1;
+							}
+							else	if(.@rxb_slots_map$ != "2007rwc_r") {
+								set $rxb_array_slot_red[.@i],0;
+								set $rxb_vagas_red,$rxb_vagas_red+1;
+							}
+							else if(@mapy > 150) {
+								set $rxb_array_slot_red[.@i],0;
+								set $rxb_vagas_red,$rxb_vagas_red+1;
+							}
+						}
+						
+						if($rxb_vagas_red == 0 && $rxb_vagas_blue == 0) {
+							mes "Nenhuma vaga a ser liberada!";
+							set $rxb_teams_locked,0;
+							next;
+							goto RXB_MENU_G;
+						} else {
+							mes "Vagas liberadas!";
+							donpcevent "rxb_slots::OnSlotsFreeing";
+							close;
+						}
+						
+				}
+			case 4:
+				next;
+				callsub RXB_ROTINE_CHECKS;
+				set $rxb_teams_locked,1;
+				mes "["+.npc_name$+"]";
+				mes "Deseja mesmo trocar o Líder?";
+				switch(select("Não","Sim")) {
+					case 1:	set $rxb_teams_locked,0;	close;
+					case 2:
+						next;
+						mes "["+.npc_name$+"]";
+						mes "Qual o ^FF0000NOME^000000 do novo Líder?";
+						mes "Digite o nome ^FF0000EXATO^000000 do Personagem.";
+						input .@rxb_leader_blue$;
+						next;
+						mes "["+.npc_name$+"]";
+						mes "Tem certeza de que trocar o Líder Azul para "+.@rxb_leader_blue$+"?";
+						switch(select("Nao","Sim")) {
+							case 1:	set $rxb_teams_locked,0;	close;
+							case 2:
+								set $rxb_blue_leader$,.@rxb_leader_blue$;
+								set $rxb_teams_locked,0;
+								areaannounce "2007rwc_r",66,154,133,183,"O Líder Azul foi trocado para: "+$rxb_blue_leader$+" pelo Game Master "+strcharinfo(0)+".",bc_blue;
+								mes "Líder Trocado.";
+								close;
+						}
+				}
+			case 5:
+				next;
+				mes "["+.npc_name$+"]";
+				mes "Até breve!";
+				close;
+		}
+		
+		//Checagens de Rotinas
+	RXB_ROTINE_CHECKS:
+		if(getgmlevel() < $rxb_sys) {
+			mes "["+.npc_name$+"]";
+			mes "Seu Nível de GM não lhe da acesso a controlar o Evento.";
+			next;
+			goto RXB_MENU_G;
+		}
+		if($rxb_event == 0) {
+			mes "["+.npc_name$+"]";
+			mes "Desulpe mas o evento deve estar Ativo para usar esta opção.";
+			next;
+			goto RXB_MENU_G;
+		}
+		if($rxb_running == 1) {
+			mes "["+.npc_name$+"]";
+			mes "Desulpe mas você não pode fazer está mudança enquanto o Evento está Ativo na Arena.";
+			next;
+			goto RXB_MENU_G;
+		}
+		if($rxb_event_players != $rxb_players_max) {
+			mes "["+.npc_name$+"]";
+			mes "Desculpe mas esta opção só pode ser usada após todos "+$rxb_players_max+" jogadores se registrarem.";
+			mes " ";
+			mes "No momento temos "+$rxb_event_players+" jogadores.";
+			next;
+			goto RXB_MENU_G;
+		}
+		return;
+		
+	}
+	
+	//Funções para os Players
+	
+	//Verifica se o Evento está ativo ou não.
+	if($rxb_event == 0) {
+		mes "["+.npc_name$+"]";
+		mes "Evento cancelado. Desculpe-nos pelo transtorno.";
+		next;
+		warp "prontera",155,155;
+		close;
+	}
+	
+	//Informa que o Grupo já está pronto
+	if(($rxb_blue_ready == 1) && (strcharinfo(0) != $rxb_blue_leader$)) {
+		mes "["+.npc_name$+"]";
+		mes "Seu Grupo já está pronto. Por favor, aguarde pelo outro Grupo.";
+		close;
+	}
+	
+	//Verifica se é o Líder do Grupo e lhe da as opções de Líder
+	if(strcharinfo(0) == $rxb_blue_leader$) {
+		
+		//Verifica se o Líder já falou com o NPC uma vez
+		if($rxb_blue_ready_temp != 1) {
+			//Informa o Líder como Proceder
+			mes "["+.npc_name$+"]";
+			mes "Vocé é o(a) Líder do Grupo Azul.";
+			mes " ";
+			mes "Por favor, crie um Grupo, chame todos os participantes para o mesmo e volte a falar comigo quando estiver pronto.";
+			set $rxb_blue_ready_temp,1;
+			close;
+		} else {
+			mes "["+.npc_name$+"]";
+			mes "O que deseja fazer?";
+			switch(select("Aprontar o Time","Liberar Vagas")) {
+				case 1:
+					next;
+					
+					if($rxb_blue_ready == 1) {
+						mes "["+.npc_name$+"]";
+						mes "Seu Time já está pronto.";
+						close;
+					}
+					
+					//Pergunta se o Grupo está pronto
+					mes "["+.npc_name$+"]";
+					if($rxb_red_ready == 1) mes "O outro Grupo está pronto!";
+					mes "Seu Grupo está pronto?";
+					switch(select("Não","Sim")) {
+						case 1:	close;
+						case 2:
+							next;
+							
+							//Informa se o Grupo já está pronto
+							if($rxb_blue_ready == 1) {
+								mes "["+.npc_name$+"]";
+								mes "Seu Grupo já está pronto. Por favor, aguarde pelo outro Grupo.";
+								close;
+							}
+							
+							//Verifica se ambos times já estão completos
+							if($rxb_event_players != $rxb_players_max) {
+								mes "["+.npc_name$+"]";
+								mes "Espere até que os "+$rxb_players_max+" participantes entrem nas Salas de Espera, por gentileza.";
+								mes	"Atualmente temos "+$rxb_event_players+" participantes";
+								close;
+							}
+							
+							//Verifica se o Grupo contém todos participantes.
+							getpartymember(getcharid(1));
+							if($@partymembercount < $rxb_max_p) { 
+								mes "["+.npc_name$+"]";
+								mes "Desculpe mas seu grupo não tem "+$rxb_max_p+" Participantes.";
+								mes "Chame todos e tente novamente.";
+								close;
+							}
+							
+							//Verifica se algum GM está modificando os Grupos
+							if($rxb_teams_locked == 1) {
+								mes "["+.npc_name$+"]";
+								mes "Por favor espere alguns instantes, pois um GM está mexendo no Sistema do Red vs Blue.";
+								close;
+							}
+							
+							//Apronta o Time
+							set $rxb_blue_ready,1;
+							set $rxb_blue_ready_team,getcharid(1);
+							
+							//Caso o outro Grupo esteja pronto, inicia a Partida
+							if(($rxb_red_ready == 1) && ($rxb_blue_ready == 1)) {
+								donpcevent "rxb_warper::OnBothReady";
+								close;
+							} else {
+								mes "["+.npc_name$+"]";
+								mes "O outro Grupo ainda não está pronto. Aguarde alguns instantes.";
+								areaannounce "2007rwc_r",66,14,133,43,"O outro Grupo já está pronto! Apressem-se por gentileza.",bc_blue;
+								close;
+							}
+					}
+				case 2:
+					next;
+					
+					//Verifica se ambos os times já estão completos
+					if($rxb_event_players != $rxb_players_max) {
+						mes "["+.npc_name$+"]";
+						mes "Desculpe mas esta opção só pode ser usada após todos "+$rxb_players_max+" jogadores se registrarem.";
+						mes " ";
+						mes "No momento temos "+$rxb_event_players+" jogadores.";
+						close;
+					}
+					
+					//Verifica se algum GM está modificando os Grupos
+					if($rxb_teams_locked == 1) {
+						mes "["+.npc_name$+"]";
+						mes "Por favor espere alguns instantes, pois um GM está mexendo no Sistema do Red vs Blue.";
+						close;
+					}
+					
+					mes "["+.npc_name$+"]";
+					mes "Deseja mesmo abrir vagas? ^FF0000Só utilize-a se alguém sair da Sala^000000.";
+					switch(select("Não","Sim")) {
+						case 1:	close;
+						case 2:
+							//Abrindo Vagas no Time Azul
+							for ( set .@i,0; .@i < $rxb_max_p; set .@i,.@i + 1 ) {
+								getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_blue_join$[.@i]);
+								if(getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_blue_join$[.@i]) != 0) {
+									set $rxb_array_slot_blue[.@i],0;
+									set $rxb_vagas_blue,$rxb_vagas_blue+1;
+								}
+								else	if(.@rxb_slots_map$ != "2007rwc_r") {
+									set $rxb_array_slot_blue[.@i],0;
+									set $rxb_vagas_blue,$rxb_vagas_blue+1;
+								}
+								else if(@mapy < 50) {
+									set $rxb_array_slot_blue[.@i],0;
+									set $rxb_vagas_blue,$rxb_vagas_blue+1;
+								}
+							}
+						
+							if($rxb_vagas_blue == 0) {
+								mes "Nenhuma vaga a ser liberada!";
+								close;
+							} else {
+								mes "Vagas liberadas!";
+								donpcevent "rxb_slots::OnSlotsFreeing";
+								close;
+							}
+					}
+			}
+		}
+	}
+	mes "["+.npc_name$+"]";
+	mes "Por favor, saia do seu grupo atual e espere seu(sua) Líder chamá-lo(a) para um grupo.";
+	mes " ";
+	mes "Seu Líder é o(a) "+$rxb_blue_leader$+".";
+	close;
+
+OnTouch:
+	//Verifica se é GM
+	if(getgmlevel() >= 10) end;
+	
+	//Seta o Ticket do Próximo Jogo no NPC
+	set .@rxb_blue_info,$rxb_ticket+1;
+	//Verifica se o Jogador já recebeu esta mensagem
+	if(#rxb_blue_info == .@rxb_blue_info) end;
+	percentheal 100,100;
+	
+	//Verifica se é o Líder
+	if(strcharinfo(0) == $rxb_blue_leader$) {
+		if($rxb_event_type == 1) {
+			mes "["+.npc_name$+"]";
+			mes "Vocé é o(a) Líder do Grupo Azul.";
+			mes " ";
+			mes "Por favor, crie um Grupo, chame todos participantes para o mesmo e faça todos entrarem no Chat.";
+			set #rxb_blue_info,$rxb_ticket+1;
+			close;
+		} else {
+			mes "["+.npc_name$+"]";
+			mes "Vocé é o(a) Líder do Grupo Azul.";
+			mes " ";
+			mes "Por favor, crie um Grupo, chame todos os participantes para o mesmo e volte a falar comigo quando estiver pronto.";
+			set #rxb_blue_info,$rxb_ticket+1;
+			close;
+		}
+	} else {
+		if($rxb_event_type == 1) {
+			mes "["+.npc_name$+"]";
+			mes "Por favor, saia do seu grupo atual, espere seu(sua) Líder chamá-lo(a) para um grupo e entre no Chat.";
+			mes " ";
+			mes "Seu Líder é o(a) "+$rxb_blue_leader$+".";
+			set #rxb_blue_info,$rxb_ticket+1;
+			close;
+		} else {
+			mes "["+.npc_name$+"]";
+			mes "Por favor, saia do seu grupo atual e espere seu(sua) Líder chamá-lo(a) para um grupo.";
+			mes " ";
+			mes "Seu Líder é o(a) "+$rxb_blue_leader$+".";
+			set #rxb_blue_info,$rxb_ticket+1;
+			close;
+		}
+	}
+
+OnKOTH:
+	waitingroom "King of the Hill - Blue",$rxb_max_p,"RXBKOTH#WRC::OnJoined",1;
+	end;
+
+OnKOTHStart:
+	/*set $@KOTH_RXB_Blue, waitingroom2bg("2009rwc_03",7,50,"RXBKOTH#WRC::OnLeave",");*/
+	end;
+
+OnInit:
+	set .npc_name$,"Ajudante Azul";
+	end;
+
+}
+
+-	script	rxb_slots	-1,{
+
+OnSlotsFreeing:
+	//Liberando Vagas do Grupo Azul
+	for ( set .@i,0; .@i < $rxb_max_p; set .@i,.@i + 1 ) {
+		if($rxb_array_slot_blue[.@i] == 0) {
+			if($rxb_array_classe_blue_join[.@i] == 8 || $rxb_array_classe_blue_join[.@i] == 4009) {
+				if($rxb_blue_priest == 1) { set $rxb_blue_priest,0; }
+				if($rxb_blue_priest == 2) { set $rxb_blue_priest,1; }
+			}
+			if($rxb_array_classe_blue_join[.@i] == 9 || $rxb_array_classe_blue_join[.@i] == 4010) {
+				if($rxb_blue_wiz == 1) { set $rxb_blue_wiz,0; }
+				if($rxb_blue_wiz == 2) { set $rxb_blue_wiz,1; }
+			}
+			if($rxb_array_classe_blue_join[.@i] == 12 || $rxb_array_classe_blue_join[.@i] == 4013) { set $rxb_blue_sin,0; }
+			if($rxb_array_classe_blue_join[.@i] == 15 || $rxb_array_classe_blue_join[.@i] == 4016) { set $rxb_blue_monk,0; }
+			if($rxb_array_classe_blue_join[.@i] == 16 || $rxb_array_classe_blue_join[.@i] == 4017) {
+				if($rxb_blue_sage == 1) { set $rxb_blue_sage,0; }
+				if($rxb_blue_sage == 2) { set $rxb_blue_sage,1; }
+			}
+			if($rxb_array_classe_blue_join[.@i] == 18 || $rxb_array_classe_blue_join[.@i] == 4019) { set $rxb_blue_alch,0; }
+			if($rxb_array_classe_blue_join[.@i] == 4049) { set $rxb_blue_sl,0; }
+			if($rxb_array_classe_blue_join[.@i] == 19 || $rxb_array_classe_blue_join[.@i] == 20 || $rxb_array_classe_blue_join[.@i] == 4020 || $rxb_array_classe_blue_join[.@i] == 4021) { set $rxb_blue_clgy,0; }
+			set $rxb_blue,$rxb_blue-1;
+			set $rxb_blue_alive,$rxb_blue_alive-1;
+			set $rxb_event_players,$rxb_event_players-1;
+			if($rxb_blue_ready == 1) {
+				set $rxb_blue_ready,0;
+				areaannounce "2007rwc_r",66,14,133,43,"O outro Grupo não está mais pronto, pois alguém caiu.",bc_blue;
+			}
+		}
+    }
+
+	//Liberando Vagas do Grupo Vermelho
+	for ( set .@i,0; .@i < $rxb_max_p; set .@i,.@i + 1 ) {
+		if($rxb_array_slot_red[.@i] == 0) {
+			if($rxb_array_classe_red_join[.@i] == 8 || $rxb_array_classe_red_join[.@i] == 4009) {
+				if($rxb_red_priest == 1) { set $rxb_red_priest,0; }
+				if($rxb_red_priest == 2) { set $rxb_red_priest,1; }
+			}
+			if($rxb_array_classe_red_join[.@i] == 9 || $rxb_array_classe_red_join[.@i] == 4010) {
+				if($rxb_red_wiz == 1) { set $rxb_red_wiz,0; }
+				if($rxb_red_wiz == 2) { set $rxb_red_wiz,1; }
+			}
+			if($rxb_array_classe_red_join[.@i] == 12 || $rxb_array_classe_red_join[.@i] == 4013) { set $rxb_red_sin,0; }
+			if($rxb_array_classe_red_join[.@i] == 15 || $rxb_array_classe_red_join[.@i] == 4016) { set $rxb_red_monk,0; }
+			if($rxb_array_classe_red_join[.@i] == 16 || $rxb_array_classe_red_join[.@i] == 4017) {
+				if($rxb_red_sage == 1) { set $rxb_red_sage,0; }
+				if($rxb_red_sage == 2) { set $rxb_red_sage,1; }
+			}
+			if($rxb_array_classe_red_join[.@i] == 18 || $rxb_array_classe_red_join[.@i] == 4019) { set $rxb_red_alch,0; }
+			if($rxb_array_classe_red_join[.@i] == 4049) { set $rxb_red_sl,0; }
+			if($rxb_array_classe_red_join[.@i] == 19 || $rxb_array_classe_red_join[.@i] == 20 || $rxb_array_classe_red_join[.@i] == 4020 || $rxb_array_classe_red_join[.@i] == 4021) { set $rxb_red_clgy,0; }
+			set $rxb_red,$rxb_red-1;
+			set $rxb_red_alive,$rxb_red_alive-1;
+			set $rxb_event_players,$rxb_event_players-1;
+			if($rxb_red_ready == 1) {
+				set $rxb_red_ready,0;
+				areaannounce "2007rwc_r",66,154,133,183,"O outro Grupo não está mais pronto, pois alguém caiu.",bc_blue;
+			}
+		}
+    }
+	
+	//Setando total de Vagas Liberadas
+	set .@rxb_total_slots,$rxb_vagas_red+$rxb_vagas_blue;
+	
+	//Anunciando
+	announce "Foram reabertas "+.@rxb_total_slots+" vagas para o Red vs Blue. ",bc_all;
+	announce "Dirija-se ao NPC em Prontera caso deseje participar.",bc_all;
+	
+	//Resetando as Salas de Espera
+	delwaitingroom "Ajudante Azul";	delwaitingroom "Ajudante Vermelho";
+	
+	//Resetando Variaveis relativas aos Slots e liberando Líderes
+	set $rxb_vagas_red,0;
+	set $rxb_vagas_blue,0;
+	set $rxb_teams_locked,0;
+	
+	//Habilitando NPC de Participação
+	enablenpc "Participar#rvb";
+	donpcevent "Participar#rvb::OnWaitingRoomStart";
+	end;
+
+}
+
+-	script	rxb_warper	-1,{
+
+OnBothReady:
+	initnpctimer;
+	end;
+	
+OnTimer1000:
+	getpartymember($rxb_blue_ready_team);
+	if($@partymembercount < $rxb_max_p) {
+		stopnpctimer;
+		set $rxb_red_ready,0;
+		set $rxb_blue_ready,0;
+		mapannounce "2007rwc_r","Ambos os times foram desaprontados pois o Grupo Azul está sem algum participante no Grupo.",bc_map;
+		end;
+	}
+	
+	getpartymember($rxb_red_ready_team);
+	if($@partymembercount < $rxb_max_p) {
+		stopnpctimer;
+		set $rxb_red_ready,0;
+		set $rxb_blue_ready,0;
+		mapannounce "2007rwc_r","Ambos os times foram desaprontados pois o Grupo Vermelho está sem algum participante no Grupo.",bc_map;
+		end;
+	}
+	
+	//Setando Ticket da Partida Atual (Azul)
+	for(set .i,0; .i<$rxb_max_p; set .i,.i+1) {
+		attachrid(getcharid(3,$rxb_array_slot_blue_join$[.i]));
+		set #rxb_ticket,$rxb_ticket;
+	}
+
+	//Setando Ticket da Partida Atual (Vermelho)
+	for(set .i,0; .i<$rxb_max_p; set .i,.i+1) {
+		attachrid(getcharid(3,$rxb_array_slot_red_join$[.i]));
+		set #rxb_ticket,$rxb_ticket;
+	}
+
+	set $rxb_running,1;
+	if($rxb_event_type == 1) {
+		mapannounce "2007rwc_r","Por favor, entrem todos na Sala de Espera.",bc_map;
+		donpcevent "Ajudante Azul::OnKOTH";
+		donpcevent "Ajudante Vermelho::OnKOTH";
+		stopnpctimer;
+		end;
+	} else {
+		areawarp "2007rwc_r",66,154,133,183,$rxb_arena_m$[$rxb_arena_used],$rxb_arena_bx[$rxb_arena_used],$rxb_arena_by[$rxb_arena_used];
+		areawarp "2007rwc_r",66,14,133,43,$rxb_arena_m$[$rxb_arena_used],$rxb_arena_rx[$rxb_arena_used],$rxb_arena_ry[$rxb_arena_used];
+		initnpctimer "Arena#"+$rxb_arena_m$[$rxb_arena_used];
+		stopnpctimer;
+		end;
+	}
+
+}
+
+2007rwc_r,126,28,4	script	Ajudante Vermelho	751,10,10,{
+
+	if(getgmlevel() >= $rxb_gm) {
+RXB_MENU_G:
+		mes "["+.npc_name$+"]";
+		mes "Bem vindo ao Sistema de GMs.";
+		mes "O que deseja fazer?";
+		switch(select("Warp","Debug","Abrir Vagas","Trocar Líder","Nada")) {
+			case 1:
+				next;
+				mes "["+.npc_name$+"]";
+				mes "Qual sala deseja ir?";
+				switch(select("Prontera","Blue","Arena","Esquece...")) {
+					case 1:	warp "prontera",155,155;							close;
+					case 2:	warp ""+$rxb_blue_wait_r$+"",$rxb_blue_wait_x,$rxb_blue_wait_y;	close;
+					case 3:	warp ""+$rxb_arena_ry[$rxb_arena_used]+"",0,0;				close;
+					case 4:	next;												goto RXB_MENU_G;
+				}
+			case 2:
+				next;
+				mes "["+.npc_name$+"]";
+				mes "Líder: "+$rxb_red_leader$;
+				mes "Jogadores Vermelho: "+$rxb_red;
+				mes " ";
+				mes "Jogadores na Sala Vermelha (com GMs): "+getareausers("2007rwc_r",66,14,133,43);
+				mes "Jogadores no Evento :"+$rxb_event_players;
+				mes " ";
+				mes "Líder Avisado: "+$rxb_red_ready_temp;
+				mes "Time Pronto: "+$rxb_red_ready;
+				next;
+				goto RXB_MENU_G;
+			case 3:
+				next;
+				callsub RXB_ROTINE_CHECKS;
+				set $rxb_teams_locked,1;
+				mes "["+.npc_name$+"]";
+				mes "Deseja mesmo abrir vagas?";
+				switch(select("Não","Sim")) {
+					case 1:	set $rxb_teams_locked,0;	goto RXB_MENU_G;
+					case 2:
+RXB_FUNC_SLOTS:
+						next;
+						mes "["+.npc_name$+"]";
+						
+						//Abrindo Vagas no Time Azul
+						for ( set .@i,0; .@i < $rxb_max_p; set .@i,.@i + 1 ) {
+							getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_blue_join$[.@i]);
+							if(getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_blue_join$[.@i]) != 0) {
+								set $rxb_array_slot_blue[.@i],0;
+								set $rxb_vagas_blue,$rxb_vagas_blue+1;
+							}
+							else	if(.@rxb_slots_map$ != "2007rwc_r") {
+								set $rxb_array_slot_blue[.@i],0;
+								set $rxb_vagas_blue,$rxb_vagas_blue+1;
+							}
+							else if(@mapy < 50) {
+								set $rxb_array_slot_blue[.@i],0;
+								set $rxb_vagas_blue,$rxb_vagas_blue+1;
+							}
+						}
+						
+						//Abrindo Vagas no Time Vermelho
+						for ( set .@i,0; .@i < $rxb_max_p; set .@i,.@i + 1 ) {
+							getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_red_join$[.@i]);
+							if(getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_red_join$[.@i]) != 0) {
+								set $rxb_array_slot_red[.@i],0;
+								set $rxb_vagas_red,$rxb_vagas_red+1;
+							}
+							else	if(.@rxb_slots_map$ != "2007rwc_r") {
+								set $rxb_array_slot_red[.@i],0;
+								set $rxb_vagas_red,$rxb_vagas_red+1;
+							}
+							else if(@mapy > 150) {
+								set $rxb_array_slot_red[.@i],0;
+								set $rxb_vagas_red,$rxb_vagas_red+1;
+							}
+						}
+						
+						if($rxb_vagas_red == 0 && $rxb_vagas_blue == 0) {
+							mes "Nenhuma vaga a ser liberada!";
+							set $rxb_teams_locked,0;
+							next;
+							goto RXB_MENU_G;
+						} else {
+							mes "Vagas liberadas!";
+							donpcevent "rxb_slots::OnSlotsFreeing";
+							close;
+						}
+						
+				}
+			case 4:
+				next;
+				callsub RXB_ROTINE_CHECKS;
+				set $rxb_teams_locked,1;
+				mes "["+.npc_name$+"]";
+				mes "Deseja mesmo trocar o Líder?";
+				switch(select("Não","Sim")) {
+					case 1:	set $rxb_teams_locked,0;	close;
+					case 2:
+						next;
+						mes "["+.npc_name$+"]";
+						mes "Qual o ^FF0000NOME^000000 do novo Líder?";
+						mes "Digite o nome ^FF0000EXATO^000000 do Personagem.";
+						input .@rxb_leader_red$;
+						next;
+						mes "["+.npc_name$+"]";
+						mes "Tem certeza de que trocar o Líder Vermelho para "+.@rxb_leader_red$+"?";
+						switch(select("Nao","Sim")) {
+							case 1:	set $rxb_teams_locked,0;	close;
+							case 2:
+								set $rxb_red_leader$,.@rxb_leader_red$;
+								set $rxb_teams_locked,0;
+								areaannounce "2007rwc_r",66,14,133,43,"O Líder Vermelho foi trocado para: "+$rxb_red_leader$+" pelo Game Master "+strcharinfo(0)+".",bc_blue;
+								mes "Líder Trocado.";
+								close;
+						}
+				}
+			case 5:
+				next;
+				mes "["+.npc_name$+"]";
+				mes "Até breve!";
+				close;
+		}
+		
+		//Checagens de Rotinas
+	RXB_ROTINE_CHECKS:
+		if(getgmlevel() < $rxb_sys) {
+			mes "["+.npc_name$+"]";
+			mes "Seu Nível de GM não lhe da acesso a controlar o Evento.";
+			next;
+			goto RXB_MENU_G;
+		}
+		if($rxb_event == 0) {
+			mes "["+.npc_name$+"]";
+			mes "Desulpe mas o evento deve estar Ativo para usar esta opção.";
+			next;
+			goto RXB_MENU_G;
+		}
+		if($rxb_running == 1) {
+			mes "["+.npc_name$+"]";
+			mes "Desulpe mas você não pode fazer está mudança enquanto o Evento está Ativo na Arena.";
+			next;
+			goto RXB_MENU_G;
+		}
+		if($rxb_event_players != $rxb_players_max) {
+			mes "["+.npc_name$+"]";
+			mes "Desculpe mas esta opção só pode ser usada após todos "+$rxb_players_max+" jogadores se registrarem.";
+			mes " ";
+			mes "No momento temos "+$rxb_event_players+" jogadores.";
+			next;
+			goto RXB_MENU_G;
+		}
+		return;
+		
+	}
+	
+	//Funções para os Players
+	
+	//Verifica se o Evento está ativo ou não.
+	if($rxb_event == 0) {
+		mes "["+.npc_name$+"]";
+		mes "Evento cancelado. Desculpe-nos pelo transtorno.";
+		next;
+		warp "prontera",155,155;
+		close;
+	}
+	
+	//Informa que o Grupo já está pronto
+	if(($rxb_red_ready == 1) && (strcharinfo(0) != $rxb_red_leader$)) {
+		mes "["+.npc_name$+"]";
+		mes "Seu Grupo já está pronto. Por favor, aguarde pelo outro Grupo.";
+		close;
+	}
+
+	//Verifica se é o Líder do Grupo e lhe da as opções de Líder
+	if(strcharinfo(0) == $rxb_red_leader$) {
+		
+		//Verifica se o Líder já falou com o NPC uma vez
+		if($rxb_red_ready_temp != 1) {
+			//Informa o Líder como Proceder
+			mes "["+.npc_name$+"]";
+			mes "Vocé é o(a) Líder do Grupo Vermelho.";
+			mes " ";
+			mes "Por favor, crie um Grupo, chame todos os participantes para o mesmo e volte a falar comigo quando estiver pronto.";
+			set $rxb_red_ready_temp,1;
+			close;
+		} else {
+			mes "["+.npc_name$+"]";
+			mes "O que deseja fazer?";
+			switch(select("Aprontar o Time","Liberar Vagas")) {
+				case 1:
+					next;
+					
+					if($rxb_red_ready == 1) {
+						mes "["+.npc_name$+"]";
+						mes "Seu Time já está pronto.";
+						close;
+					}
+					
+					//Pergunta se o Grupo está pronto
+					mes "["+.npc_name$+"]";
+					if($rxb_blue_ready == 1) mes "O outro Grupo está pronto!";
+					mes "Seu Grupo está pronto?";
+					switch(select("Não","Sim")) {
+						case 1:	close;
+						case 2:
+							next;
+							
+							//Verifica se ambos times já estão completos
+							if($rxb_event_players != $rxb_players_max) {
+								mes "["+.npc_name$+"]";
+								mes "Espere até que os "+$rxb_players_max+" participantes entrem nas Salas de Espera, por gentileza.";
+								mes	"Atualmente temos "+$rxb_event_players+" participantes";
+								close;
+							}
+							
+							//Verifica se o Grupo contém todos participantes.
+							getpartymember(getcharid(1));
+							if($@partymembercount < $rxb_max_p) { 
+								mes "["+.npc_name$+"]";
+								mes "Desculpe mas seu grupo não tem "+$rxb_max_p+" Participantes.";
+								mes "Chame todos e tente novamente.";
+								close;
+							}
+							
+							//Verifica se algum GM está modificando os Grupos
+							if($rxb_teams_locked == 1) {
+								mes "["+.npc_name$+"]";
+								mes "Por favor espere alguns instantes, pois um GM está mexendo no Sistema do Red vs Blue.";
+								close;
+							}
+							
+							//Apronta o Time
+							set $rxb_red_ready,1;
+							set $rxb_red_ready_team,getcharid(1);
+							
+							//Caso o outro Grupo esteja pronto, inicia a Partida
+							if(($rxb_red_ready == 1) && ($rxb_blue_ready == 1)) {
+								donpcevent "rxb_warper::OnBothReady";
+								close;
+							} else {
+								mes "["+.npc_name$+"]";
+								mes "O outro Grupo ainda não está pronto. Aguarde alguns instantes.";
+								areaannounce "2007rwc_r",66,154,133,183,"O outro Grupo já está pronto! Apressem-se por gentileza.",bc_blue;
+								close;
+							}
+					}
+				case 2:
+					next;
+					
+					//Verifica se ambos os times já estão completos
+					if($rxb_event_players != $rxb_players_max) {
+						mes "["+.npc_name$+"]";
+						mes "Desculpe mas esta opção só pode ser usada após todos "+$rxb_players_max+" jogadores se registrarem.";
+						mes " ";
+						mes "No momento temos "+$rxb_event_players+" jogadores.";
+						close;
+					}
+					
+					//Verifica se algum GM está modificando os Grupos
+					if($rxb_teams_locked == 1) {
+						mes "["+.npc_name$+"]";
+						mes "Por favor espere alguns instantes, pois um GM está mexendo no Sistema do Red vs Blue.";
+						close;
+					}
+					
+					mes "["+.npc_name$+"]";
+					mes "Deseja mesmo abrir vagas? ^FF0000Só utilize-a se alguém sair da Sala^000000.";
+					switch(select("Não","Sim")) {
+						case 1:	close;
+						case 2:
+							//Abrindo Vagas no Time Vermelho
+							for ( set .@i,0; .@i < $rxb_max_p; set .@i,.@i + 1 ) {
+								getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_red_join$[.@i]);
+								if(getmapxy(.@rxb_slots_map$,@mapx,@mapy,0,$rxb_array_slot_red_join$[.@i]) != 0) {
+									set $rxb_array_slot_red[getarg(0)],0;
+									set $rxb_vagas_red,$rxb_vagas_red+1;
+								}
+								else	if(.@rxb_slots_map$ != "2007rwc_r") {
+									set $rxb_array_slot_red[.@i],0;
+									set $rxb_vagas_red,$rxb_vagas_red+1;
+								}
+								else if(@mapy > 150) {
+									set $rxb_array_slot_red[.@i],0;
+									set $rxb_vagas_red,$rxb_vagas_red+1;
+								}
+							}
+						
+							if($rxb_vagas_red == 0) {
+								mes "Nenhuma vaga a ser liberada!";
+								close;
+							} else {
+								mes "Vagas liberadas!";
+								donpcevent "rxb_slots::OnSlotsFreeing";
+								close;
+							}
+					}
+			}
+		}
+	}
+	mes "["+.npc_name$+"]";
+	mes "Por favor, saia do seu grupo atual e espere seu(sua) Líder chamá-lo(a) para um grupo.";
+	mes " ";
+	mes "Seu Líder é o(a) "+$rxb_red_leader$+".";
+	close;
+
+OnTouch:
+	//Verifica se é GM
+	if(getgmlevel() >= 10) end;
+	
+	//Seta o Ticket do Próximo Jogo no NPC
+	set .@rxb_red_info,$rxb_ticket+1;
+	//Verifica se o Jogador já recebeu esta mensagem
+	if(#rxb_red_info == .@rxb_red_info) end;
+	percentheal 100,100;
+	
+	//Verifica se é o Líder
+	if(strcharinfo(0) == $rxb_red_leader$) {
+		if($rxb_event_type == 1) {
+			mes "["+.npc_name$+"]";
+			mes "Vocé é o(a) Líder do Grupo Vermelho.";
+			mes " ";
+			mes "Por favor, crie um Grupo, chame todos participantes para o mesmo e faça todos entrarem no Chat.";
+			set #rxb_red_info,$rxb_ticket+1;
+			close;
+		} else {
+			mes "["+.npc_name$+"]";
+			mes "Vocé é o(a) Líder do Grupo Vermelho.";
+			mes " ";
+			mes "Por favor, crie um Grupo, chame todos os participantes para o mesmo e volte a falar comigo quando estiver pronto.";
+			set #rxb_red_info,$rxb_ticket+1;
+			close;
+		}
+	} else {
+		if($rxb_event_type == 1) {
+			mes "["+.npc_name$+"]";
+			mes "Por favor, saia do seu grupo atual, espere seu(sua) Líder chamá-lo(a) para um grupo e entre no Chat.";
+			mes " ";
+			mes "Seu Líder é o(a) "+$rxb_red_leader$+".";
+			set #rxb_red_info,$rxb_ticket+1;
+			close;
+		} else {
+			mes "["+.npc_name$+"]";
+			mes "Por favor, saia do seu grupo atual e espere seu(sua) Líder chamá-lo(a) para um grupo.";
+			mes " ";
+			mes "Seu Líder é o(a) "+$rxb_red_leader$+".";
+			set #rxb_red_info,$rxb_ticket+1;
+			close;
+		}
+	}
+
+OnKOTH:
+	waitingroom "King of the Hill - Red",$rxb_max_p,"RXBKOTH#WRC::OnJoined",1;
+	end;
+
+OnKOTHStart:
+/*	set $@KOTH_RXB_Red, waitingroom2bg("2009rwc_03",92,50,"RXBKOTH#WRC::OnLeave","); */
+	end;
+
+OnInit:
+	set .npc_name$,"Ajudante Vermelho";
+	end;
+	
+}
+
+//============================================================================================================
+//DOMINATION MODE
+//============================================================================================================
+
+rwc03,49,72,5	script	Arena#rwc03	733,{
+
+	if(getgmlevel() >= $rxb_gm) {
+RXB_MENU_G:
+		mes "O que deseja fazer?";
+		switch(select("Debug","Cancelar a Partida","Termina a Partida","Warp","Nada")) {
+			case 1:
+				next;
+				mes "ID Last Killed: "+$rxb_arena_killed+".";
+				if($rxb_arena_killed == $rxb_blue_ready_team) mes "Grupo Azul";
+				if($rxb_arena_killed == $rxb_red_ready_team) mes "Grupo Vermelho";
+				mes " ";
+				mes "Vivos Azul: "+$rxb_blue_alive+".";
+				mes "Nome do Grupo Azul: "+getpartyname($rxb_blue_ready_team)+".";
+				mes "Vivos Vermelho: "+$rxb_red_alive+".";
+				mes "Nome do Grupo Vermelho: "+getpartyname($rxb_red_ready_team)+".";
+				mes "Pessoas na Arena contando GMs: "+getmapusers($rxb_arena_m$[$rxb_arena_used]);
+				next;
+				goto RXB_MENU_G;
+			case 2:
+				next;
+				if(getgmlevel() < $rxb_sys) {
+					mes "Seu Nível de GM não lhe da acesso a controlar o Evento.";
+					next;
+					goto RXB_MENU_G;
+				}
+				if($rxb_event == 0) {
+					mes "O Red vs Blue ainda não foi iniciado. Caso deseje inicia-lo, utilize a opção apropriada.";
+					next;
+					goto RXB_MENU_G;
+				}
+				mes "Tem certeza?";
+				switch(select("Sim","Não")) {
+					case 1:
+						mes "Informe o motivo";
+						next;
+						input .@rxb_cancel_reason$;
+						announce "O Game Master "+strcharinfo(0)+" cancelou o Evento Red vs Blue. ",bc_all;
+						announce "Motivo: "+.@rxb_cancel_reason$+".",bc_all;
+						pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";
+						donpcevent "RXB_Init::OnReset";
+						mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Evento foi Cancelado. Dirija-se ao NPC Arena para voltar a Prontera.",bc_blue;
+						areaannounce "2007rwc_r",66,154,133,183,"O Evento foi Cancelado. Fale com o Assistente para voltar a Prontera.",bc_blue;
+						areaannounce "2007rwc_r",66,14,133,43,"O Evento foi Cancelado. Fale com o Assistente para voltar a Prontera.",bc_blue;
+						next;
+						goto RXB_MENU_G;
+					case 2:
+						next;
+						goto RXB_MENU_G;
+				}
+			case 3:
+				next;
+				if(getgmlevel() < $rxb_sys) {
+					mes "Seu Nível de GM não lhe da acesso a controlar o Evento.";
+					next;
+					goto RXB_MENU_G;
+				}
+				if($rxb_running == 0) {
+					mes "Como você pretende decidir um vencedor se a partida sequer começou?";
+					next;
+					goto RXB_MENU_G;
+				}
+				if($rxb_running == 2) {
+					mes "A partida já terminou e um vencedor já foi definido.";
+					next;
+					goto RXB_MENU_G;
+				}
+				mes "^FF0000A T E N Ç Ã O^000000!";
+				mes "Esta opção somente deve ser usada caso alguém tenha saído da Arena antes de morrer.";
+				next;
+				mes "Você saberá se isso ocorreu caso os únicos vivos do mapa sejam de um único Grupo e o Evento não tenha terminado.";
+				next;
+				mes "Deseja mesmo terminar a partida?";
+				switch(select("Não","Sim")) {
+					case 1:	next;	goto RXB_MENU_G;
+					case 2:
+						if($rxb_running != 1) { mes "A partida sequer começou...."; close; }	//Anti Exploit
+						
+						if($rxb_red_alive == $rxb_blue_alive) {
+							mes "Os dois times tem o mesmo número de participantes vivos.";
+							mes "O que deseja fazer?";
+							switch(select("Red Venceu","Blue Venceu","Stalemate")) {
+								case 1:	goto RXB_R_WIN_GM;
+								case 2:	goto RXB_B_WIN_GM;
+								case 3:
+									set $rxb_event,0;	//Evento desligado
+									set $rxb_running,2;	//Partida em fase final - Premição
+									stopnpctimer;
+									mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","TIME'S UP! STALEMATE! Os dois times perderam!",bc_map,0xFF0000;
+									set $rxb_games,$rxb_games+1;	set $rxb_games_stale,$rxb_games_stale+1;
+									set $rxb_ticket_last,$rxb_ticket;				//Ticket do Ultimo Jogo
+									if($rxb_running_sd) set $rxb_running_sd,0;		//Setando Morte Súbita
+									set $rxb_winner,0;								//Resetando o vencedor para que ambos saiam da Arena
+									announce "Os dois times perderam no Red vs Blue.",bc_all;
+									stopnpctimer; 				initnpctimer "ArenaTimerEnd#RXB";
+									sleep2 2000;					donpcevent "Raise#"+$rxb_arena_m$[$rxb_arena_used]+"::OnRaise";
+									pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";	stopnpctimer;
+									close;
+							}
+						}
+						
+						if($rxb_blue_alive > $rxb_red_alive) {					//Time Azul venceu
+							RXB_B_WIN_GM:
+							set $rxb_event,0;	//Evento desligado
+							set $rxb_running,2;	//Partida em fase final - Premição
+							stopnpctimer;
+							if($rxb_winner == $rxb_blue_ready_team) {
+								set $rxb_winner_streak,$rxb_winner_streak+1;	//Win Streak
+							} else {
+								set $rxb_winner,$rxb_blue_ready_team;			//Time Vencedor
+								set $rxb_winner_streak,1;						//Win Streak
+							}
+							set $rxb_games,$rxb_games+1;
+							set $rxb_games_blue,$rxb_games_blue+1;
+							set $rxb_ticket_last,$rxb_ticket;					//Ticket do Ultimo Jogo
+							set $npc_arena_locked,1;							//Travando o NPC da Arena pro Líder do Time Vencedor
+							if($rxb_event_cont_m == 1) set $rxb_event_cont,1;
+							if($rxb_blue_alive != $rxb_max_p) announce "O Grupo Azul do Líder "+$rxb_blue_leader$+" foi o vencedor do Red vs Blue!",bc_all;
+							if($rxb_blue_alive == $rxb_max_p) announce "O Grupo Azul do Líder "+$rxb_blue_leader$+" obteve uma Flawless Victory no Red vs Blue!",bc_all;
+							mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Time Azul venceu por decisão de um GM! Pontuação atual, Blue "+($rxb_max_p-$rxb_red_alive)+", Red "+($rxb_max_p-$rxb_blue_alive)+".",bc_blue;
+							initnpctimer "ArenaTimerEnd#RXB";
+							sleep2 2000; mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Líder do Grupo Vencedor tem 1 minuto para decidir se continuam a jogar.",bc_blue;
+							donpcevent "Raise#"+$rxb_arena_m$[$rxb_arena_used]+"::OnRaise";
+							pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";
+							close;
+						}
+						
+						if($rxb_red_alive > $rxb_blue_alive) {					//Time Vermelho venceu
+							RXB_R_WIN_GM:
+							set $rxb_event,0;	//Evento desligado
+							set $rxb_running,2;	//Partida em fase final - Premição
+							stopnpctimer;
+							if($rxb_winner == $rxb_red_ready_team) {
+								set $rxb_winner_streak,$rxb_winner_streak+1;	//Win Streak
+							} else {
+								set $rxb_winner,$rxb_red_ready_team;			//Time Vencedor
+								set $rxb_winner_streak,1;						//Win Streak
+							}
+							set $rxb_games,$rxb_games+1;
+							set $rxb_games_red,$rxb_games_red+1;
+							set $rxb_ticket_last,$rxb_ticket;					//Ticket do Ultimo Jogo
+							set $npc_arena_locked,1;							//Travando o NPC da Arena pro Líder do Time Vencedor
+							if($rxb_event_cont_m == 1) set $rxb_event_cont,1;
+							if($rxb_red_alive != $rxb_max_p) announce "O Grupo Vermelho do Líder "+$rxb_red_leader$+" foi o vencedor do Red vs Blue!",bc_all;
+							if($rxb_red_alive == $rxb_max_p) announce "O Grupo Vermelho do Líder "+$rxb_red_leader$+" obteve uma Flawless Victory no Red vs Blue!",bc_all;
+							mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Time Vermelho venceu por decisão de um GM! Pontuação atual, Blue "+($rxb_max_p-$rxb_red_alive)+", Red "+($rxb_max_p-$rxb_blue_alive)+".",bc_blue;
+							initnpctimer "ArenaTimerEnd#RXB";
+							sleep2 2000; mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Líder do Grupo Vencedor tem 1 minuto para decidir se continuam a jogar.",bc_blue;
+							donpcevent "Raise#"+$rxb_arena_m$[$rxb_arena_used]+"::OnRaise";
+							pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";
+							close;
+						}
+				}
+			case 4:
+				next;
+				mes "Qual sala gostaria de ir?";
+				switch(select("Prontera","Sala Azul","Sala Vermelha","Voltar")) {
+					case 1:	warp "prontera",155,155;										close;
+					case 2:	warp ""+$rxb_blue_wait_r$+"",$rxb_blue_wait_x,$rxb_blue_wait_y;	close;
+					case 3:	warp ""+$rxb_red_wait_r$+"",$rxb_red_wait_x,$rxb_red_wait_y;	close;
+					case 4:	next;															goto RXB_MENU_G;
+				}
+			case 5:	close;
+		}
+	}
+	
+	if($rxb_running == 2) {
+		//Integrante do Time Vencedor
+		if(getcharid(1) == $rxb_winner) {
+			mes "Parabéns! Você venceu o Red vs. Blue!";
+			
+			if($rxb_event_cont >= $rxb_event_cont_m) {
+				mes "Como já atingimos "+$rxb_event_cont+" jogos consecultivos no Evento, aguarde até que seja teletransportado para Prontera.";
+				close;
+			}
+			
+			if(($rxb_winner_talked == 0) && (strcharinfo(0) != $rxb_blue_leader$) && (strcharinfo(0) != $rxb_red_leader$)) {
+				mes "Aguarde seu Líder responder o sistema para receber seu prêmio.";
+				close;
+			}
+			
+			//Checando se é o Líder para o Game Streak - Blue
+			if(($rxb_winner == $rxb_blue_ready_team) && (strcharinfo(0) == $rxb_blue_leader$)) {
+				if($npc_arena_locked == 1) {
+					mes "Aguarde até que os jogadores do time perdedor saiam para poder falar comigo.";
+					close;
+				}
+				mes "Gostaria que seu time continuasse a jogar?";
+				switch(select("Não","Sim")) {
+					case 1:
+						set $rxb_winner_talked,1;
+						set $rxb_winner_con,0;
+						stopnpctimer;
+						break;
+					case 2:
+						set $rxb_winner_talked,1;
+						set $rxb_winner_con,1;
+						set $rxb_event_cont,$rxb_event_cont+1;
+						stopnpctimer;
+						break;
+				}
+				
+				getpartymember($rxb_blue_ready_team);
+				for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+					if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+						attachrid(getcharid(3,$@partymembername$[$@k]));
+						getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+						if(.@rxb_map$ == $rxb_arena_m$[$rxb_arena_used]) {
+							set #rxb_participated,#rxb_participated+1;											//Participou
+							set #rxb_won,#rxb_won+1;															//Venceu
+							set #rxb_pontos,#rxb_pontos+10;														//10 Pontos por vencer a Partida
+							set #rxb_participated_blue,#rxb_participated_blue+1;								//Participou como Azul
+							set #rxb_participated_blue_won,#rxb_participated_blue_won+1;						//Venceu como Azul
+							set #rxb_pontos,#rxb_pontos+$rxb_blue_killed;										//1 Ponto por personagem do outro time morto
+							if($rxb_blue_alive == $rxb_max_p) set #rxb_pontos,#rxb_pontos+50;					//50 Pontos por Flawless
+							if(#rxb_win_streak < $rxb_winner_streak) set #rxb_win_streak,$rxb_winner_streak;	//Setando o Winning Streak
+							if($rxb_winner_con == 1) { warp "2007rwc_r",90,163; }
+							else { warp "prontera",155,155; }
+						}
+					}
+				}
+				if($rxb_winner_con == 1) {
+					announce "O Grupo Azul do Líder "+$rxb_blue_leader$+" decidiu continuar! Quem irá derrotá-los? Participe!",bc_all;
+					donpcevent "RXB_Init::OnReset_B";
+					donpcevent "RXB_Init::OnRXBStart";
+					set $rxb_last_partida$,gettimestr("%d-%m-%Y %H:%M:%S",21);
+				}
+			}
+			
+			//Checando se é o Líder para o Game Streak - Red
+			if(($rxb_winner == $rxb_red_ready_team) && (strcharinfo(0) == $rxb_red_leader$)) {
+				mes "Gostaria que seu time continuasse a jogar?";
+				switch(select("Não","Sim")) {
+					case 1:
+						set $rxb_winner_talked,1;
+						set $rxb_winner_con,0;
+						stopnpctimer;
+						break;
+					case 2:
+						set $rxb_winner_talked,1;
+						set $rxb_winner_con,1;
+						stopnpctimer;
+						break;
+				}
+				
+				getpartymember($rxb_red_ready_team);
+				for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+					if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+						attachrid(getcharid(3,$@partymembername$[$@k]));
+						getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+						if(.@rxb_map$ == $rxb_arena_m$[$rxb_arena_used]) {
+							set #rxb_participated,#rxb_participated+1;											//Participou
+							set #rxb_won,#rxb_won+1;															//Venceu
+							set #rxb_pontos,#rxb_pontos+10;														//10 Pontos por vencer a Partida
+							set #rxb_participated_red,#rxb_participated_red+1;									//Participou como Vermelho
+							set #rxb_participated_red_won,#rxb_participated_red_won+1;							//Venceu como Vermelho
+							set #rxb_pontos,#rxb_pontos+$rxb_red_killed;										//1 Ponto por personagem do outro time morto
+							if($rxb_red_alive == $rxb_max_p) set #rxb_pontos,#rxb_pontos+50;					//50 Pontos por Flawless
+							if(#rxb_win_streak < $rxb_winner_streak) set #rxb_win_streak,$rxb_winner_streak;	//Setando o Winning Streak
+							if($rxb_winner_con == 1) { warp "2007rwc_r",126,23; }
+							else { warp "prontera",155,155; }
+						}
+					}
+				}
+				if($rxb_winner_con == 1) {
+					announce "O Grupo Vermelho do Líder "+$rxb_red_leader$+" decidiu continuar! Quem irá derrotá-los? Participe!",bc_all;
+					donpcevent "RXB_Init::OnReset_R";
+					donpcevent "RXB_Init::OnRXBStart";
+					set $rxb_last_partida$,gettimestr("%d-%m-%Y %H:%M:%S",21);
+				}
+				end;
+			}
+			mes "Erro no sistema. Informe a um GM: ERR 001.";
+			close;
+		}
+		
+		//Não Venceu
+		mes "Obrigado por Participar do Red vs. Blue!";
+		mes "Mais sorte na próxima vez.";
+		close;
+	}
+
+	//Evento ativo na Arena
+	if($rxb_running == 1) { end; }
+
+	//Evento Não Iniciado ou Terminado
+	if($rxb_event == 0) {
+		warp "prontera",155,155;
+		close;
+	}
+
+OnTimer210000:
+	mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","Só restam mais 3 minutos e meio de partida!",bc_blue;
+	end;
+
+OnTimer420000:
+	if($rxb_blue_alive > $rxb_red_alive) {					//Time Azul venceu pelo tempo.
+		set $rxb_event,0;
+		set $rxb_running,2;
+		if($rxb_winner == $rxb_blue_ready_team) {
+			set $rxb_winner_streak,$rxb_winner_streak+1;	//Win Streak
+		} else {
+			set $rxb_winner,$rxb_blue_ready_team;			//Time Vencedor
+			set $rxb_winner_streak,1;						//Win Streak
+		}
+		set $rxb_games,$rxb_games+1;
+		set $rxb_games_blue,$rxb_games_blue+1;
+		set $rxb_ticket_last,$rxb_ticket;					//Ticket do Ultimo Jogo
+		set $npc_arena_locked,1;							//Travando o NPC da Arena pro Líder do Time Vencedor
+		if($rxb_event_cont_m == 1) set $rxb_event_cont,1;
+		if($rxb_blue_alive != $rxb_max_p) announce "O Grupo Azul do Líder "+$rxb_blue_leader$+" foi o vencedor do Red vs Blue!",bc_all;
+		if($rxb_blue_alive == $rxb_max_p) announce "O Grupo Azul do Líder "+$rxb_blue_leader$+" obteve uma Flawless Victory no Red vs Blue!",bc_all;
+		mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Time Azul venceu por "+($rxb_max_p-$rxb_red_alive)+" a "+($rxb_max_p-$rxb_blue_alive)+" pelo Limite de Tempo.",bc_blue;
+		stopnpctimer; initnpctimer "ArenaTimerEnd#RXB";
+		sleep 2000; mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Líder do Grupo Vencedor tem 1 minuto para decidir se continuam a jogar.",bc_blue;
+		donpcevent "Raise#"+$rxb_arena_m$[$rxb_arena_used]+"::OnRaise";
+		pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";
+		end;
+	}
+	if($rxb_red_alive > $rxb_blue_alive) {					//Time Vermelho venceu pelo tempo.
+		set $rxb_event,0;
+		set $rxb_running,2;
+		if($rxb_winner == $rxb_red_ready_team) {
+			set $rxb_winner_streak,$rxb_winner_streak+1;	//Win Streak
+		} else {
+			set $rxb_winner,$rxb_red_ready_team;			//Time Vencedor
+			set $rxb_winner_streak,1;						//Win Streak
+		}
+		set $rxb_games,$rxb_games+1;
+		set $rxb_games_red,$rxb_games_red+1;
+		set $rxb_ticket_last,$rxb_ticket;					//Ticket do Ultimo Jogo
+		set $npc_arena_locked,1;							//Travando o NPC da Arena pro Líder do Time Vencedor
+		if($rxb_event_cont_m == 1) set $rxb_event_cont,1;
+		if($rxb_red_alive != $rxb_max_p) announce "O Grupo Vermelho do Líder "+$rxb_red_leader$+" foi o vencedor do Red vs Blue!",bc_all;
+		if($rxb_red_alive == $rxb_max_p) announce "O Grupo Vermelho do Líder "+$rxb_red_leader$+" obteve uma Flawless Victory no Red vs Blue!",bc_all;
+		mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Time Vermelho venceu por "+($rxb_max_p-$rxb_blue_alive)+" a "+($rxb_max_p-$rxb_red_alive)+" pelo Limite de Tempo.",bc_blue;
+		stopnpctimer; initnpctimer "ArenaTimerEnd#RXB";
+		sleep 2000; mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Líder do Grupo Vencedor tem 1 minuto para decidir se continuam a jogar.",bc_blue;
+		donpcevent "Raise#"+$rxb_arena_m$[$rxb_arena_used]+"::OnRaise";
+		pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";
+		end;
+	}
+	if($rxb_red_alive == $rxb_blue_alive) {					//Sudden Death
+		mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","TIME'S UP! MORTE SÚBITA! O primeiro a morrer perde!",bc_map,0xFF0000;
+		set $rxb_running_sd,1;								//Setando Morte Súbita
+		end;
+	}
+	end;
+
+OnTimer600000:
+	mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","TIME'S UP! STALEMATE! Os dois times perderam!",bc_map,0xFF0000;
+	set $rxb_event,0;				set $rxb_running,2;
+	set $rxb_games,$rxb_games+1;	set $rxb_games_stale,$rxb_games_stale+1;
+	set $rxb_ticket_last,$rxb_ticket;	//Ticket do Ultimo Jogo
+	set $rxb_running_sd,0;				//Setando Morte Súbita
+	set $rxb_winner,0;					//Resetando o vencedor para que ambos saiam da Arena
+	announce "O tempo acabou! Os dois times perderam no Red vs Blue.",bc_all;
+	stopnpctimer; 				initnpctimer "ArenaTimerEnd#RXB";
+	sleep 2000;					donpcevent "Raise#"+$rxb_arena_m$[$rxb_arena_used]+"::OnRaise";
+	pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";	stopnpctimer;
+	end;
+
+}
+
+2009rwc_01,46,46,5	duplicate(Arena#rwc03)	Arena#2009rwc_01	733
+2009rwc_04,49,29,5	duplicate(Arena#rwc03)	Arena#2009rwc_04	733
+
+rwc03,1,1,1	script	Raise#rwc03	111,{
+
+OnRaise:
+	atcommand "@raisemap";
+	end;
+
+}
+
+2009rwc_01,1,1,1	script	Raise#2009rwc_01	111,{
+
+OnRaise:
+	atcommand "@raisemap";
+	end;
+
+}
+
+2009rwc_04,1,1,1	script	Raise#2009rwc_04	111,{
+
+OnRaise:
+	atcommand "@raisemap";
+	end;
+
+}
+
+-	script	RXB_KillCount	-1,{
+
+	//Eventos de Morte na Arena
+OnPCKillEvent:
+	if($rxb_running != 1) { end; }							//Checando status da Partida
+	
+	set $rxb_arena_killed,getcharid(1);						//ID do Grupo do ultimo personagem morto no Servidor
+	getmapxy .@rxb_map_killed$,.@x,.@y,0;					//Local onde isto ocorreu.
+	set .@rxb_max_p,$rxb_max_p-1;							//Variavel para o Anti Exploit ([Máximo por Grupo]-1)
+	if(.@rxb_map_killed$ != $rxb_arena_m$[$rxb_arena_used]) end;	//Ignora se não for no mapa da Arena.
+	
+	//Time Azul
+	if($rxb_arena_killed == $rxb_blue_ready_team) {
+		if($rxb_running != 1) end;										//Anti Exploit
+		if(.@rxb_map_killed$ != $rxb_arena_m$[$rxb_arena_used]) end;	//Anti Exploit
+		set $rxb_red_alive,$rxb_red_alive-1;
+		if($rxb_blue_killed <= .@rxb_max_p) { set $rxb_blue_killed,$rxb_blue_killed+1; }	//Anti Exploit
+		if($rxb_red_alive == 0 || $rxb_running_sd == 1) {
+			set $rxb_event,0;
+			set $rxb_running,2;
+			if($rxb_winner == $rxb_blue_ready_team) {
+				set $rxb_winner_streak,$rxb_winner_streak+1;			//Win Streak
+			} else {
+				set $rxb_winner,$rxb_blue_ready_team;					//Time Vencedor
+				set $rxb_winner_streak,1;								//Win Streak
+			}
+			set $rxb_games,$rxb_games+1;
+			set $rxb_games_blue,$rxb_games_blue+1;
+			set $rxb_ticket_last,$rxb_ticket;							//Ticket do Ultimo Jogo
+			set $npc_arena_locked,1;									//Travando o NPC da Arena pro Líder do Time Vencedor
+			if($rxb_event_cont_m == 1) set $rxb_event_cont,1;
+			if($rxb_running_sd == 1) set $rxb_running_sd,0;
+			if($rxb_blue_alive != $rxb_max_p) announce "O Grupo Azul do Líder "+$rxb_blue_leader$+" foi o vencedor do Red vs Blue!",bc_all;
+			if($rxb_blue_alive == $rxb_max_p) announce "O Grupo Azul do Líder "+$rxb_blue_leader$+" obteve uma Flawless Victory no Red vs Blue!",bc_all;
+			stopnpctimer "Arena#"+$rxb_arena_m$[$rxb_arena_used]; initnpctimer "ArenaTimerEnd#RXB";
+			sleep 2000; mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Líder do Grupo Vencedor tem 1 minuto para decidir se continuam a jogar.",bc_blue;
+			donpcevent "Raise#"+$rxb_arena_m$[$rxb_arena_used]+"::OnRaise";
+			pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";
+			end;
+		}
+		end;
+	}
+	
+	//Time Vermelho
+	if($rxb_arena_killed == $rxb_red_ready_team) {
+		if($rxb_running != 1) end;										//Anti Exploit
+		if(.@rxb_map_killed$ != $rxb_arena_m$[$rxb_arena_used]) end;	//Anti Exploit
+		set $rxb_blue_alive,$rxb_blue_alive-1;
+		if($rxb_red_killed <= .@rxb_max_p) { set $rxb_red_killed,$rxb_red_killed+1; }	//Anti Exploit
+		if($rxb_blue_alive == 0 || $rxb_running_sd == 1) {
+			set $rxb_event,0;
+			set $rxb_running,2;
+			if($rxb_winner == $rxb_red_ready_team) {
+				set $rxb_winner_streak,$rxb_winner_streak+1;			//Win Streak
+			} else {
+				set $rxb_winner,$rxb_red_ready_team;					//Time Vencedor
+				set $rxb_winner_streak,1;								//Win Streak
+			}
+			set $rxb_games,$rxb_games+1;
+			set $rxb_games_red,$rxb_games_red+1;
+			set $rxb_ticket_last,$rxb_ticket;							//Ticket do Ultimo Jogo
+			set $npc_arena_locked,1;									//Travando o NPC da Arena pro Líder do Time Vencedor
+			if($rxb_event_cont_m == 1) set $rxb_event_cont,1;
+			if($rxb_running_sd == 1) set $rxb_running_sd,0;
+			if($rxb_red_alive != $rxb_max_p) announce "O Grupo Vermelho do Líder "+$rxb_red_leader$+" foi o vencedor do Red vs Blue!",bc_all;
+			if($rxb_red_alive == $rxb_max_p) announce "O Grupo Vermelho do Líder "+$rxb_red_leader$+" obteve uma Flawless Victory no Red vs Blue!",bc_all;
+			stopnpctimer "Arena#"+$rxb_arena_m$[$rxb_arena_used]; initnpctimer "ArenaTimerEnd#RXB";
+			sleep 2000; mapannounce ""+$rxb_arena_m$[$rxb_arena_used]+"","O Líder do Grupo Vencedor tem 1 minuto para decidir se continuam a jogar.",bc_blue;
+			donpcevent "Raise#"+$rxb_arena_m$[$rxb_arena_used]+"::OnRaise";
+			pvpoff ""+$rxb_arena_m$[$rxb_arena_used]+"";
+			end;
+		}
+		end;
+	}
+	end;
+
+}
+
+-	script	ArenaTimerEnd#RXB	-1,{
+	
+OnTimer10000:
+	//Retirando membros do Grupo Perdedor da Arena
+	if($rxb_running == 2) {
+		if($rxb_winner != $rxb_blue_ready_team) {
+			getpartymember($rxb_blue_ready_team);
+			for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+				if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+					attachrid(getcharid(3,$@partymembername$[$@k]));
+					getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+					if(.@rxb_map$ == $rxb_arena_m$[$rxb_arena_used]) {
+						set #rxb_participated,#rxb_participated+1;				//Participou
+						set #rxb_participated_blue,#rxb_participated_blue+1;	//Participou Azul
+						set $rxb_blue,$rxb_blue-1;
+						set #rxb_pontos,#rxb_pontos+$rxb_blue_killed;			//1 Ponto por personagem do outro time morto
+						warp "prontera",155,155;
+					}
+				}
+			}
+		}
+		if($rxb_winner != $rxb_red_ready_team) {
+			getpartymember($rxb_red_ready_team);
+			for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+				if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+					attachrid(getcharid(3,$@partymembername$[$@k]));
+					getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+					if(.@rxb_map$ == $rxb_arena_m$[$rxb_arena_used]) {
+						set #rxb_participated,#rxb_participated+1;				//Participou
+						set #rxb_participated_red,#rxb_participated_red+1;		//Participou Vermelho
+						set $rxb_red,$rxb_red-1;
+						set #rxb_pontos,#rxb_pontos+$rxb_red_killed;			//1 Ponto por personagem do outro time morto
+						warp "prontera",155,155;
+					}
+				}
+			}
+		}
+		if($npc_arena_locked) set $npc_arena_locked,0;	//Destravando o NPC da Arena
+		end;
+	}
+	if($rxb_winner == 0) stopnpctimer;
+	if($rxb_event_cont >= $rxb_event_cont_m) { sleep 5000; goto OnTimer60000; }
+	end;
+	
+OnTimer60000:
+	//Decidindo pelo Líder que não irão continuar.
+	if($rxb_running == 2) {
+		stopnpctimer;
+		set $rxb_winner_talked,1; set $rxb_winner_con,0;
+		
+		if($rxb_winner == $rxb_red_ready_team) {
+			getpartymember($rxb_red_ready_team);
+			for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+				if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+					attachrid(getcharid(3,$@partymembername$[$@k]));
+					getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+					if(.@rxb_map$ == $rxb_arena_m$[$rxb_arena_used]) {
+						set #rxb_participated,#rxb_participated+1;											//Participou
+						set #rxb_won,#rxb_won+1;															//Venceu
+						set #rxb_pontos,#rxb_pontos+10;														//10 Pontos por vencer a Partida
+						set #rxb_participated_red,#rxb_participated_red+1;									//Participou como Vermelho
+						set #rxb_participated_red_won,#rxb_participated_red_won+1;							//Venceu como Vermelho
+						set #rxb_pontos,#rxb_pontos+$rxb_red_killed;										//1 Ponto por personagem do outro time morto
+						if($rxb_red_alive == $rxb_max_p) set #rxb_pontos,#rxb_pontos+50;					//50 Pontos por Flawless
+						if(#rxb_win_streak < $rxb_winner_streak) set #rxb_win_streak,$rxb_winner_streak;	//Setando o Winning Streak
+						else { warp "prontera",155,155; }
+					}
+				}
+			}
+		}
+		if($rxb_winner == $rxb_blue_ready_team) {
+			getpartymember($rxb_blue_ready_team);
+			for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+				if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+					attachrid(getcharid(3,$@partymembername$[$@k]));
+					getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+					if(.@rxb_map$ == $rxb_arena_m$[$rxb_arena_used]) {
+						set #rxb_participated,#rxb_participated+1;											//Participou
+						set #rxb_won,#rxb_won+1;															//Venceu
+						set #rxb_pontos,#rxb_pontos+10;														//10 Pontos por vencer a Partida
+						set #rxb_participated_blue,#rxb_participated_blue+1;								//Participou como Azul
+						set #rxb_participated_blue_won,#rxb_participated_blue_won+1;						//Venceu como Azul
+						set #rxb_pontos,#rxb_pontos+$rxb_blue_killed;										//1 Ponto por personagem do outro time morto
+						if($rxb_blue_alive == $rxb_max_p) set #rxb_pontos,#rxb_pontos+50;					//50 Pontos por Flawless
+						if(#rxb_win_streak < $rxb_winner_streak) set #rxb_win_streak,$rxb_winner_streak;	//Setando o Winning Streak
+						else { warp "prontera",155,155; }
+					}
+				}
+			}
+		}
+		end;
+	}
+}
+
+//============================================================================================================
+//KING OF THE HILL MODE
+//============================================================================================================
+
+//Controlador das Waiting Room do King of the Hill
+//============================================================================================================
+-	script	RXBKOTH#WRC	-1,{
+
+OnJoined:
+	set $@Blue, getwaitingroomstate(0,"Ajudante Azul");
+	set $@Red, getwaitingroomstate(0,"Ajudante Vermelho");
+	
+	if($@Blue == $rxb_max_p && $@Red == $rxb_max_p) {
+		donpcevent "Ajudante Azul::OnKOTHStart";
+		donpcevent "Ajudante Vermelho::OnKOTHStart";
+		sleep 1000;
+		bg_warp $@KOTH_RXB_Blue,"2009rwc_03",7,50;
+		bg_warp $@KOTH_RXB_Red,"2009rwc_03",92,50;
+		hideoffnpc "KOTH1";
+		set $koth_instruc,0;	initnpctimer "Counter#KOTH";
+	}
+	end;
+
+OnLeave:
+	end;
+
+}
+
+//Controlador do Control Point da Arena
+//============================================================================================================
+2009rwc_03,49,49,5	script	Control Point#KOTH::KOTH1	802,6,6,{
+	end;
+
+OnInit:
+	hideonnpc "Blue#KOTH";
+	hideonnpc "Red#KOTH";
+	hideonnpc "KOTH1";
+	set $koth_blue_counting,0;	set $koth_red_counting,0;	set $koth_instruc,0;
+	end;
+
+OnTouch:
+	if(getcharid(1) == $rxb_blue_ready_team) {
+		if($koth_blue_counting == 0 && $koth_red_counting == 0) {
+			donpcevent "Blue#KOTH::OnGotStart";
+			end;
+		}
+		end;
+	}
+	if(getcharid(1) == $rxb_red_ready_team) {
+		if($koth_blue_counting == 0 && $koth_red_counting == 0) {
+			donpcevent "Red#KOTH::OnGotStart";
+			end;
+		}
+		end;
+	}
+	end;
+
+}
+
+//King of the Hill Mode - Controlador Blue
+//============================================================================================================
+2009rwc_03,49,49,5	script	Blue#KOTH	1914,{
+	end;
+
+OnGotStart:
+	initnpctimer;
+	set $koth_blue_counting,1;
+	specialeffect EF_DELUGE;
+	bg_monster $@KOTH_RXB_Blue,"2009rwc_03",49,49,"Blue",1914,"Blue#KOTH::OnGotStop";
+	mapannounce "2009rwc_03","O Time Azul pegou o Ponto! Segure-o por 60 segundos para vencer!",bc_map | bc_blue;
+	hideonnpc "KOTH1";
+	end;
+
+OnGotStop:
+	stopnpctimer;
+	set $koth_blue_counting,0;
+	donpcevent "Recont#KOTH::OnStartRecont";
+	end;
+	
+OnGotRestart:
+	startnpctimer;
+	set $koth_blue_counting,1;
+	specialeffect EF_DELUGE;
+	bg_monster $@KOTH_RXB_Blue,"2009rwc_03",49,49,"Blue",1914,"Blue#KOTH::OnGotStop";
+	mapannounce "2009rwc_03","O Time Azul pegou o ponto novamente! Restam "+((60000-getnpctimer(0,"Red#KOTH"))/1000)+" segundos para vencer!",bc_map | bc_blue;
+	end;
+
+//0 a 1 Minuto
+OnTimer10000:	specialeffect EF_DELUGE;	end;
+OnTimer20000:	specialeffect EF_DELUGE;	end;
+OnTimer30000:	specialeffect EF_DELUGE;	end;
+OnTimer40000:	specialeffect EF_DELUGE;	end;
+OnTimer50000:	specialeffect EF_DELUGE;	end;
+OnTimer60000:	specialeffect EF_DELUGE;	end;
+
+//1 a 2 Minutos
+OnTimer70000:	specialeffect EF_DELUGE;	end;
+OnTimer80000:	specialeffect EF_DELUGE;	end;
+OnTimer90000:	specialeffect EF_DELUGE;	end;
+OnTimer100000:	specialeffect EF_DELUGE;	end;
+OnTimer110000:	specialeffect EF_DELUGE;	end;
+OnTimer120000:	specialeffect EF_DELUGE;	end;
+
+//2 a 3 Minutos
+OnTimer125000:	specialeffect EF_DELUGE;	end; OnTimer130000:	specialeffect EF_DELUGE;	end;
+OnTimer135000:	specialeffect EF_DELUGE;	end; OnTimer140000:	specialeffect EF_DELUGE;	end;
+OnTimer145000:	specialeffect EF_DELUGE;	end; OnTimer150000:	specialeffect EF_DELUGE;	end;
+OnTimer155000:	specialeffect EF_DELUGE;	end; OnTimer160000:	specialeffect EF_DELUGE;	end;
+OnTimer165000:	specialeffect EF_DELUGE;	end; OnTimer170000:	specialeffect EF_DELUGE;	end;
+OnTimer175000:	specialeffect EF_DELUGE;	end; OnTimer180000:	specialeffect EF_DELUGE;	end;
+
+//3 a 4 Minutos
+OnTimer182500:	specialeffect EF_DELUGE;	end; OnTimer185000:	specialeffect EF_DELUGE;	end; OnTimer187500:	specialeffect EF_DELUGE;	end;
+OnTimer190000:	specialeffect EF_DELUGE;	end; OnTimer192500:	specialeffect EF_DELUGE;	end; OnTimer195000:	specialeffect EF_DELUGE;	end; OnTimer197500:	specialeffect EF_DELUGE;	end;
+OnTimer200000:	specialeffect EF_DELUGE;	end; OnTimer202500:	specialeffect EF_DELUGE;	end; OnTimer205000:	specialeffect EF_DELUGE;	end; OnTimer207500:	specialeffect EF_DELUGE;	end;
+OnTimer210000:	specialeffect EF_DELUGE;	end; OnTimer212500:	specialeffect EF_DELUGE;	end; OnTimer215000:	specialeffect EF_DELUGE;	end; OnTimer217500:	specialeffect EF_DELUGE;	end;
+OnTimer220000:	specialeffect EF_DELUGE;	end; OnTimer222500:	specialeffect EF_DELUGE;	end; OnTimer225000:	specialeffect EF_DELUGE;	end; OnTimer227500:	specialeffect EF_DELUGE;	end;
+OnTimer230000:	specialeffect EF_DELUGE;	end; OnTimer232500:	specialeffect EF_DELUGE;	end; OnTimer235000:	specialeffect EF_DELUGE;	end; OnTimer237500:	specialeffect EF_DELUGE;	end;
+
+//4 a 4 Minutos e 30 Segundos
+OnTimer240000:	specialeffect EF_DELUGE;	end; OnTimer242500:	specialeffect EF_DELUGE;	end; OnTimer245000:	specialeffect EF_DELUGE;	end; OnTimer247500:	specialeffect EF_DELUGE;	end;
+OnTimer250000:	specialeffect EF_DELUGE;	end; OnTimer252500:	specialeffect EF_DELUGE;	end; OnTimer255000:	specialeffect EF_DELUGE;	end; OnTimer257500:	specialeffect EF_DELUGE;	end;
+OnTimer260000:	specialeffect EF_DELUGE;	end; OnTimer262500:	specialeffect EF_DELUGE;	end; OnTimer265000:	specialeffect EF_DELUGE;	end; OnTimer267500:	specialeffect EF_DELUGE;	end;
+
+//4 Minutos e 30 Segundos a 4 Minutos e 50 Segundos
+OnTimer270000:	specialeffect EF_DELUGE;	end; OnTimer271750:	specialeffect EF_DELUGE;	end; OnTimer273500:	specialeffect EF_DELUGE;	end; OnTimer275250:	specialeffect EF_DELUGE;	end;  OnTimer277000:	specialeffect EF_DELUGE;	end; OnTimer278750:	specialeffect EF_DELUGE;	end;
+OnTimer280000:	specialeffect EF_DELUGE;	end; OnTimer281750:	specialeffect EF_DELUGE;	end; OnTimer283500:	specialeffect EF_DELUGE;	end; OnTimer285250:	specialeffect EF_DELUGE;	end;  OnTimer287000:	specialeffect EF_DELUGE;	end; OnTimer288750:	specialeffect EF_DELUGE;	end;
+
+//4 Minutos e 45 Segundos a 4 Minutos e 59 Segundos
+OnTimer290000:	specialeffect EF_DELUGE;	end; OnTimer291000:	specialeffect EF_DELUGE;	end; OnTimer292000:	specialeffect EF_DELUGE;	end; OnTimer293000:	specialeffect EF_DELUGE;	end; OnTimer294000:	specialeffect EF_DELUGE;	end;
+OnTimer295000:	specialeffect EF_DELUGE;	end; OnTimer296000:	specialeffect EF_DELUGE;	end; OnTimer297000:	specialeffect EF_DELUGE;	end; OnTimer298000:	specialeffect EF_DELUGE;	end; OnTimer299000:	specialeffect EF_DELUGE;	end;
+
+//5 Minutos
+OnTimer300000:
+	specialeffect EF_DELUGE;
+	stopnpctimer;
+	mapannounce "2009rwc_03","O Time Vermelho venceu o King of the Hill!",bc_map | bc_blue;
+	killmonster "2009rwc_03","Blue#KOTH::OnGotStop";
+	callfunc "KOTH_Ending",2;
+	end;
+
+}
+
+//King of the Hill Mode - Controlador Red
+//============================================================================================================
+2009rwc_03,49,49,5	script	Red#KOTH	1915,{
+	end;
+
+OnGotStart:
+	initnpctimer;
+	set $koth_red_counting,1;
+	specialeffect EF_VOLCANO;
+	bg_monster $@KOTH_RXB_Red,"2009rwc_03",49,49,"Red",1915,"Red#KOTH::OnGotStop";
+	mapannounce "2009rwc_03","O Time Vermelho pegou o Ponto! Segure-o por 60 segundos para vencer!",bc_map,0xFF0000;
+	hideonnpc "KOTH1";
+	end;
+
+OnGotStop:
+	stopnpctimer;
+	set $koth_red_counting,0;
+	donpcevent "Recont#KOTH::OnStartRecont";
+	end;
+
+OnGotRestart:
+	startnpctimer;
+	set $koth_red_counting,1;
+	specialeffect EF_VOLCANO;
+	bg_monster $@KOTH_RXB_Red,"2009rwc_03",49,49,"Red",1915,"Red#KOTH::OnGotStop";
+	mapannounce "2009rwc_03","O Time Vermelho pegou o ponto novamente! Restam "+((60000-getnpctimer(0,"Red#KOTH"))/1000)+" segundos para vencer!",bc_map,0xFF0000;
+	end;
+
+//0 a 1 Minuto
+OnTimer10000:	specialeffect EF_VOLCANO;	end;
+OnTimer20000:	specialeffect EF_VOLCANO;	end;
+OnTimer30000:	specialeffect EF_VOLCANO;	end;
+OnTimer40000:	specialeffect EF_VOLCANO;	end;
+OnTimer50000:	specialeffect EF_VOLCANO;	end;
+OnTimer60000:	specialeffect EF_VOLCANO;	end;
+
+//1 a 2 Minutos
+OnTimer70000:	specialeffect EF_VOLCANO;	end;
+OnTimer80000:	specialeffect EF_VOLCANO;	end;
+OnTimer90000:	specialeffect EF_VOLCANO;	end;
+OnTimer100000:	specialeffect EF_VOLCANO;	end;
+OnTimer110000:	specialeffect EF_VOLCANO;	end;
+OnTimer120000:	specialeffect EF_VOLCANO;	end;
+
+//2 a 3 Minutos
+OnTimer125000:	specialeffect EF_VOLCANO;	end; OnTimer130000:	specialeffect EF_VOLCANO;	end;
+OnTimer135000:	specialeffect EF_VOLCANO;	end; OnTimer140000:	specialeffect EF_VOLCANO;	end;
+OnTimer145000:	specialeffect EF_VOLCANO;	end; OnTimer150000:	specialeffect EF_VOLCANO;	end;
+OnTimer155000:	specialeffect EF_VOLCANO;	end; OnTimer160000:	specialeffect EF_VOLCANO;	end;
+OnTimer165000:	specialeffect EF_VOLCANO;	end; OnTimer170000:	specialeffect EF_VOLCANO;	end;
+OnTimer175000:	specialeffect EF_VOLCANO;	end; OnTimer180000:	specialeffect EF_VOLCANO;	end;
+
+//3 a 4 Minutos
+OnTimer182500:	specialeffect EF_VOLCANO;	end; OnTimer185000:	specialeffect EF_VOLCANO;	end; OnTimer187500:	specialeffect EF_VOLCANO;	end;
+OnTimer190000:	specialeffect EF_VOLCANO;	end; OnTimer192500:	specialeffect EF_VOLCANO;	end; OnTimer195000:	specialeffect EF_VOLCANO;	end; OnTimer197500:	specialeffect EF_VOLCANO;	end;
+OnTimer200000:	specialeffect EF_VOLCANO;	end; OnTimer202500:	specialeffect EF_VOLCANO;	end; OnTimer205000:	specialeffect EF_VOLCANO;	end; OnTimer207500:	specialeffect EF_VOLCANO;	end;
+OnTimer210000:	specialeffect EF_VOLCANO;	end; OnTimer212500:	specialeffect EF_VOLCANO;	end; OnTimer215000:	specialeffect EF_VOLCANO;	end; OnTimer217500:	specialeffect EF_VOLCANO;	end;
+OnTimer220000:	specialeffect EF_VOLCANO;	end; OnTimer222500:	specialeffect EF_VOLCANO;	end; OnTimer225000:	specialeffect EF_VOLCANO;	end; OnTimer227500:	specialeffect EF_VOLCANO;	end;
+OnTimer230000:	specialeffect EF_VOLCANO;	end; OnTimer232500:	specialeffect EF_VOLCANO;	end; OnTimer235000:	specialeffect EF_VOLCANO;	end; OnTimer237500:	specialeffect EF_VOLCANO;	end;
+
+//4 a 4 Minutos e 30 Segundos
+OnTimer240000:	specialeffect EF_VOLCANO;	end; OnTimer242500:	specialeffect EF_VOLCANO;	end; OnTimer245000:	specialeffect EF_VOLCANO;	end; OnTimer247500:	specialeffect EF_VOLCANO;	end;
+OnTimer250000:	specialeffect EF_VOLCANO;	end; OnTimer252500:	specialeffect EF_VOLCANO;	end; OnTimer255000:	specialeffect EF_VOLCANO;	end; OnTimer257500:	specialeffect EF_VOLCANO;	end;
+OnTimer260000:	specialeffect EF_VOLCANO;	end; OnTimer262500:	specialeffect EF_VOLCANO;	end; OnTimer265000:	specialeffect EF_VOLCANO;	end; OnTimer267500:	specialeffect EF_VOLCANO;	end;
+
+//4 Minutos e 30 Segundos a 4 Minutos e 50 Segundos
+OnTimer270000:	specialeffect EF_VOLCANO;	end; OnTimer271750:	specialeffect EF_VOLCANO;	end; OnTimer273500:	specialeffect EF_VOLCANO;	end; OnTimer275250:	specialeffect EF_VOLCANO;	end;  OnTimer277000:	specialeffect EF_VOLCANO;	end; OnTimer278750:	specialeffect EF_VOLCANO;	end;
+OnTimer280000:	specialeffect EF_VOLCANO;	end; OnTimer281750:	specialeffect EF_VOLCANO;	end; OnTimer283500:	specialeffect EF_VOLCANO;	end; OnTimer285250:	specialeffect EF_VOLCANO;	end;  OnTimer287000:	specialeffect EF_VOLCANO;	end; OnTimer288750:	specialeffect EF_VOLCANO;	end;
+
+//4 Minutos e 45 Segundos a 4 Minutos e 59 Segundos
+OnTimer290000:	specialeffect EF_VOLCANO;	end; OnTimer291000:	specialeffect EF_VOLCANO;	end; OnTimer292000:	specialeffect EF_VOLCANO;	end; OnTimer293000:	specialeffect EF_VOLCANO;	end; OnTimer294000:	specialeffect EF_VOLCANO;	end;
+OnTimer295000:	specialeffect EF_VOLCANO;	end; OnTimer296000:	specialeffect EF_VOLCANO;	end; OnTimer297000:	specialeffect EF_VOLCANO;	end; OnTimer298000:	specialeffect EF_VOLCANO;	end; OnTimer299000:	specialeffect EF_VOLCANO;	end;
+
+//5 Minutos
+OnTimer300000:
+	specialeffect EF_VOLCANO;
+	stopnpctimer;
+	mapannounce "2009rwc_03","O Time Vermelho venceu o King of the Hill!",bc_map,0xFF0000;
+	killmonster "2009rwc_03","Red#KOTH::OnGotStop";
+	callfunc "KOTH_Ending",1;
+	end;
+
+}
+	
+//Controlador da Recontagem
+//============================================================================================================
+-	script	Recont#KOTH	-1,{
+	end;
+
+OnStartRecont:
+	hideoffnpc "KOTH1";
+OnTimer5000:
+	set .@Red, bg_getareausers($@KOTH_RXB_Red,"2009rwc_03",44,44,55,55);
+	set .@Blue, bg_getareausers($@KOTH_RXB_Blue,"2009rwc_03",43,43,55,55);
+	
+	if((.@Red != 0 && .@Blue != 0) || (.@Red == 0 && .@Blue == 0)) {
+		stopnpctimer;	initnpctimer;
+	}
+	if(.@Red != 0 && .@Blue == 0) {	
+		if(getnpctimer(0,"Red#KOTH") > 0) {
+			stopnpctimer;
+			donpcevent "Red#KOTH::OnGotRestart";
+		} else {
+			stopnpctimer;
+			donpcevent "Red#KOTH::OnGotStart";
+		}
+	}
+	if(.@Red == 0 && .@Blue != 0) {	
+		if(getnpctimer(0,"Blue#KOTH") > 0) {
+			stopnpctimer;
+			donpcevent "Blue#KOTH::OnGotRestart";
+		} else {
+			stopnpctimer;
+			donpcevent "Blue#KOTH::OnGotStart";
+		}
+	}
+	end;
+
+}
+	
+//Controlador da Finalização (1 = RED WON, 2 = BLUE WON)
+//============================================================================================================
+
+function	script	KOTH_Ending	{
+
+	//Destruindo os Grupos
+	bg_destroy $@KOTH_RXB_Blue; set $@KOTH_RXB_Blue, 0;
+	bg_destroy $@KOTH_RXB_Red; set $@KOTH_RXB_Red, 0;
+	set $rxb_event,0;
+
+	//Explodindo os perdedores
+	if(getarg(0) == 1) {											//Vermelho Venceu
+		getpartymember($rxb_blue_ready_team);
+		for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+			if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+				attachrid(getcharid(3,$@partymembername$[$@k]));
+				getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+				if(.@rxb_map$ == "2009rwc_03") {
+					atcommand "@nuke "+strcharinfo(0);
+				}
+			}
+		}
+	}
+	if(getarg(0) == 2) {											//Azul Venceu
+		getpartymember($rxb_red_ready_team);
+		for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+			if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+				attachrid(getcharid(3,$@partymembername$[$@k]));
+				getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+				if(.@rxb_map$ == "2009rwc_03") {
+					atcommand "@nuke "+strcharinfo(0);
+				}
+			}
+		}
+	}
+	
+	stopnpctimer "Counter#KOTH"; sleep 10000;
+	areapercentheal "2009rwc_03",6,46,19,53,50,50;					//Blue - Heal
+	areapercentheal "2009rwc_03",80,46,93,53,50,50;					//Red - Heal	
+	
+	//Pontuando os Perdedores, revivendo-os e retirando-os da Arena
+	if(getarg(0) == 1) {											//Vermelho Venceu
+		getpartymember($rxb_blue_ready_team);
+		for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+			if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+				attachrid(getcharid(3,$@partymembername$[$@k]));
+				getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+				if(.@rxb_map$ == "2009rwc_03") {
+					set #rxb_participated,#rxb_participated+1;				//Participou
+					set #rxb_participated_blue,#rxb_participated_blue+1;	//Participou Azul
+					set #rxb_pontos,#rxb_pontos+15;							//15 Pontos por perder.
+					warp "prontera",155,155;
+				}
+			}
+		}
+	}
+	if(getarg(0) == 2) {											//Azul Venceu
+		getpartymember($rxb_red_ready_team);
+		for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+			if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+				attachrid(getcharid(3,$@partymembername$[$@k]));
+				getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+				if(.@rxb_map$ == "2009rwc_03") {
+					set #rxb_participated,#rxb_participated+1;				//Participou
+					set #rxb_participated_red,#rxb_participated_red+1;		//Participou Vermelho
+					set #rxb_pontos,#rxb_pontos+15;							//15 Pontos por perder
+					warp "prontera",155,155;
+				}
+			}
+		}
+	}
+	
+	//Pontuando os Vencedores e retirando-os da Arena (argumento invertido)
+	if(getarg(0) == 2) {										//Vermelho Venceu
+		getpartymember($rxb_blue_ready_team);
+		for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+			if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+				attachrid(getcharid(3,$@partymembername$[$@k]));
+				getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+				if(.@rxb_map$ == "2009rwc_03") {
+					set #rxb_participated,#rxb_participated+1;				//Participou
+					set #rxb_participated_blue,#rxb_participated_blue+1;	//Participou Azul
+					set #rxb_pontos,#rxb_pontos+40;							//40 Pontos por perder.
+					warp "prontera",155,155;
+				}
+			}
+		}
+	}
+	if(getarg(0) == 1) {										//Azul Venceu
+		getpartymember($rxb_red_ready_team);
+		for (set $@k,0; $@k < $@partymembercount; set $@k,$@k+1) {
+			if (isloggedin(getcharid(3,$@partymembername$[$@k]))) {
+				attachrid(getcharid(3,$@partymembername$[$@k]));
+				getmapxy(.@rxb_map$,@mapx,@mapy,0,$@partymembername$[$@k]);
+				if(.@rxb_map$ == "2009rwc_03") {
+					set #rxb_participated,#rxb_participated+1;				//Participou
+					set #rxb_participated_red,#rxb_participated_red+1;		//Participou Vermelho
+					set #rxb_pontos,#rxb_pontos+40;							//40 Pontos por perder
+					warp "prontera",155,155;
+				}
+			}
+		}
+	}
+	end;
+}
+
+//Controlador das Areas de Respawn (1 = BLOCK, 2 = UNBLOCK)
+//============================================================================================================
+-	script	Counter#KOTH	-1,{
+
+OnKOTHInit:
+	initnpctimer;
+	end;
+	
+OnTimer10000:
+	if($koth_instruc == 0) {
+		mapannounce "2009rwc_03","Bem vindos ao King of the Hill. A Partida começara em breve.",bc_map;
+		sleep 1000; mapannounce "2009rwc_03","Para vencer, ganhe o Ponto de Controle e o matenha por 1 minuto!",bc_map;
+		set $koth_instruc,1;
+		end;
+	}
+	
+OnTimer25000:
+	areapercentheal "2009rwc_03",6,46,19,53,50,50;			//Blue - Heal
+	areawarp "2009rwc_03",6,46,19,53,"2009rwc_03",23,50;	//Blue - Warp (Respawn)
+	
+	areapercentheal "2009rwc_03",80,46,93,53,50,50;			//Red - Heal
+	areawarp "2009rwc_03",80,46,93,53,"2009rwc_03",76,50;	//Red - Warp (Respawn)
+	
+	stopnpctimer;	initnpctimer;	end;
+	
+}
+
+
+//============================================================================================================
+
+
+//Mapflags
+rwc03	mapflag	nobranch
+rwc03	mapflag	nomemo
+rwc03	mapflag	nopenalty
+rwc03	mapflag	noreturn
+rwc03	mapflag	nosave	SavePoint
+rwc03	mapflag	noteleport
+rwc03	mapflag	nowarp
+rwc03	mapflag	nowarpto
+rwc03	mapflag	pvp
+rwc03	mapflag	pvp_noguild
+rwc03	mapflag	restricted	7
+
+2009rwc_01	mapflag	nobranch
+2009rwc_01	mapflag	nomemo
+2009rwc_01	mapflag	nopenalty
+2009rwc_01	mapflag	noreturn
+2009rwc_01	mapflag	nosave	SavePoint
+2009rwc_01	mapflag	noteleport
+2009rwc_01	mapflag	nowarp
+2009rwc_01	mapflag	nowarpto
+2009rwc_01	mapflag	pvp
+2009rwc_01	mapflag	pvp_noguild
+2009rwc_01	mapflag	restricted	7
+
+2009rwc_04	mapflag	nobranch
+2009rwc_04	mapflag	nomemo
+2009rwc_04	mapflag	nopenalty
+2009rwc_04	mapflag	noreturn
+2009rwc_04	mapflag	nosave	SavePoint
+2009rwc_04	mapflag	noteleport
+2009rwc_04	mapflag	nowarp
+2009rwc_04	mapflag	nowarpto
+2009rwc_04	mapflag	pvp
+2009rwc_04	mapflag	pvp_noguild
+2009rwc_04	mapflag	restricted	7
+
+2007rwc_r	mapflag	nobranch
+2007rwc_r	mapflag	nomemo
+2007rwc_r	mapflag	nopenalty
+2007rwc_r	mapflag	noreturn
+2007rwc_r	mapflag	nosave	SavePoint
+2007rwc_r	mapflag	noteleport
+2007rwc_r	mapflag	nowarp
+2007rwc_r	mapflag	nowarpto
+2007rwc_r	mapflag	pvp	off
+2007rwc_r	mapflag	restricted	7
+
+2009rwc_03	mapflag	pvp	off
+2009rwc_03	mapflag	battleground
+2009rwc_03	mapflag	nomemo
+2009rwc_03	mapflag	nosave	SavePoint
+2009rwc_03	mapflag	noteleport
+2009rwc_03	mapflag	nowarp
+2009rwc_03	mapflag	nowarpto
+2009rwc_03	mapflag	noreturn
+2009rwc_03	mapflag	nobranch
+2009rwc_03	mapflag	nopenalty
+2009rwc_03	mapflag	restricted	7

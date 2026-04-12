@@ -1,0 +1,34 @@
+job3_rune03,47,40,3	duplicate(Telma 2.0)	Telma#PET	701
+job3_rune03,47,43,3	duplicate(Resetadora)	Resetadora#PET	859
+job3_rune03,43,46,3	duplicate(HealerG)	Curandeira#PET	971,2,2
+job3_rune03,31,41,5	duplicate(gomora)	Batalha Campal#PET	733
+job3_rune03,31,37,5	duplicate(PM_source)	Arenas de Batalha#PET	470
+
+
+job3_rune03,36,48,5	script	Kafra Yokai#PET	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "job3_rune03",39,41;
+	close;
+	}
+}
+
+job3_rune03,33,46,5	duplicate(ultYokai)	Utilidades#PET	838
+
+job3_rune03,39,49,4	script	Eternal Brothers#PET	722,{
+OnInit:
+	flagemblem 12;
+	end;
+}

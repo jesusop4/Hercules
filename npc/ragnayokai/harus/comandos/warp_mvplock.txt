@@ -1,0 +1,36 @@
+-	script	Warp MvPs	-1,{
+	end;
+
+OnWarpMvP:
+mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+mes "Olá "+strcharinfo(0)+",";
+mes "Deseja ser teletransportado?";
+switch(select("- Imperador de Morocc:- Beelzebub:- Nidhoggr's Shadow:- Valkyrie:- Ifrit:- Laborátorio de Samatologia:- Nada, Obrigado")) {
+case 1:
+close2;
+warp "moc_fild22",60,189;
+end;
+case 2:
+close2;
+warp "abbey03",119,11;
+end;
+case 3:
+close2;
+warp "2@nyd",200,10;
+end;
+case 4:
+close2;
+warp "odin_tem03",223,67;
+end;
+case 5:
+close2;
+warp "thor_v03",171,210;
+end;
+case 6:
+close2;
+warp "lhz_dun03",140,132;
+end;
+case 7:
+close;
+}		
+}

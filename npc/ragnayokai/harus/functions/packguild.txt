@@ -1,0 +1,87 @@
+function	script	PackMEMBRO	{
+
+	atcommand "@storeall";
+	// Cartas Inicias
+	getitem 32043,2;
+	getitem 32044,1;
+	getitem 32045,1;
+	getitem 32046,1;
+	getitem 32047,1;
+	getitem 32048,1;
+	getitem 32049,1;
+	getitem 32050,2;
+	getitem 32051,1;
+	getitem 32052,1;
+	getitem 32053,1;
+	// Fim das cartas
+	atcommand "@storeall";
+	// Itens Normais
+	getitem 32027,1;
+	getitem 32028,1;
+	getitem 32029,1;
+	getitem 32030,2;
+	getitem 32031,2;
+	getitem 10114,1;
+	// Itens Normais
+	atcommand "@storeall";
+	getitem 7773,250;
+	getitem 7828,500;
+	getitem 7829,500;
+	atcommand "@storeall";
+	end;
+
+}
+
+function	script	PackLIDER16	{
+
+	atcommand "@storeall";
+	// tickets e emblem
+	getitem 10114,5;
+	getitem 4000,1;
+	getitem 7773,500;
+	getitem 7828,1000;
+	getitem 7829,1000;
+	atcommand "@storeall";
+	// Cards
+	getitem 32042,3;
+	getitem 32041,1;
+	// CK
+	getitem 32040,1;
+	//
+	getitem 32033,1;
+	getitem 32034,1;
+	getitem 32035,1;
+	getitem 32037,1;
+	getitem 32038,1;
+	getitem 32039,1;
+	atcommand "@storeall";
+	end;
+
+}
+
+function	script	PackLIDER26	{
+
+	atcommand "@storeall";
+	// tickets e emblem
+	getitem 10114,10;
+	getitem 4000,2;
+	getitem 7773,1000;
+	getitem 7828,2000;
+	getitem 7829,2000;
+	atcommand "@storeall";
+	// Cards
+	getitem 32042,6;
+	getitem 32041,3;
+	// CK
+	getitem 32040,3;
+	//
+	getitem 32033,3;
+	getitem 32034,3;
+	getitem 32035,3;
+	getitem 32037,3;
+	getitem 32038,3;
+	getitem 32039,3;
+	atcommand "@storeall";
+	end;
+
+}

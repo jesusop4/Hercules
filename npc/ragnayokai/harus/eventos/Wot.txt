@@ -1,0 +1,169 @@
+que_qaru01,125,137,6	script	War of Treasure	966,{
+
+//====================== Configurações do Npc ============================//
+// Nome do npc
+set @npc$,"[War of Treasure]";
+
+// Level minimo da conta de gm do seu servidor
+set @lv,30;
+//====================== Não mecha daqui pra baixo ============================//
+ 
+if (getgmlevel() < @lv){
+
+Player:
+mes @npc$;
+mes "Olá "+strcharinfo(0)+",";
+mes "O que você deveja fazer?";
+switch(select("- Entrar na Wot:- Sair"))
+{
+case 1:
+next;
+if( !getcharid(2) ) {
+	mes @npc$;
+	mes "Desculpe mas você não pode entrar sem uma Guilda.";
+	close;
+}
+if($ligou == 0){
+mes @npc$;
+mes "Desculpe mas você não pode entrar enquanto a wot estiver fechada.";
+close;
+}
+mes @npc$;
+mes "Vamos la te levarei a wot, Boa Sorte.";
+warp "prt_are_in",97,30;
+close;
+
+case 2:
+next;
+mes @npc$;
+mes "Tudo bem estarei aqui se precisar.";
+close;
+}
+}
+
+mes @npc$;
+mes "Olá "+strcharinfo(0)+" O que deseja fazer?";
+if(.WOTELIGADALIXO == 1) {
+mes " GM DE MERDA, O EVENTO JÁ FOI INICIADO VÊ SE NÃO INICIA NOVAMENTE, CERTO LIXO?";
+}
+switch(select("- Entrar na Wot:- Iniciar Evento:- Modo Player"))
+{
+case 1:
+next;
+if( !getcharid(2) ) {
+	mes @npc$;
+	mes "Desculpe mas você não pode entrar sem uma Guilda.";
+	close;
+}
+mes @npc$;
+mes "Tudo bem te levarei ao mapa da wot.";
+warp "prt_are_in",97,30;
+close;
+
+case 2:
+next;
+mes @npc$;
+mes "GM TrueBRO tem certeza que deseja iniciar o Evento WoT?";
+if(select("Sim:Não, pensando em outra coisa ...") == 2) close;
+set .WOTELIGADALIXO,1;
+close2;
+callsub EventoWOT;
+
+case 3:
+goto Player;
+close;
+}
+
+	OnClock1505: callsub EventoWOT;
+	OnClock2205: callsub EventoWOT;
+
+EventoWOT:
+killmonsterall "prt_are_in";
+announce "[ @eventos ] A War of Treasure irá começar, vocês tem apenas 5 minutos!",8;
+announce "[ @eventos ] Use --> @eventos <-- e venha participar!",8;
+set $ligou,1;
+initnpctimer;
+end;
+
+OnTimer60000:
+announce "[ @eventos ] A War of Treasure irá começar, corram porque só resta 4 minutos!",8;
+announce "[ @eventos ] Use --> @eventos <-- e venha participar!",8;
+end;
+
+OnTimer120000:
+announce "[ @eventos ] A War of Treasure irá começar, corram porque só resta 3 minutos!",8;
+announce "[ @eventos ] Use --> @eventos <-- e venha participar!",8;
+end;
+
+OnTimer180000:
+announce "[ @eventos ] A War of Treasure irá começar, corram porque só resta 2 minutos!",8;
+announce "[ @eventos ] Use --> @eventos <-- e venha participar!",8;
+end;
+
+OnTimer240000:
+announce "[ @eventos ] A War of Treasure irá começar, corram porque só resta 1 minuto!",8;
+announce "[ @eventos ] Use --> @eventos <-- e venha participar!",8;
+end;
+
+OnTimer300000:
+pvpon "prt_are_in";
+gvgon "prt_are_in";
+announce "[ @eventos ] A War of Treasure Começou !",8;
+set $ligou,0;
+end;
+
+OnTimer360000:
+mapannounce "prt_are_in","[War of Treasure] Os báus aparecerão em 5 minutos!",8;
+end;
+
+OnTimer420000:
+mapannounce "prt_are_in","[War of Treasure] Os báus aparecerão em 4 minutos!",8;
+end;
+
+OnTimer480000:
+mapannounce "prt_are_in","[War of Treasure] Os báus aparecerão em 3 minutos!",8;
+end;
+
+OnTimer540000:
+mapannounce "prt_are_in","[War of Treasure] Os báus aparecerão em 2 minutos!",8;
+end;
+
+OnTimer600000:
+mapannounce "prt_are_in","[War of Treasure] Os báus aparecerão em 1 Minuto!",8;
+end;
+
+OnTimer660000:
+pvpoff "prt_are_in";
+gvgoff "prt_are_in";
+if (getmapusers("prt_are_in") == 0 ){
+announce "[ @eventos ] Não tivemos jogadores suficientes para iniciar a War of Treasure, até depois.",8;
+set .WOTELIGADALIXO,0;
+stopnpctimer;
+end;
+}
+mapannounce "prt_are_in","[War of Treasure] Os báus apareceram !",8;
+monster "prt_are_in",178,140,"Bau do Tesouro",1324,1,"War of Treasure::OnThisMobDeath";
+monster "prt_are_in",22,89,"Bau do Tesouro",1324,1,"War of Treasure::OnThisMobDeath";
+stopnpctimer;
+
+OnThisMobDeath:
+set .wotend,0;
+set #PTEVENTO, #PTEVENTO + 5;
+dispbottom "[rYokai Eventos] - Agora você tem "+#PTEVENTO+"x Pontos de Evento.";
+set .WOTELIGADALIXO,0;
+announce "[ @eventos ] O Jogador "+strcharinfo(0)+" acaba de destruir um dos baús na War of Treasure!",8;
+warp getsavepoint(0),getsavepoint(1),getsavepoint(2);
+set .wotend,.wotend + 1;
+if( .wotend >= 2 ) {
+mapwarp "prt_are_in","prontera",150,150;
+}
+end;
+}
+
+// Portais
+
+//izlude,128,226,0	warp	War Of Treasure1	1,1,prt_are_in,98,6
+prt_are_in,55,13,0	warp	War Of Treasure2	1,1,prt_are_in,177,129
+prt_are_in,177,127,0	warp	War Of Treasure3	1,1,prt_are_in,57,13
+prt_are_in,21,75,0	warp	War Of Treasure4	1,1,prt_are_in,140,13
+prt_are_in,142,13,0	warp	War Of Treasure5	1,1,prt_are_in,21,77

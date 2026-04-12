@@ -1,0 +1,31 @@
+sec_in02,23,173,6	script	Buscar Itens[GM]	90,{
+if(getgmlevel() < 60) end;
+
+	mes "[^ff0000 "+strnpcinfo(1)+" ^000000]";
+	mes "Coloque o ID do item no qual você quer saber a quantidade existente.";
+	mes "^F7F7F7-^000000";
+	mes "Exemplo: ^0000ffPoção Vermelha^000000 - ID: ^0b85f8501^000000";
+	input .@item_id;
+	if( getitemname( .@item_id ) != "null" ){
+		for( set .@i,0; .@i < .sql_size; set .@i,.@i + 1 ){
+			query_sql( "SELECT SUM(`amount`) FROM `"+.sql_table$[.@i]+"` WHERE `nameid`='"+.@item_id+"'",.@amount );
+			query_sql( "SELECT COUNT(`card0`) FROM `"+.sql_table$[.@i]+"` WHERE `card0`='"+.@item_id+"'",.@card0 );
+			query_sql( "SELECT COUNT(`card1`) FROM `"+.sql_table$[.@i]+"` WHERE `card1`='"+.@item_id+"'",.@card1 );
+			query_sql( "SELECT COUNT(`card2`) FROM `"+.sql_table$[.@i]+"` WHERE `card2`='"+.@item_id+"'",.@card2 );
+			query_sql( "SELECT COUNT(`card3`) FROM `"+.sql_table$[.@i]+"` WHERE `card3`='"+.@item_id+"'",.@card3 );
+			set .@total,.@total + ( .@amount + .@card0 + .@card1 + .@card2 + .@card3 );
+		}
+		mes "^F7F7F7-^000000";
+		mes "Encontrados "+.@total+"x "+getitemname(.@item_id)+"s.";
+		close;
+	}else{
+		mes "ID inválido";
+	}
+	close;
+
+OnInit:
+	setarray .sql_table$[0],"inventory","cart_inventory","guild_storage","storage","mail";
+	set .sql_size,getarraysize( .sql_table$ );
+	end;
+
+}

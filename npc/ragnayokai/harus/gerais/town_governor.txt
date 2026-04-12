@@ -1,0 +1,504 @@
+//==============================================================
+// Town Governor — Town Donation & Buff System
+//
+// Towns: 0=Prontera 1=Morocc 2=Geffen 3=Payon 4=Alberta
+//        5=Izlude 6=Aldebaran 7=Lutie 8=Comodo 9=Yuno
+//        10=Amatsu 11=Gonryun 12=Louyang 13=Hugel
+//
+// Persistent variables per char:
+//   TG_DONATED_<TOWN>  — total zeny donated to each town
+//   TG_BUFF_TOWN       — town_id+1 of current buff (0=none)
+//
+// Global NPC variables:
+//   $TG_TOP_ID[14]     — char_id of top donor per town
+//   $TG_TOP_NAME$[14]  — name of top donor per town
+//   $TG_TOP_ZEN[14]    — zeny donated by top donor
+//
+// Weekly reset: Monday 00:01
+//==============================================================
+
+//--------------------------------------------------------------
+// F_TG_ApplyBuff(town_id) — apply the buff for a town
+//--------------------------------------------------------------
+function	script	F_TG_ApplyBuff	{
+	set @_tg_town, getarg(0);
+	set @_tg_dur, 604800000; // 7 days in ms
+
+	if (@_tg_town == 0) { // Prontera
+		sc_start SC_INCMHPRATE,@_tg_dur,10,0;
+		sc_start SC_INCMSPRATE,@_tg_dur,5,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+		sc_start SC_INCMATKRATE,@_tg_dur,5,0;
+		sc_start SC_INCALLSTATUS,@_tg_dur,3,0;
+	} else if (@_tg_town == 1) { // Morocc
+		sc_start SC_INCAGI,@_tg_dur,5,0;
+		sc_start SC_INCSTR,@_tg_dur,3,0;
+		sc_start SC_INCLUK,@_tg_dur,3,0;
+		sc_start SC_INCFLEE,@_tg_dur,10,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 2) { // Geffen
+		sc_start SC_INCINT,@_tg_dur,3,0;
+		sc_start SC_INCDEX,@_tg_dur,3,0;
+		sc_start SC_INCVIT,@_tg_dur,5,0;
+		sc_start SC_INCMATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 3) { // Payon
+		sc_start SC_INCAGI,@_tg_dur,2,0;
+		sc_start SC_INCDEX,@_tg_dur,3,0;
+		sc_start SC_INCLUK,@_tg_dur,3,0;
+		sc_start SC_INCFLEE,@_tg_dur,10,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 4) { // Alberta
+		sc_start SC_INCSTR,@_tg_dur,5,0;
+		sc_start SC_INCAGI,@_tg_dur,2,0;
+		sc_start SC_INCVIT,@_tg_dur,3,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+		sc_start SC_INCMATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 5) { // Izlude
+		sc_start SC_INCVIT,@_tg_dur,5,0;
+		sc_start SC_INCMSPRATE,@_tg_dur,5,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 6) { // Aldebaran
+		sc_start SC_INCAGI,@_tg_dur,3,0;
+		sc_start SC_INCINT,@_tg_dur,3,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+		sc_start SC_INCMATKRATE,@_tg_dur,5,0;
+		sc_start SC_SPEEDUP0,@_tg_dur,1,0;
+	} else if (@_tg_town == 7) { // Lutie
+		sc_start SC_INCLUK,@_tg_dur,3,0;
+		sc_start SC_INCSTR,@_tg_dur,3,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+		sc_start SC_INCMATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 8) { // Comodo
+		sc_start SC_INCAGI,@_tg_dur,3,0;
+		sc_start SC_INCLUK,@_tg_dur,3,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+		sc_start SC_INCMATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 9) { // Yuno
+		sc_start SC_INCINT,@_tg_dur,3,0;
+		sc_start SC_INCVIT,@_tg_dur,3,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+		sc_start SC_INCMATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 10) { // Amatsu
+		sc_start SC_INCDEX,@_tg_dur,3,0;
+		sc_start SC_INCINT,@_tg_dur,3,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+		sc_start SC_INCMATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 11) { // Gonryun
+		sc_start SC_INCVIT,@_tg_dur,3,0;
+		sc_start SC_INCINT,@_tg_dur,3,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+		sc_start SC_INCMATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 12) { // Louyang
+		sc_start SC_INCAGI,@_tg_dur,3,0;
+		sc_start SC_INCSTR,@_tg_dur,5,0;
+		sc_start SC_INCFLEE,@_tg_dur,10,0;
+		sc_start SC_INCATKRATE,@_tg_dur,5,0;
+	} else if (@_tg_town == 13) { // Hugel
+		sc_start SC_INCMHPRATE,@_tg_dur,10,0;
+		sc_start SC_INCDEX,@_tg_dur,3,0;
+		sc_start SC_INCINT,@_tg_dur,3,0;
+	}
+	return;
+}
+
+//--------------------------------------------------------------
+// F_TG_RemoveBuff(town_id) — remove the buff for a town
+//--------------------------------------------------------------
+function	script	F_TG_RemoveBuff	{
+	set @_tg_town, getarg(0);
+
+	if (@_tg_town == 0) { // Prontera
+		sc_end SC_INCMHPRATE; sc_end SC_INCMSPRATE;
+		sc_end SC_INCATKRATE; sc_end SC_INCMATKRATE;
+		sc_end SC_INCALLSTATUS;
+	} else if (@_tg_town == 1) { // Morocc
+		sc_end SC_INCAGI; sc_end SC_INCSTR; sc_end SC_INCLUK;
+		sc_end SC_INCFLEE; sc_end SC_INCATKRATE;
+	} else if (@_tg_town == 2) { // Geffen
+		sc_end SC_INCINT; sc_end SC_INCDEX;
+		sc_end SC_INCVIT; sc_end SC_INCMATKRATE;
+	} else if (@_tg_town == 3) { // Payon
+		sc_end SC_INCAGI; sc_end SC_INCDEX; sc_end SC_INCLUK;
+		sc_end SC_INCFLEE; sc_end SC_INCATKRATE;
+	} else if (@_tg_town == 4) { // Alberta
+		sc_end SC_INCSTR; sc_end SC_INCAGI; sc_end SC_INCVIT;
+		sc_end SC_INCATKRATE; sc_end SC_INCMATKRATE;
+	} else if (@_tg_town == 5) { // Izlude
+		sc_end SC_INCVIT; sc_end SC_INCMSPRATE; sc_end SC_INCATKRATE;
+	} else if (@_tg_town == 6) { // Aldebaran
+		sc_end SC_INCAGI; sc_end SC_INCINT;
+		sc_end SC_INCATKRATE; sc_end SC_INCMATKRATE; sc_end SC_SPEEDUP0;
+	} else if (@_tg_town == 7) { // Lutie
+		sc_end SC_INCLUK; sc_end SC_INCSTR;
+		sc_end SC_INCATKRATE; sc_end SC_INCMATKRATE;
+	} else if (@_tg_town == 8) { // Comodo
+		sc_end SC_INCAGI; sc_end SC_INCLUK;
+		sc_end SC_INCATKRATE; sc_end SC_INCMATKRATE;
+	} else if (@_tg_town == 9) { // Yuno
+		sc_end SC_INCINT; sc_end SC_INCVIT;
+		sc_end SC_INCATKRATE; sc_end SC_INCMATKRATE;
+	} else if (@_tg_town == 10) { // Amatsu
+		sc_end SC_INCDEX; sc_end SC_INCINT;
+		sc_end SC_INCATKRATE; sc_end SC_INCMATKRATE;
+	} else if (@_tg_town == 11) { // Gonryun
+		sc_end SC_INCVIT; sc_end SC_INCINT;
+		sc_end SC_INCATKRATE; sc_end SC_INCMATKRATE;
+	} else if (@_tg_town == 12) { // Louyang
+		sc_end SC_INCAGI; sc_end SC_INCSTR;
+		sc_end SC_INCFLEE; sc_end SC_INCATKRATE;
+	} else if (@_tg_town == 13) { // Hugel
+		sc_end SC_INCMHPRATE; sc_end SC_INCDEX; sc_end SC_INCINT;
+	}
+	return;
+}
+
+//--------------------------------------------------------------
+// F_TG_TownName(town_id) — returns town name string
+//--------------------------------------------------------------
+function	script	F_TG_TownName	{
+	set @_tg_t, getarg(0);
+	if (@_tg_t == 0)  return "Prontera";
+	if (@_tg_t == 1)  return "Morocc";
+	if (@_tg_t == 2)  return "Geffen";
+	if (@_tg_t == 3)  return "Payon";
+	if (@_tg_t == 4)  return "Alberta";
+	if (@_tg_t == 5)  return "Izlude";
+	if (@_tg_t == 6)  return "Aldebaran";
+	if (@_tg_t == 7)  return "Lutie";
+	if (@_tg_t == 8)  return "Comodo";
+	if (@_tg_t == 9)  return "Yuno";
+	if (@_tg_t == 10) return "Amatsu";
+	if (@_tg_t == 11) return "Gonryun";
+	if (@_tg_t == 12) return "Louyang";
+	return "Hugel";
+}
+
+//--------------------------------------------------------------
+// F_TG_GetDonated(town_id) — get this player's donation to town
+//--------------------------------------------------------------
+function	script	F_TG_GetDonated	{
+	set @_tg_t, getarg(0);
+	if (@_tg_t == 0)  return TG_DON_PRON;
+	if (@_tg_t == 1)  return TG_DON_MORC;
+	if (@_tg_t == 2)  return TG_DON_GEFF;
+	if (@_tg_t == 3)  return TG_DON_PAYN;
+	if (@_tg_t == 4)  return TG_DON_ALBT;
+	if (@_tg_t == 5)  return TG_DON_IZLD;
+	if (@_tg_t == 6)  return TG_DON_ALDE;
+	if (@_tg_t == 7)  return TG_DON_LUTI;
+	if (@_tg_t == 8)  return TG_DON_COMO;
+	if (@_tg_t == 9)  return TG_DON_YUNO;
+	if (@_tg_t == 10) return TG_DON_AMAT;
+	if (@_tg_t == 11) return TG_DON_GONR;
+	if (@_tg_t == 12) return TG_DON_LOUY;
+	return TG_DON_HUGE;
+}
+
+//--------------------------------------------------------------
+// F_TG_AddDonated(town_id, amount) — add to player's donation
+//--------------------------------------------------------------
+function	script	F_TG_AddDonated	{
+	set @_tg_t, getarg(0);
+	set @_tg_a, getarg(1);
+	if (@_tg_t == 0)  { set TG_DON_PRON, TG_DON_PRON + @_tg_a; return; }
+	if (@_tg_t == 1)  { set TG_DON_MORC, TG_DON_MORC + @_tg_a; return; }
+	if (@_tg_t == 2)  { set TG_DON_GEFF, TG_DON_GEFF + @_tg_a; return; }
+	if (@_tg_t == 3)  { set TG_DON_PAYN, TG_DON_PAYN + @_tg_a; return; }
+	if (@_tg_t == 4)  { set TG_DON_ALBT, TG_DON_ALBT + @_tg_a; return; }
+	if (@_tg_t == 5)  { set TG_DON_IZLD, TG_DON_IZLD + @_tg_a; return; }
+	if (@_tg_t == 6)  { set TG_DON_ALDE, TG_DON_ALDE + @_tg_a; return; }
+	if (@_tg_t == 7)  { set TG_DON_LUTI, TG_DON_LUTI + @_tg_a; return; }
+	if (@_tg_t == 8)  { set TG_DON_COMO, TG_DON_COMO + @_tg_a; return; }
+	if (@_tg_t == 9)  { set TG_DON_YUNO, TG_DON_YUNO + @_tg_a; return; }
+	if (@_tg_t == 10) { set TG_DON_AMAT, TG_DON_AMAT + @_tg_a; return; }
+	if (@_tg_t == 11) { set TG_DON_GONR, TG_DON_GONR + @_tg_a; return; }
+	if (@_tg_t == 12) { set TG_DON_LOUY, TG_DON_LOUY + @_tg_a; return; }
+	set TG_DON_HUGE, TG_DON_HUGE + @_tg_a;
+	return;
+}
+
+//--------------------------------------------------------------
+// F_TG_ResetDonated(town_id) — clear player's donation to town
+//--------------------------------------------------------------
+function	script	F_TG_ResetDonated	{
+	set @_tg_t, getarg(0);
+	if (@_tg_t == 0)  { set TG_DON_PRON, 0; return; }
+	if (@_tg_t == 1)  { set TG_DON_MORC, 0; return; }
+	if (@_tg_t == 2)  { set TG_DON_GEFF, 0; return; }
+	if (@_tg_t == 3)  { set TG_DON_PAYN, 0; return; }
+	if (@_tg_t == 4)  { set TG_DON_ALBT, 0; return; }
+	if (@_tg_t == 5)  { set TG_DON_IZLD, 0; return; }
+	if (@_tg_t == 6)  { set TG_DON_ALDE, 0; return; }
+	if (@_tg_t == 7)  { set TG_DON_LUTI, 0; return; }
+	if (@_tg_t == 8)  { set TG_DON_COMO, 0; return; }
+	if (@_tg_t == 9)  { set TG_DON_YUNO, 0; return; }
+	if (@_tg_t == 10) { set TG_DON_AMAT, 0; return; }
+	if (@_tg_t == 11) { set TG_DON_GONR, 0; return; }
+	if (@_tg_t == 12) { set TG_DON_LOUY, 0; return; }
+	set TG_DON_HUGE, 0;
+	return;
+}
+
+//--------------------------------------------------------------
+// F_TG_ShowBuff(town_id) — show buff description for a town
+//--------------------------------------------------------------
+function	script	F_TG_ShowBuff	{
+	set @_tg_t, getarg(0);
+	if (@_tg_t == 0) { // Prontera
+		mes "^8888880#:: Max HP +10% | Max SP +5%";
+		mes "^888888 :: ATK +5% | MATK +5%";
+		mes "^888888 :: All Stats +3^000000";
+	} else if (@_tg_t == 1) { // Morocc
+		mes "^888888 :: AGI +5 | STR +3 | LUK +3";
+		mes "^888888 :: Flee +10 | ATK +5%^000000";
+	} else if (@_tg_t == 2) { // Geffen
+		mes "^888888 :: INT +3 | DEX +3 | VIT +5";
+		mes "^888888 :: MATK +5%^000000";
+	} else if (@_tg_t == 3) { // Payon
+		mes "^888888 :: AGI +2 | DEX +3 | LUK +3";
+		mes "^888888 :: Flee +10 | ATK +5%^000000";
+	} else if (@_tg_t == 4) { // Alberta
+		mes "^888888 :: STR +5 | AGI +2 | VIT +3";
+		mes "^888888 :: ATK +5% | MATK +5%^000000";
+	} else if (@_tg_t == 5) { // Izlude
+		mes "^888888 :: VIT +5 | SP Recovery +5%";
+		mes "^888888 :: ATK +5%^000000";
+	} else if (@_tg_t == 6) { // Aldebaran
+		mes "^888888 :: AGI +3 | INT +3";
+		mes "^888888 :: ATK +5% | MATK +5% | Speed +10%^000000";
+	} else if (@_tg_t == 7) { // Lutie
+		mes "^888888 :: LUK +3 | STR +3";
+		mes "^888888 :: ATK +5% | MATK +5%^000000";
+	} else if (@_tg_t == 8) { // Comodo
+		mes "^888888 :: AGI +3 | LUK +3";
+		mes "^888888 :: ATK +5% | MATK +5%^000000";
+	} else if (@_tg_t == 9) { // Yuno
+		mes "^888888 :: INT +3 | VIT +3";
+		mes "^888888 :: ATK +5% | MATK +5%^000000";
+	} else if (@_tg_t == 10) { // Amatsu
+		mes "^888888 :: DEX +3 | INT +3";
+		mes "^888888 :: ATK +5% | MATK +5%^000000";
+	} else if (@_tg_t == 11) { // Gonryun
+		mes "^888888 :: VIT +3 | INT +3";
+		mes "^888888 :: ATK +5% | MATK +5%^000000";
+	} else if (@_tg_t == 12) { // Louyang
+		mes "^888888 :: AGI +3 | STR +5";
+		mes "^888888 :: Flee +10 | ATK +5%^000000";
+	} else { // Hugel
+		mes "^888888 :: Max HP +10% | DEX +3 | INT +3^000000";
+	}
+	return;
+}
+
+//==============================================================
+// Main Governor NPC (invisible, triggered by each town NPC)
+//==============================================================
+-	script	TownGovernorSystem	-1,{
+
+OnPCLoginEvent:
+	// Reapply buff if this character is still the top donor
+	if (TG_BUFF_TOWN <= 0) end;
+	set @_tg_t, TG_BUFF_TOWN - 1;
+	if ($TG_TOP_ID[@_tg_t] != getcharid(0)) {
+		// No longer top donor — remove buff record
+		set TG_BUFF_TOWN, 0;
+		end;
+	}
+	// Still top donor — reapply buff
+	callfunc "F_TG_ApplyBuff", @_tg_t;
+	end;
+
+OnTalk:
+	// Called by individual town governor NPCs with setarg(0, town_id)
+	set @_tg_town, @tg_town_id;
+	set @_tg_name$, callfunc("F_TG_TownName", @_tg_town);
+
+L_Main:
+	mes "^663300[ Town Governor ]^000000";
+	mes "^AA6600" + @_tg_name$ + " Donation Fund^000000";
+	mes " ";
+	if ($TG_TOP_ID[@_tg_town] > 0) {
+		mes "Top Donor: ^FF8800" + $TG_TOP_NAME$[@_tg_town] + "^000000";
+		mes "Donated:   ^FF8800" + $TG_TOP_ZEN[@_tg_town] + " z^000000";
+	} else {
+		mes "^888888No donations yet. Be the first!^000000";
+	}
+	mes " ";
+	mes "Your donation: ^FF8800" + callfunc("F_TG_GetDonated", @_tg_town) + " z^000000";
+	if (TG_BUFF_TOWN == @_tg_town + 1) {
+		mes "Status: ^00AA00You have the Top Donor buff!^000000";
+	}
+	mes " ";
+	mes "^888888Donation Buff:^000000";
+	callfunc "F_TG_ShowBuff", @_tg_town;
+	next;
+	set @_tg_sel, select("Donate Zeny", "View Leaderboard", "Close");
+	if (@_tg_sel == 1) goto L_Donate;
+	if (@_tg_sel == 2) goto L_Board;
+	end;
+
+L_Donate:
+	mes "^663300[ Donate to " + @_tg_name$ + " ]^000000";
+	mes "Enter the amount to donate (min 10,000z):";
+	mes "Your Zeny: ^FF8800" + Zeny + " z^000000";
+	next;
+	input @_tg_amount, 10000, 1000000000;
+	if (@_tg_amount % 10000 != 0) {
+		mes "^663300[ Donate to " + @_tg_name$ + " ]^000000";
+		mes "^FF0000Amount must be a multiple of 10,000z.^000000";
+		next;
+		goto L_Donate;
+	}
+	if (Zeny < @_tg_amount) {
+		mes "^663300[ Donate to " + @_tg_name$ + " ]^000000";
+		mes "^FF0000You don't have enough Zeny.^000000";
+		next;
+		goto L_Main;
+	}
+	set Zeny, Zeny - @_tg_amount;
+	callfunc "F_TG_AddDonated", @_tg_town, @_tg_amount;
+	set @_tg_my_total, callfunc("F_TG_GetDonated", @_tg_town);
+
+	// Check if new top donor
+	if (@_tg_my_total > $TG_TOP_ZEN[@_tg_town]) {
+		// Remove buff from previous top donor if online
+		if ($TG_TOP_ID[@_tg_town] > 0 && $TG_TOP_ID[@_tg_town] != getcharid(0)) {
+			set @_tg_prev_sd, $TG_TOP_ID[@_tg_town];
+			// Will be removed on their next login via OnPCLoginEvent check
+		}
+		// Remove my own previous buff (another town) if any
+		if (TG_BUFF_TOWN > 0 && TG_BUFF_TOWN != @_tg_town + 1) {
+			callfunc "F_TG_RemoveBuff", TG_BUFF_TOWN - 1;
+		}
+		set $TG_TOP_ID[@_tg_town], getcharid(0);
+		set $TG_TOP_NAME$[@_tg_town], strcharinfo(0);
+		set $TG_TOP_ZEN[@_tg_town], @_tg_my_total;
+		set TG_BUFF_TOWN, @_tg_town + 1;
+		callfunc "F_TG_ApplyBuff", @_tg_town;
+		mes "^663300[ Donate to " + @_tg_name$ + " ]^000000";
+		mes "^00AA00You donated " + @_tg_amount + "z and became the Top Donor!^000000";
+		mes "^00AA00Your buff has been applied!^000000";
+		announce "[Town Governor] " + strcharinfo(0) + " is now the Top Donor of " + @_tg_name$ + "! (" + @_tg_my_total + "z)",0;
+	} else {
+		mes "^663300[ Donate to " + @_tg_name$ + " ]^000000";
+		mes "^00AA00Thank you! You donated " + @_tg_amount + "z.^000000";
+		mes "Your total: ^FF8800" + @_tg_my_total + "z^000000";
+		mes "Top Donor needs: ^FF8800" + ($TG_TOP_ZEN[@_tg_town] - @_tg_my_total + 10000) + "z more^000000";
+	}
+	next;
+	goto L_Main;
+
+L_Board:
+	mes "^663300[ " + @_tg_name$ + " Leaderboard ]^000000";
+	if ($TG_TOP_ID[@_tg_town] > 0) {
+		mes " ^FF8800#1 " + $TG_TOP_NAME$[@_tg_town] + "^000000 — " + $TG_TOP_ZEN[@_tg_town] + "z";
+		mes " ^888888(Top Donor buff active)^000000";
+	} else {
+		mes "^888888No donations yet this week.^000000";
+	}
+	mes " ";
+	mes "Weekly reset: ^888888Every Monday at 00:01^000000";
+	next;
+	goto L_Main;
+
+// Weekly reset — every Monday 00:01
+OnClock0001:
+	if (gettime(4) != 1) end; // 1 = Monday
+	set @_tg_i, 0;
+	while (@_tg_i < 14) {
+		set $TG_TOP_ID[@_tg_i], 0;
+		set $TG_TOP_NAME$[@_tg_i], "";
+		set $TG_TOP_ZEN[@_tg_i], 0;
+		set @_tg_i, @_tg_i + 1;
+	}
+	announce "[Town Governor] Weekly donation reset! All town buffs and leaderboards have been cleared.",0;
+	end;
+}
+
+//==============================================================
+// Individual Town Governor NPCs
+//==============================================================
+
+prontera,162,183,4	script	Governor#pron	71,{
+	set @tg_town_id, 0;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+morocc,159,96,4	script	Governor#morc	71,{
+	set @tg_town_id, 1;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+geffen,120,72,4	script	Governor#geff	71,{
+	set @tg_town_id, 2;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+payon,168,103,4	script	Governor#payn	71,{
+	set @tg_town_id, 3;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+alberta,100,143,4	script	Governor#albt	71,{
+	set @tg_town_id, 4;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+izlude,128,146,4	script	Governor#izld	71,{
+	set @tg_town_id, 5;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+aldebaran,140,119,4	script	Governor#alde	71,{
+	set @tg_town_id, 6;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+xmas,147,134,4	script	Governor#luti	71,{
+	set @tg_town_id, 7;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+comodo,209,143,4	script	Governor#como	71,{
+	set @tg_town_id, 8;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+yuno,157,120,4	script	Governor#yuno	71,{
+	set @tg_town_id, 9;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+amatsu,198,84,4	script	Governor#amat	71,{
+	set @tg_town_id, 10;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+gonryun,164,122,4	script	Governor#gonr	71,{
+	set @tg_town_id, 11;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+louyang,217,114,4	script	Governor#louy	71,{
+	set @tg_town_id, 12;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}
+
+hugel,100,130,4	script	Governor#huge	71,{
+	set @tg_town_id, 13;
+	doevent "TownGovernorSystem::OnTalk";
+	end;
+}

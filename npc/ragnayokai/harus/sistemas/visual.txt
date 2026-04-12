@@ -1,0 +1,52 @@
+prontera,168,202,6	script	Chefe dos Visuais	51,{
+
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Comigo você pode transformar um equipamento por um cópia visual, eu só cobro ^0000ff500x Kafra Points^000000 para usuários não ViP e ^0000ff250x Kafra Points^000000 para usuários ViP por cada transformação, ^FF9900a cópia visual do item virá sem cartas, enquantamentos e affins.^000000.";
+	next;
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "^FF9900ATENÇÃO: O ITEM ORIGINAL NÃO DEVE CONTER CARDS OU ENCANTAMENTOS.^000000.";
+	mes "^FF9900ATENÇÃO: NÃO FUNCIONA COM ITENS ROPS.^000000.";
+	setarray .@Position$[1],"- Cabeça","- Óculos","- Boca";
+	setarray .@Position[1],1,9,10;
+ 
+	set .@Menu$,"";
+	for(set .@i, 1; .@i < 4; set .@i, .@i + 1){
+		if(getequipisequiped(.@Position[.@i]))
+		set .@Menu$, .@Menu$ + .@Position$[.@i] + " " + "[ ^0000ff"+getequipname(.@Position[.@i])+" ^000000 ]";
+ 
+		set .@Menu$, .@Menu$ + ":";
+	}
+ 
+	set .@Part, .@Position[ select(.@Menu$) ];
+	set .@Visual, getequipid(.@Part);
+
+	next;
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+
+	deletearray .@Vconfere[0],127;
+	setarray .@Vconfere[0],5357,18550,5654,5780,18503,19008,5366,19009,5403,5412,5155,5800,5594,5423,5801,5374,5518,5483,5137,5225,5480,5548,5596,5846,5377,5325,5788,18507,2202,2204,5452,5453;
+	for( set .@i, 0; .@i < getarraysize(.@Vconfere); set .@i, .@i + 1 )
+	{
+		if( .@Vconfere[.@i] == .@Visual ) {
+		mes "NÃO TRABALHO COM ITENS DONATE!";		
+		close;
+		}
+	}
+
+	if( !getequipisequiped(.@Part) ){ mes "Você não está usando um equipamento."; close; }
+	else if( getequipcardcnt(.@Part) != 0) { mes "Remova a carta do item"; close; }
+	else if( getequipcardid(.@Part,3) != 0) { mes "Item encantado!"; close; }
+
+	mes "Você selecionou o item ^0000ff"+getitemname(getequipid(.@Part))+"^000000, você deseja transforma-lo em visual?";
+	if(select("- Sim:- Não") == 2) close;
+ 	
+	if( #TRIUMPHPOINTS < 500 && getgmlevel() == 0 ){ next; mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]"; mes "Você não tem os Kafra Points necessários."; close; }
+	if( #TRIUMPHPOINTS < 250 && getgmlevel() < 1 ){ next; mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]"; mes "Você não tem os Kafra Points necessários."; close; }
+	costume .@Part;
+	if(getgmlevel() == 0) set #TRIUMPHPOINTS,#TRIUMPHPOINTS - 500; else set #TRIUMPHPOINTS,#TRIUMPHPOINTS - 250;
+	getitem .@Visual,1;
+	getitem 2220,1;
+	equip 2220;
+	close;
+
+}

@@ -1,0 +1,78 @@
+function	script	antibot	{
+if(getgmlevel() < 80) end;
+OnWhisperGlobal:
+	if(compare(@whispervar0$,"!ver"))
+query_sql "SELECT `userid` from `login` WHERE `suspbot` >= 20", .@user$;
+		mes "O usuário:^FFFF00 "+@user$[0];
+		mes "^000000O usuário:^FFFF00 "+@user$[1];
+		mes "^000000O usuário:^FFFF00 "+@user$[2];
+		mes "^000000O usuário:^FFFF00 "+@user$[3];
+		mes "^000000O usuário:^FFFF00 "+@user$[4];
+		mes "^000000São suspeitos de BOT";
+		close;
+}
+
+function	script	ShieldInGame	{
+	if( getvariableofnpc(.Ready,"BG_Queue_Join") == 0 )
+		donpcevent "BG_Queue_Join::OnInit";
+
+	if(#delayglobal > gettimetick(2))
+			{
+				set .@tempoMF,#delayglobal - gettimetick(2);
+				message strcharinfo(0),"HAHA tentando escapar do Campo de Batalha né? Fica de molho ai ...";
+				message strcharinfo(0),"Tempo restante: "+(.@tempoMF/60)+" Minuto(s).";
+				close;
+			}
+			if( BaseLevel < 99 )
+			{
+				message strcharinfo(0),"Level minimo requerido para participar da BG é 99.";
+				close;
+			}
+/*
+			if(	Class != 4008 &&			
+				Class != 4009 &&
+				Class != 4010 &&
+				Class != 4011 &&
+				Class != 4012 &&
+				Class != 4013 &&
+				Class != 4015 &&
+				Class != 4016 &&
+				Class != 4017 &&
+				Class != 4018 &&
+				Class != 4019 &&
+				Class != 4020 &&
+				Class != 4021 &&
+				Class != 4049)
+			{
+				message strcharinfo(0),"A entrada de sua classe não é permitida na batalha campal.";
+				close;
+			}
+*/
+	set @n1, rand(1,9);
+	set @n2, rand(1,9);
+	set @n3, rand(1,9);
+	set @n4, rand(1,9);
+	set @numero, @n1*1000+@n2*100+@n3*10+@n4;
+
+		mes "[Checagem Automática]";
+		mes "Quais numeros aparecem aqui?";
+		mes "---->[ "+@n1+" "+@n2+" "+@n3+" "+@n4+" ]<----";
+			input @respnum;
+		if(@respnum == @numero){
+		mes "[Checagem Automática]"; 
+		mes "Você acertou as respostas!";
+		mes "Desculpe o inconveniente.";
+		message strcharinfo(0),"Registrado com SUCESSO!";
+		message strcharinfo(0),"Aguarde alguns segundos até ser recallado para a Arena.";
+		bg_queue_join getvariableofnpc(.BG_Queue,"BG_Queue_Join");
+		close;
+		
+}
+	if(@respnum != @numero){
+	set @suspbot, 1;
+	mes "Você NÃO acertou as respostas!";
+	/*Expressão sql que salva um log da resposta em +1, sugerindo quantas vezes a "pessoa" errou*/
+	query_sql "UPDATE `login` SET `suspbot`=`suspbot`+"+@suspbot+" WHERE `account_id`='"+ getcharid(3) +"'";
+	close;
+	}
+}

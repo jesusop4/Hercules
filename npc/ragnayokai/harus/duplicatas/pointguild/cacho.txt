@@ -1,0 +1,32 @@
+que_temsky,103,147,3	duplicate(HealerG)	Curandeira#cacho	971,2,2
+que_temsky,96,142,5	duplicate(gomora)	Batalha Campal#cacho	733
+que_temsky,98,147,5	duplicate(PM_source)	PvP Master#cacho	470
+
+
+que_temsky,90,147,5	script	Kafra Yokai#cacho	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "que_temsky",99,142;
+	close;
+	}
+}
+
+que_temsky,103,141,3	duplicate(ultYokai)	Utilidades#cacho	838
+
+que_temsky,109,144,3	script	cachorreiras#cacho	722,{
+OnInit:
+	flagemblem 40;
+	end;
+}

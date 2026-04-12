@@ -1,0 +1,29 @@
+z_agit,16,182,5	duplicate(Empacotador de Emblemas)	Empacotador#god	54
+z_agit,24,182,3	duplicate(Telma 2.0)	Telma#god	701
+z_agit,18,182,5	duplicate(Resetadora)	Resetadora#god	859
+z_agit,26,182,3	duplicate(HealerG)	Curandeira#god	971,2,2
+z_agit,20,182,5	duplicate(gomora)	Batalha Campal#god	733
+z_agit,28,182,3	duplicate(PM_source)	Arenas de Batalha#god	470
+
+
+z_agit,30,182,3	script	Kafra Yokai#god	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "z_agit",24,175;
+	close;
+	}
+}
+
+z_agit,22,182,5	duplicate(ultYokai)	Utilidades#god	838

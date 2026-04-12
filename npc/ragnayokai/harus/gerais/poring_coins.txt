@@ -1,0 +1,134 @@
+//==============================================================
+// Lydia — Poring Coin Exchange NPC
+// Location: Prontera main office
+//
+// Item 7539 = Poring Coin (Moeda Poring)
+// Exchange for consumables at the listed PC costs.
+//==============================================================
+
+prontera,161,188,4	script	Lydia#PC	113,{
+
+	mes "^663300[ Lydia ]^000000";
+	mes "Hello, adventurer! I can exchange your ^FF8800Poring Coins^000000 for useful items.";
+	mes " ";
+	mes "Your Poring Coins: ^FF8800" + countitem(7539) + "^000000";
+	next;
+
+	set @_pc_sel, select(
+		"Consumables",
+		"Wings & Teleport",
+		"Battle Supplies",
+		"Close"
+	);
+
+	if (@_pc_sel == 4) { close; }
+	if (@_pc_sel == 1) goto L_Consumables;
+	if (@_pc_sel == 2) goto L_Wings;
+	goto L_Battle;
+
+//-------------------------------
+L_Consumables:
+	mes "^663300[ Lydia — Consumables ]^000000";
+	mes "Your Poring Coins: ^FF8800" + countitem(7539) + "^000000";
+	next;
+	set @_pc_sel, select(
+		"Field Manual 100% — ^FF880040 PC^000000",
+		"Bubble Gum — ^FF8800700 PC^000000",
+		"LV10 Blessing Scroll — ^FF88002 PC^000000",
+		"LV10 Agi Scroll — ^FF88002 PC^000000",
+		"Kafra Card — ^FF880020 PC^000000",
+		"Kafra Card x10 — ^FF8800200 PC^000000",
+		"Blessing Scroll x10 — ^FF880020 PC^000000",
+		"Agi Scroll x10 — ^FF880020 PC^000000",
+		"Speed Potion x10 — ^FF88005 PC^000000",
+		"Life Insurance — ^FF88003 PC^000000",
+		"Medium Life Potion — ^FF880015 PC^000000",
+		"Med Life Potion x10 — ^FF8800150 PC^000000",
+		"Regeneration Potion — ^FF880015 PC^000000",
+		"Regen Potion x10 — ^FF8800150 PC^000000",
+		"Back"
+	);
+	if (@_pc_sel == 15) end;
+	set @_pc_item, 0; set @_pc_qty, 1; set @_pc_cost, 0;
+	if (@_pc_sel ==  1) { set @_pc_item, 12208; set @_pc_qty,  1; set @_pc_cost,  40; }
+	if (@_pc_sel ==  2) { set @_pc_item, 12210; set @_pc_qty,  1; set @_pc_cost, 700; }
+	if (@_pc_sel ==  3) { set @_pc_item, 12215; set @_pc_qty,  1; set @_pc_cost,   2; }
+	if (@_pc_sel ==  4) { set @_pc_item, 12216; set @_pc_qty,  1; set @_pc_cost,   2; }
+	if (@_pc_sel ==  5) { set @_pc_item, 12211; set @_pc_qty,  1; set @_pc_cost,  20; }
+	if (@_pc_sel ==  6) { set @_pc_item, 12211; set @_pc_qty, 10; set @_pc_cost, 200; }
+	if (@_pc_sel ==  7) { set @_pc_item, 12215; set @_pc_qty, 10; set @_pc_cost,  20; }
+	if (@_pc_sel ==  8) { set @_pc_item, 12216; set @_pc_qty, 10; set @_pc_cost,  20; }
+	if (@_pc_sel ==  9) { set @_pc_item, 13995; set @_pc_qty,  1; set @_pc_cost,   5; }
+	if (@_pc_sel == 10) { set @_pc_item, 12209; set @_pc_qty,  1; set @_pc_cost,   3; }
+	if (@_pc_sel == 11) { set @_pc_item, 14535; set @_pc_qty,  1; set @_pc_cost,  15; }
+	if (@_pc_sel == 12) { set @_pc_item, 14535; set @_pc_qty, 10; set @_pc_cost, 150; }
+	if (@_pc_sel == 13) { set @_pc_item, 14537; set @_pc_qty,  1; set @_pc_cost,  15; }
+	if (@_pc_sel == 14) { set @_pc_item, 13720; set @_pc_qty,  1; set @_pc_cost, 150; }
+	goto L_Confirm;
+
+//-------------------------------
+L_Wings:
+	mes "^663300[ Lydia — Wings & Teleport ]^000000";
+	mes "Your Poring Coins: ^FF8800" + countitem(7539) + "^000000";
+	next;
+	set @_pc_sel, select(
+		"Giant Fly Wing x50 — ^FF880030 PC^000000",
+		"Green Butterfly Wing x5 — ^FF880050 PC^000000",
+		"Blue Butterfly Wing x5 — ^FF880050 PC^000000",
+		"Red Butterfly Wing x5 — ^FF880050 PC^000000",
+		"Infinite Fly Wing — ^FF8800700 PC^000000",
+		"Infinite Butterfly Wing — ^FF8800600 PC^000000",
+		"Back"
+	);
+	if (@_pc_sel == 7) end;
+	set @_pc_item, 0; set @_pc_qty, 1; set @_pc_cost, 0;
+	if (@_pc_sel == 1) { set @_pc_item, 12212; set @_pc_qty, 50; set @_pc_cost,  30; }
+	if (@_pc_sel == 2) { set @_pc_item, 14583; set @_pc_qty,  5; set @_pc_cost,  50; }
+	if (@_pc_sel == 3) { set @_pc_item, 14585; set @_pc_qty,  5; set @_pc_cost,  50; }
+	if (@_pc_sel == 4) { set @_pc_item, 14584; set @_pc_qty,  5; set @_pc_cost,  50; }
+	if (@_pc_sel == 5) { set @_pc_item, 25001; set @_pc_qty,  1; set @_pc_cost, 700; }
+	if (@_pc_sel == 6) { set @_pc_item, 25002; set @_pc_qty,  1; set @_pc_cost, 600; }
+	goto L_Confirm;
+
+//-------------------------------
+L_Battle:
+	mes "^663300[ Lydia — Battle Supplies ]^000000";
+	mes "Your Poring Coins: ^FF8800" + countitem(7539) + "^000000";
+	next;
+	set @_pc_sel, select(
+		"Dead Branch x10 Box — ^FF880050 PC^000000",
+		"Bloody Branch — ^FF8800300 PC^000000",
+		"Gym Pass — ^FF880070 PC^000000",
+		"Gym Pass x10 — ^FF8800700 PC^000000",
+		"Tyr's Blessing — ^FF880025 PC^000000",
+		"Barricade Repair Kit — ^FF880075 PC^000000",
+		"Mysterious Dyestuff — ^FF8800500 PC^000000",
+		"Back"
+	);
+	if (@_pc_sel == 8) end;
+	set @_pc_item, 0; set @_pc_qty, 1; set @_pc_cost, 0;
+	if (@_pc_sel == 1) { set @_pc_item, 14233; set @_pc_qty,  1; set @_pc_cost,  50; }
+	if (@_pc_sel == 2) { set @_pc_item, 12103; set @_pc_qty,  1; set @_pc_cost, 300; }
+	if (@_pc_sel == 3) { set @_pc_item,  7776; set @_pc_qty,  1; set @_pc_cost,  70; }
+	if (@_pc_sel == 4) { set @_pc_item,  7776; set @_pc_qty, 10; set @_pc_cost, 700; }
+	if (@_pc_sel == 5) { set @_pc_item, 14601; set @_pc_qty,  1; set @_pc_cost,  25; }
+	if (@_pc_sel == 6) { set @_pc_item, 14287; set @_pc_qty,  1; set @_pc_cost,  75; }
+	if (@_pc_sel == 7) { set @_pc_item,  6220; set @_pc_qty,  1; set @_pc_cost, 500; }
+	goto L_Confirm;
+
+//-------------------------------
+L_Confirm:
+	if (@_pc_item == 0 || @_pc_cost == 0) { close; }
+	if (countitem(7539) < @_pc_cost) {
+		mes "^663300[ Lydia ]^000000";
+		mes "^FF0000You don't have enough Poring Coins.^000000";
+		mes "You need ^FF8800" + @_pc_cost + " PC^000000 but only have ^FF8800" + countitem(7539) + " PC^000000.";
+		close;
+	}
+	delitem 7539, @_pc_cost;
+	getitem @_pc_item, @_pc_qty;
+	mes "^663300[ Lydia ]^000000";
+	mes "^00AA00Exchange successful!^000000";
+	mes "Remaining Poring Coins: ^FF8800" + countitem(7539) + "^000000";
+	close;
+}

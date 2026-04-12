@@ -1,0 +1,19 @@
+-	script	salagm	-1,{
+    OnInit:
+        bindatcmd("salagm", "salawarp::OnGMYokai");
+        end;
+}
+
+-	script	salawarp	-1,{
+    OnGMYokai:
+ 	if(getgmlevel() < 60) end;
+	warp "sec_in02",28,166;
+	end;
+}
+
+sec_in02	mapflag	noreturn
+sec_in02	mapflag	nosave
+sec_in02	mapflag	noteleport
+sec_in02	mapflag	nowarpto
+sec_in02	mapflag	nowarp
+sec_in02	mapflag	nomemo

@@ -1,0 +1,545 @@
+// .----------------------------------------------------------.
+// .                ___________________                       .
+// .               /   _____/\______   \                      .
+// .               \_____  \  |    |  _/                      .
+// .               /        \ |    |   \                      .
+// .              /_______  / |______  /                      .
+// .                      \/         \/                       .
+// .               [ Advanced Scripts ]                       .
+// .                                                    v1.2  .
+// .----------------------------------------------------------.
+// ;               https:github.com/SoulBlaker/               ;
+// .----------------------------------------------------------.
+// . Script:                                                  .
+// .   Sitema de Duelos                                       .
+// .----------------------------------------------------------.
+// . Por: SoulBlaker   Compátivel: eAthena Based              .
+// . Versão: 1.1                                              .
+// .----------------------------------------------------------.
+// . Descrição:                                               .
+// .  1ª Arena de Duelos, contém os eventos e os apostadoras. .
+// .----------------------------------------------------------.
+// . Changelog da Versão:                                     .
+// .  * 1.0 [SoulBlaker]                                      .
+// .	- Iniciado NPC.                                       .
+// .  * 1.1 [SoulBlaker]                                      .
+// .    - Adicionado comando getcharisdead, para checagem de  .
+// .      empate.                                             .
+// *----------------------------------------------------------*
+-	script	Dueling_03	-1,{
+
+OnInit:
+	if( !getmapusers("x1_arena_03") )
+		donpcevent "Dueling_03::OnEnd";
+	else if( getmapusers("x1_arena_03") < 2 )
+		donpcevent "Dueling_03::OnCheck";
+	end;
+
+OnStart:
+	set $dueling_arena_3, 1;
+	set $dueling03_player_1$, "";
+	set $dueling03_aid_1, 0;
+	set $dueling03_status_1, 0;
+	set $dueling03_player_2$, "";
+	set $dueling03_aid_2, 0;
+	set $dueling03_status_2, 0;
+	set $dueling03_agree_1, 0;
+	set $dueling03_agree_2, 0;
+	set $dueling03_bid_progress, 0;
+	deletearray $dueling03_bid_1, 127;
+	deletearray $dueling03_bid_2, 127;
+	enablenpc "#Dueling03_player_warp";
+	donpcevent "::OnDueling03B01E";
+	setwall "x1_arena_03", 55, 42, 30, 2, 0, "Dueling03_w01";
+	setwall "x1_arena_03", 55, 58, 30, 2, 0, "Dueling03_w02";
+	sleep 2000;
+	initnpctimer "#Dueling03_timer_check";
+	end;
+	
+OnTimer8000:
+	delwall "Dueling03_w01";
+	delwall "Dueling03_w02";
+	mapannounce "x1_arena_03", "[Duelo]: O Duelo começou, boa sorte!", bc_map, "0x00FF00";
+	end;
+	
+OnEnd:
+	mapwarp "x1_arena_03", "x1_room", 154, 150;
+	set $dueling_arena_3, 0;
+	set $dueling03_player_1$, "";
+	set $dueling03_aid_1, 0;
+	set $dueling03_status_1, 0;
+	set $dueling03_player_2$, "";
+	set $dueling03_aid_2, 0;
+	set $dueling03_status_2, 0;
+	set $dueling03_agree_1, 0;
+	set $dueling03_agree_2, 0;
+	set $dueling03_bid_progress, 0;
+	deletearray $dueling03_bid_1, 127;
+	deletearray $dueling03_bid_2, 127;
+	stopnpctimer "#Dueling03_timer_check";
+	donpcevent "Recrutador de Duelos#d_pvp01::OnStartArena";
+	disablenpc "Apostadora#Dueling03_3";
+	end;
+
+OnPCLogoutEvent:
+	set .@flaglogout,1;
+OnPCDieEvent:
+	set .@flaglogout,(.@flaglogout?1:0);
+	set .@charname$, strcharinfo(0);
+	
+	sleep 2000;
+	set .@p,(.@charname$==$dueling03_player_1$?1:(.@charname$==$dueling03_player_2$?2:0));
+	
+	if( !.@p )
+		end;
+	
+	if( .@flaglogout && .@p == 1 )
+		set $dueling03_status_1, 0;
+	else if( .@flaglogout && .@p == 2 )
+		set $dueling03_status_2, 0;
+		
+	donpcevent "Dueling_03::OnCheck";
+	end;
+
+OnCheck:
+	sleep 2000;
+	getmapxy .@map_1$, .@x, .@y, 0, $dueling03_player_1$;
+	getmapxy .@map_2$, .@x, .@y, 0, $dueling03_player_2$;
+	
+	if( .@map_1$ != "x1_arena_03" || getcharisdead($dueling03_player_1$) )
+		set $dueling03_status_1, 0;
+		
+	if( .@map_2$ != "x1_arena_03" || getcharisdead($dueling03_player_2$) )
+		set $dueling03_status_2, 0;
+	
+	if( $dueling_arena_3 < 4 && !$dueling03_status_1 && !$dueling03_status_2 )
+	{
+		mapannounce "x1_arena_03", "Ambos jogadores empataram não houve vencedores, aguardem para receber seus itens.", bc_map, "0x00FF00";
+		set $dueling_arena_3, 4;
+		sleep 2000;
+		if( attachrid($dueling03_aid_1) )
+		{
+			if( $dueling03_bid_1[0] == 1 )
+				getitem2 $dueling03_bid_1[1], $dueling03_bid_1[2], $dueling03_bid_1[4], $dueling03_bid_1[3], $dueling03_bid_1[5], $dueling03_bid_1[6], $dueling03_bid_1[7], $dueling03_bid_1[8], $dueling03_bid_1[9];
+			else if( $dueling03_bid_1[0] == 2 )
+				set Zeny, Zeny + $dueling03_bid_1[2];
+				
+			detachrid;
+		}
+			
+		if( attachrid($dueling03_aid_2) )
+		{
+			if( $dueling03_bid_2[0] == 1 )
+				getitem2 $dueling03_bid_2[1], $dueling03_bid_2[2], $dueling03_bid_2[4], $dueling03_bid_2[3], $dueling03_bid_2[5], $dueling03_bid_2[6], $dueling03_bid_2[7], $dueling03_bid_2[8], $dueling03_bid_2[9];
+			else if( $dueling03_bid_2[0] == 2 )
+				set Zeny, Zeny + $dueling03_bid_2[2];
+					
+			detachrid;
+		}
+		sleep 2000;
+		donpcevent "Dueling_03::OnEnd";
+	}
+	else if( $dueling_arena_3 > 0 && $dueling_arena_3 < 4 && (!$dueling03_status_1 || !$dueling03_status_2) )
+	{
+		if( $dueling03_status_1 )
+			set .@charname$,$dueling03_player_1$;
+		else if( $dueling03_status_2 )
+			set .@charname$,$dueling03_player_2$;
+		else {
+			donpcevent "Dueling_03::OnEnd";
+			end;
+		}
+		playbgmall "ufc2","x1_arena_03";	
+		mapannounce "x1_arena_03", "O Jogador " + .@charname$ + " venceu o duelo!", bc_map, "0x00FF00";
+		set .@last,$dueling_arena_3;
+		set $dueling_arena_3, 3;
+		enablenpc "Apostadora#Dueling03_3";
+		
+		if( .@last < 2 )
+		{
+			warpchar "x1_arena_03", 50, 50, getcharid(0,.@charname$);
+			disablenpc "Apostadora#Dueling03_1";
+			disablenpc "Apostadora#Dueling03_2";
+		}
+	}
+	end;
+}
+
+// Checagem de tempo para finalizações limpeza da arena.
+-	script	#Dueling03_timer_check	-1,{
+OnInit:
+	if( $dueling_arena_3 )
+		initnpctimer;
+	end;
+
+OnTimer60000:
+	stopnpctimer;
+	if( !getmapusers("x1_arena_03") )
+		donpcevent "Dueling_03::OnEnd";
+	else
+		initnpctimer;
+	end;
+}
+
+// Teleportador que define o lado que os jogadores vão se encontrar.
+x1_arena_03,50,50,0	script	#Dueling03_player_warp	-1,5,5,{
+	end;
+
+OnInit:
+	disablenpc "#Dueling03_player_warp";
+	end;
+
+OnTouch:
+	if( $dueling03_player_1$ == "" )
+	{
+		set $dueling03_aid_1, getcharid(3);
+		set $dueling03_player_1$, strcharinfo(0);
+		set $dueling03_status_1, 1;
+		warp "x1_arena_03", 51, 59;
+	}
+	else if( $dueling03_player_2$ == "" )
+	{
+		set $dueling03_aid_2, getcharid(3);
+		set $dueling03_player_2$, strcharinfo(0);
+		set $dueling03_status_2, 1;
+		warp "x1_arena_03", 51, 40;
+	}
+	else {
+		warp "x1_room", 154, 150;
+	}
+
+	if( $dueling03_player_1$ != "" && $dueling03_player_2$ != "" )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// Apostadores.
+x1_arena_03,49,40,5	script	Apostadora#Dueling03_1	50,{
+	set .@r, (strcharinfo(0)==$dueling03_player_1$?1:2);
+	set .@r2, (.@r==1?2:1);
+	
+	if( getmapusers("x1_arena_03") < 2 )
+	{
+		donpcevent "Dueling_03::OnCheck";
+		end;
+	}
+	
+	// Prevenção de outros jogadores tentarem fazer a apostas.
+	if( strcharinfo(0) != $dueling03_player_1$ && strcharinfo(0) != $dueling03_player_2$ )
+	{
+		mes "^FF0000[Apostadora]^000000";
+		mes "Você não está envolvido com o duelo!";
+		close2;
+		warp "x1_room", 154, 150;
+		end;
+	}
+	else if( !$dueling03_bid_progress && (strcharinfo(0) == getd("$dueling03_player_"+.@r+"$") && getd("$dueling03_bid_"+.@r+"[0]") != 0) )
+	{
+		mes "^FF0000[Apostadora]^000000";
+		mes "Você já fez sua aposta, deve aguardar o adversário fazer sua aposta.";
+		close;
+	}
+	else if( !$dueling03_bid_progress )
+	{
+		while(1)
+		{
+			mes "^FF0000[Apostadora]^000000";
+			mes "O que você deseja apostar?";
+			next;
+			switch( select("- Apostar um Item.", "- Apostar Zenys.", "- Não apostar.") )
+			{
+				case 1:
+					deletearray @inventorylist_id[0], getarraysize(@inventorylist_id);
+					getinventorylist;
+					if( !getarraysize(@inventorylist_id) )
+					{
+						mes "^FF0000[Apostadora]^000000";
+						mes "Você não tem itens para apostar.";
+						next;
+						break;
+					}
+					set .@loop_2, 1;
+					while(.@loop_2)
+					{
+						mes "^FF0000[Apostadora]^000000";
+						mes "Escolhe o item que deseja apostar.";
+						next;
+						set .@build_menu$, "";
+						for( set .@i, 0; .@i < getarraysize(@inventorylist_id); set .@i, .@i + 1 )
+							set .@build_menu$, .@build_menu$ + (!@inventorylist_equip[.@i]&&!@inventorylist_expire[.@i]?"- " + getitemname(@inventorylist_id[.@i]) + ".:":":");
+						
+						set .@choose, select(.@build_menu$+"^FF0000- Voltar.^000000")-1;
+						if( .@choose >= getarraysize(@inventorylist_id) )
+						{
+							set .@loop_2, 0;
+							break;
+						}
+						
+						mes "^FF0000[Apostadora]^000000";
+						mes "Você pode apostar até ^0000FF" + @inventorylist_amount[.@choose] + "x " + getitemname(@inventorylist_id[.@choose]) + "^000000,";
+						mes "se você digitar ^FF00000^000000 você poderá escolher outro item.";
+						mes "Quantos ^0000FF" + getitemname(@inventorylist_id[.@choose]) + "^000000 você deseja apostar?";
+						next;
+						set .@loop_3, 1;
+						while(.@loop_3)
+						{
+							input .@amount;
+							if( .@amount > @inventorylist_amount[.@choose] )
+							{
+								mes "^FF0000[Apostadora]^000000";
+								mes "Você não tem ^0000FF" + .@amount + "x " + getitemname(@inventorylist_id[.@choose]) + "^000000, tente outro valor.";
+								next;
+							}
+							else if( !.@amount )
+							{
+								mes "^FF0000[Apostadora]^000000";
+								mes "Tudo bem, vamos tentar novamente.";
+								next;
+								set .@loop_3, 0;
+							}
+							else {
+								mes "^FF0000[Apostadora]^000000";
+								mes "Tem certeza que deseja apostar ^0000FF" + .@amount + "x " + getitemname(@inventorylist_id[.@choose]) + "^000000?";
+								next;
+								if( select("- Sim, por favor.", "^FF0000- Não, não quero.^000000") == 1 )
+								{
+									delitem @inventorylist_id[.@choose], .@amount;
+									setarray getd("$dueling03_bid_"+.@r+"[0]"), 1, @inventorylist_id[.@choose], .@amount, @inventorylist_refine[.@choose], @inventorylist_identify[.@choose], @inventorylist_attribute[.@choose], @inventorylist_card1[.@choose], @inventorylist_card2[.@choose], @inventorylist_card3[.@choose], @inventorylist_card4[.@choose];
+									
+									if( $dueling03_bid_1[0] != 0 && $dueling03_bid_2[0] != 0 )
+										set $dueling03_bid_progress, 1;
+										
+									mes "^FF0000[Apostadora]^000000";
+									mes "Muito bem, sua aposta foi feita.";
+									close2;
+									if( $dueling03_bid_progress == 1 )
+										mapannounce "x1_arena_03", "Apostadora: As apostas foram feitas, ambos duelistas devem concordar com os termos, falem comigo novamente!", bc_map, "0x00FF00";
+									end;
+								}
+								set .@loop_3, 0;
+							}
+						}
+					}
+					break;
+				case 2:
+					if( !Zeny )
+					{
+						mes "^FF0000[Apostadora]^000000";
+						mes "Você não tem ^0000FFZeny^000000 para apostar.";
+						next;
+						break;
+					}
+					set .@loop_2, 1;
+					while(.@loop_2)
+					{
+						mes "^FF0000[Apostadora]^000000";
+						mes "Digite a ^0000FFquantidade de Zeny^000000 que deseja apostar,";
+						mes "se você digitar ^FF00000^000000 você irá voltar a seleção anterior.";
+						next;
+						input .@zeny;
+						if( !.@zeny )
+							set .@loop_2, 0;
+						else if( Zeny < .@zeny ) {
+							mes "^FF0000[Apostadora]^000000";
+							mes "Você não tem ^0000FF" + .@zeny + " de Zeny^000000 para apostar, tente novamente lembrando que";
+							mes "se você digitar ^FF00000^000000 você irá voltar a seleção anterior.";
+							next;
+						}
+						else {
+							mes "^FF0000[Apostadora]^000000";
+							mes "Tem certeza que deseja apostar ^0000FF" + .@zeny + " Zenys^000000?";
+							next;
+							if( select("- Sim, por favor.", "^FF0000- Não, não quero.^000000") == 1 )
+							{
+								set Zeny, Zeny - .@zeny;
+								setarray getd("$dueling03_bid_"+.@r+"[0]"), 2, 0, .@zeny;
+									
+								if( $dueling03_bid_1[0] != 0 && $dueling03_bid_2[0] != 0 )
+									set $dueling03_bid_progress, 1;
+										
+								mes "^FF0000[Apostadora]^000000";
+								mes "Muito bem, sua aposta foi feita.";
+								close2;
+								if( $dueling03_bid_progress == 1 )
+									mapannounce "x1_arena_03", "Apostadora: As apostas foram feitas, ambos duelistas devem concordar com os termos, falem comigo novamente!", bc_map, "0x00FF00";
+								end;
+							}
+							set .@loop_2, 0;
+						}
+					}
+					break;
+				case 3:
+					mes "^FF0000[Apostadora]^000000";
+					mes "Tem certeza que não deseja apostar nada?";
+					next;
+					if( select("- Sim, por favor.", "^FF0000- Não, não quero.^000000") == 1 )
+					{
+						setarray getd("$dueling03_bid_"+.@r+"[0]"), 3, 0, 0;
+						
+						if( $dueling03_bid_1[0] != 0 && $dueling03_bid_2[0] != 0 )
+								set $dueling03_bid_progress, 1;
+										
+						mes "^FF0000[Apostadora]^000000";
+						mes "Muito bem, sua aposta foi feita.";
+						close2;
+						if( $dueling03_bid_progress == 1 )
+							mapannounce "x1_arena_03", "Apostadora: As apostas foram feitas, ambos duelistas devem concordar com os termos, falem comigo novamente!", bc_map, "0x00FF00";
+						end;
+					}
+					break;
+			}
+		}
+	}
+	else if( $dueling03_bid_progress == 1 && (strcharinfo(0) == getd("$dueling03_player_"+.@r+"$") && getd("$dueling03_agree_"+.@r)) )
+	{
+		mes "^FF0000[Apostadora]^000000";
+		mes "Você já concordou com a aposta, agora deve aguardar o seu adversário concordar também!";
+		close;
+	}
+	else if( $dueling03_bid_progress == 1 )
+	{
+		mes "^FF0000[Apostadora]^000000";
+		if( getd("$dueling03_bid_"+.@r2+"[0]") == 1 )
+			mes "O ^0000FF" + getd("$dueling03_player_"+.@r2+"$") + "^000000 fez a aposta de ^FF0000" + getd("$dueling03_bid_"+.@r2+"[2]") + "x " + getitemname(getd("$dueling03_bid_"+.@r2+"[1]")) + "^000000.";
+		else if( getd("$dueling03_bid_"+.@r2+"[0]") == 2 )
+			mes "O ^0000FF" + getd("$dueling03_player_"+.@r2+"$") + "^000000 fez a aposta de ^FF0000" + getd("$dueling03_bid_"+.@r2+"[2]") + " Zenys^000000.";
+		else
+			mes "O ^0000FF" + getd("$dueling03_player_"+.@r2+"$") + "^000000 não fez apostas.";
+				
+		mes "Você concorda com esta aposta?";
+		next;
+		if( select("- Sim, concordo.", "^FF0000- Não concordo.^000000") == 2 )
+		{
+			set $dueling03_bid_progress, 2;
+			if( getd("$dueling03_bid_"+.@r+"[0]") == 1 )
+				getitem2 getd("$dueling03_bid_"+.@r+"[1]"), getd("$dueling03_bid_"+.@r+"[2]"), getd("$dueling03_bid_"+.@r+"[4]"), getd("$dueling03_bid_"+.@r+"[3]"), getd("$dueling03_bid_"+.@r+"[5]"), getd("$dueling03_bid_"+.@r+"[6]"), getd("$dueling03_bid_"+.@r+"[7]"), getd("$dueling03_bid_"+.@r+"[8]"), getd("$dueling03_bid_"+.@r+"[9]");
+			else if( getd("$dueling03_bid_"+.@r+"[0]") == 2 )
+				set Zeny, Zeny + getd("$dueling03_bid_"+.@r+"[2]");
+				
+			setd "$dueling03_agree_"+.@r, 1;
+			setd "$dueling03_agree_"+.@r2, 0;
+			mapannounce "x1_arena_03", "Apostadora: O Jogador [" + strcharinfo(0) + "] não concordou com a aposta, o jogador [" + getd("$dueling03_player_"+.@r2+"$") + "] pode retirar sua aposta para fazer uma nova!", bc_map, "0x00FF00";
+			mes "^FF0000[Apostadora]^000000";
+			mes "Tudo bem, vamos aguardar seu adversário para refazer-mos as apostas.";
+			close;
+		}
+		else {
+			mes "^FF0000[Apostadora]^000000";
+			mes "Tudo bem, vou oficializar sua aposta!";
+			close2;
+			setd "$dueling03_agree_"+.@r, 1;
+			if( $dueling03_agree_1 && $dueling03_agree_2 )
+			{
+				playbgmall "ufc","x1_arena_03";
+				mapannounce "x1_arena_03", "Apostadora: As apostas foram feita, o duelo vai começar em 8 segundos!", bc_map, "0x00FF00";
+				initnpctimer "Dueling_03";
+				set $dueling03_bid_progress, 3;
+				set $dueling_arena_3, 2;
+				donpcevent "::OnDueling03B01D";
+			}
+			end;
+		}
+	}
+	else if( $dueling03_bid_progress == 2 && getd("$dueling03_agree_"+.@r) )
+	{
+		mes "^FF0000[Apostadora]^000000";
+		mes "Estou aguardando seu adversário falar comigo.";
+		close;
+	}
+	else if( $dueling03_bid_progress == 2 && !getd("$dueling03_agree_"+.@r) )
+	{
+		if( getd("$dueling03_bid_"+.@r+"[0]") == 1 )
+			getitem2 getd("$dueling03_bid_"+.@r+"[1]"), getd("$dueling03_bid_"+.@r+"[2]"), getd("$dueling03_bid_"+.@r+"[4]"), getd("$dueling03_bid_"+.@r+"[3]"), getd("$dueling03_bid_"+.@r+"[5]"), getd("$dueling03_bid_"+.@r+"[6]"), getd("$dueling03_bid_"+.@r+"[7]"), getd("$dueling03_bid_"+.@r+"[8]"), getd("$dueling03_bid_"+.@r+"[9]");
+		else if( getd("$dueling03_bid_"+.@r+"[0]") == 2 )
+			set Zeny, Zeny + getd("$dueling03_bid_"+.@r+"[2]");
+			
+		mes "^FF0000[Apostadora]^000000";
+		mes "Muito bem, estamos pronto para fazer outra aposta.";
+		close2;
+		set $dueling03_agree_1, 0;
+		set $dueling03_agree_2, 0;
+		deletearray $dueling03_bid_1[0], getarraysize($dueling03_bid_1);
+		deletearray $dueling03_bid_2[0], getarraysize($dueling03_bid_2);
+		if( !$dueling03_agree_1 && !$dueling03_agree_2 )
+			set $dueling03_bid_progress, 0;
+		end;
+	}
+	
+	mes "^FF0000[Apostadora]^000000";
+	mes "Parece que já está acontecendo o duelo.";
+	close;
+	
+OnDueling03B01E:
+	enablenpc strnpcinfo(0);
+	end;
+
+OnDueling03B01D:
+	disablenpc strnpcinfo(0);
+	end;
+	
+OnInit:
+	if( $dueling_arena_3 != 1 )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+x1_arena_03,49,59,5	duplicate(Apostadora#Dueling03_1)	Apostadora#Dueling03_2	50
+
+x1_arena_03,50,50,3	script	Apostadora#Dueling03_3	50,{
+	
+	if( $dueling03_bid_1[0] )
+	{
+		if( $dueling03_bid_1[0] == 1 && !checkweight($dueling03_bid_1[1], $dueling03_bid_1[2]) )
+		{
+			mes "^FF0000[Apostadora]^000000";
+			mes "Você não pode carregar tantos ^0000FF" + getitemname($dueling03_bid_1[1]) + "^000000.";
+			mes "Guarde alguns dos seus itens no armazém para continuar-mos.";
+			close2;
+			openstorage();
+			end;
+		}
+		else if( $dueling03_bid_1[0] == 1 )
+			getitem2 $dueling03_bid_1[1], $dueling03_bid_1[2], $dueling03_bid_1[4], $dueling03_bid_1[3], $dueling03_bid_1[5], $dueling03_bid_1[6], $dueling03_bid_1[7], $dueling03_bid_1[8], $dueling03_bid_1[9];
+		else if( $dueling03_bid_1[0] == 2 )
+			set Zeny, Zeny + $dueling03_bid_1[2];
+	}
+	
+	if( $dueling03_bid_2[0] )
+	{
+		if( $dueling03_bid_2[0] == 1 && !checkweight($dueling03_bid_2[1], $dueling03_bid_2[2]) )
+		{
+			mes "^FF0000[Apostadora]^000000";
+			mes "Você não pode carregar tantos ^0000FF" + getitemname($dueling03_bid_2[1]) + "^000000.";
+			mes "Guarde alguns dos seus itens no armazém para continuar-mos.";
+			close2;
+			openstorage();
+			end;
+		}
+		else if( $dueling03_bid_2[0] == 1 )
+			getitem2 $dueling03_bid_2[1], $dueling03_bid_2[2], $dueling03_bid_2[4], $dueling03_bid_2[3], $dueling03_bid_2[5], $dueling03_bid_2[6], $dueling03_bid_2[7], $dueling03_bid_2[8], $dueling03_bid_2[9];
+		else if( $dueling03_bid_2[0] == 2 )
+			set Zeny, Zeny + $dueling03_bid_2[2];
+	}
+		
+	mes "^FF0000[Apostadora]^000000";
+	mes "Muito bem, você foi um verdadeiro campeão!";
+	close2;
+	donpcevent "Dueling_03::OnEnd";
+	end;
+	
+OnInit:
+	if( $dueling_arena_3 < 3 )
+		disablenpc strnpcinfo(0);
+	end;
+}
+
+// MapFlags
+x1_arena_03	mapflag	pvp
+x1_arena_03	mapflag	pvp_noguild
+x1_arena_03	mapflag	pvp_noparty
+x1_arena_03	mapflag	nomemo
+x1_arena_03	mapflag	noreturn
+x1_arena_03	mapflag	nosave
+x1_arena_03	mapflag	noteleport
+x1_arena_03	mapflag	nowarp
+x1_arena_03	mapflag	nowarpto

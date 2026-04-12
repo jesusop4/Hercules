@@ -1,0 +1,26 @@
+veins,210,130,5	duplicate(HealerG)	Curandeira#out	971,2,2
+veins,212,130,5	duplicate(gomora)	Batalha Campal#out	733
+veins,214,130,5	duplicate(PM_source)	Arenas de Batalha#out	470
+
+
+veins,216,130,3	script	Kafra Yokai#out	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "veins",216,123;
+	close;
+	}
+}
+
+veins,218,130,3	duplicate(ultYokai)	Utilidades#out	838

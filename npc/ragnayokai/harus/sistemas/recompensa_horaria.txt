@@ -1,0 +1,69 @@
+// ============================================================
+// Sistema de Recompensa Horária — Hourly Reward UI
+// - O timer é gerenciado pelo servidor (SC_PCCAFE_PLAY_TIME)
+// - A cada hora online o servidor adiciona pontos automaticamente
+// - Ao clicar no botão "Hourly Reward" na interface, abre a loja gráfica
+// - Pontos salvos em conta: #GOLDPCPOINTS (máx. 300)
+// - Preços na janela da loja = custo em pontos (não em Zeny)
+// ============================================================
+
+// --- Loja invisível com itens custando seus respectivos pontos ---
+-	shop	GoldPCItems	-1,7539:5,6224:15,6225:15,616:50,7776:100
+
+// --- NPC invisível que responde ao clique do botão UI ---
+-	script	GoldPCShop	-1,{
+	end;
+
+OnInit:
+	// Anexa este script à loja para interceptar compras
+	npcshopattach "GoldPCItems";
+	end;
+
+OnGoldPCTimer:
+	// Salva o Zeny real apenas na primeira abertura (evita perda se fechar sem comprar)
+	if (#_gpc_swap == 0) {
+		set #_gpc_zeny, Zeny;
+	}
+	set #_gpc_swap, 1;
+	// Substitui Zeny por pontos para o cliente exibir os preços corretamente
+	set Zeny, #GOLDPCPOINTS;
+	callshop "GoldPCItems", 1;
+	end;
+
+OnBuyItem:
+	// Restaura o Zeny real imediatamente
+	set #_gpc_swap, 0;
+	set Zeny, #_gpc_zeny;
+
+	// Calcula o custo total em pontos
+	set .@total, 0;
+	set .@i, 0;
+	while (.@i < getarraysize(@bought_nameid)) {
+		set .@n, @bought_nameid[.@i];
+		set .@q, @bought_quantity[.@i];
+		if (.@n == 7539)       set .@total, .@total + 5   * .@q;
+		else if (.@n == 6224)  set .@total, .@total + 15  * .@q;
+		else if (.@n == 6225)  set .@total, .@total + 15  * .@q;
+		else if (.@n == 616)   set .@total, .@total + 50  * .@q;
+		else if (.@n == 7776)  set .@total, .@total + 100 * .@q;
+		set .@i, .@i + 1;
+	}
+
+	// Verifica se há pontos suficientes (dupla checagem servidor)
+	if (#GOLDPCPOINTS < .@total) {
+		dispbottom "Pontos insuficientes! Precisa de " + .@total + " pt(s), voce tem " + #GOLDPCPOINTS + ".";
+		end;
+	}
+
+	// Entrega os itens
+	set .@i, 0;
+	while (.@i < getarraysize(@bought_nameid)) {
+		getitem @bought_nameid[.@i], @bought_quantity[.@i];
+		set .@i, .@i + 1;
+	}
+
+	// Desconta os pontos
+	delgoldpoints .@total;
+	dispbottom "Compra realizada! Saldo: " + #GOLDPCPOINTS + " ponto(s) de presenca.";
+	end;
+}

@@ -1,0 +1,8 @@
+function	script	YokaiMoon	{
+
+set #CASHPOINTS, #CASHPOINTS + 1000;
+dispbottom "[Yokai Moon] - Você acaba de receber 1000x Cash Points!";
+dispbottom "[Yokai Moon] - Agora você tem "+#CASHPOINTS+"x Cash Points.";
+end;
+
+}

@@ -1,0 +1,64 @@
+que_qaru01,138,137,3	script	Sortudo	954,{ 
+
+	if(getgmlevel() == 99 && $sortudo == 0) {
+	if(select("Ligar:Não") == 2) close;
+		callsub OnSortudoStart;
+	}
+
+	if($sortudo == 0){ mes "[^ff0000 "+strnpcinfo(1)+" ^000000]"; mes "Evento fechado no momento."; close; }
+	if(BaseLevel < 90){ mes "[^ff0000 "+strnpcinfo(1)+" ^000000]"; mes "Apenas jogadores com o nível maior que 90 podem receber a bonificação."; close; }
+
+	percentheal 100,100;
+	set @rand_sortudo, rand(1,8);
+	if(@rand_sortudo == 1){ warp "quiz_02",318,34; end; }
+	if(@rand_sortudo == 2){ warp "quiz_02",37,52; end; }
+	if(@rand_sortudo == 3){ warp "quiz_02",73,52; end; }
+	if(@rand_sortudo == 4){ warp "quiz_02",330,34; end; }
+	if(@rand_sortudo == 5){ warp "quiz_02",49,52; end; }
+	if(@rand_sortudo == 6){ warp "quiz_02",342,34; end; }
+	if(@rand_sortudo == 7){ warp "quiz_02",354,34; end; }
+	if(@rand_sortudo == 8){ warp "quiz_02",61,52; end; }
+
+	OnClock1002: callsub OnSortudoStart;
+	OnClock1802: callsub OnSortudoStart;
+
+OnSortudoStart:
+	set $sortudo,1;
+	killmonsterall "quiz_02";
+	announce "[ @eventos ]: O sortudo acaba de abrir, você tem 5 minutos para entrar.",8;
+	announce "[ @eventos ]: Use --> @eventos <-- e venha participar!",8;
+	sleep 60000;
+	announce "[ @eventos ]: O sortudo acaba de abrir, você tem 4 minutos para entrar.",8;
+	announce "[ @eventos ]: Use --> @eventos <-- e venha participar!",8;
+	sleep 60000;
+	announce "[ @eventos ]: O sortudo acaba de abrir, você tem 3 minutos para entrar.",8;
+	announce "[ @eventos ]: Use --> @eventos <-- e venha participar!",8;
+	sleep 60000;
+	announce "[ @eventos ]: O sortudo acaba de abrir, você tem 2 minutos para entrar.",8;
+	announce "[ @eventos ]: Use --> @eventos <-- e venha participar!",8;
+	sleep 60000;
+	announce "[ @eventos ]: O sortudo acaba de abrir, você tem 1 minutos para entrar.",8;
+	announce "[ @eventos ]: Use --> @eventos <-- e venha participar!",8;
+	sleep 60000;
+	set $sortudo,0;
+	pvpon "quiz_02";
+	announce "[ @eventos ]: O sortudo acaba de fechar, aguarde a proxima abertura.",8;
+	sleep 120000;
+	pvpoff "quiz_02";
+	monster "quiz_02",314,46,"Tesouro",1363,1,"Sortudo::OnTreasureDie";
+	monster "quiz_02",326,46,"Tesouro",1363,1,"Sortudo::OnTreasureDie";
+	monster "quiz_02",338,46,"Tesouro",1363,1,"Sortudo::OnTreasureDie";
+	monster "quiz_02",350,46,"Tesouro",1363,1,"Sortudo::OnTreasureDie";
+	monster "quiz_02",33,64,"Tesouro",1363,1,"Sortudo::OnTreasureDie";
+	monster "quiz_02",45,64,"Tesouro",1363,1,"Sortudo::OnTreasureDie";
+	monster "quiz_02",57,64,"Tesouro",1363,1,"Sortudo::OnTreasureDie";
+	monster "quiz_02",69,64,"Tesouro",1363,1,"Sortudo::OnTreasureDie";
+	end;
+
+OnTreasureDie:
+	set @rand_premio, rand(1,4);
+	if(@rand_premio == 1){ set #PTEVENTO, #PTEVENTO + 3; dispbottom "[rYokai Eventos] - Agora você tem "+#PTEVENTO+"x Pontos de Evento."; warp "prontera",156,182; announce "[Sortudo]: O jogador "+strcharinfo(0)+" ganhou 3x Pontos de Evento.",8; end; }
+	if(@rand_premio == 2){ set #PTEVENTO, #PTEVENTO + 5; dispbottom "[rYokai Eventos] - Agora você tem "+#PTEVENTO+"x Pontos de Evento."; warp "prontera",156,182; announce "[Sortudo]: O jogador "+strcharinfo(0)+" ganhou 5x Pontos de Evento.",8; end; }
+	if(@rand_premio == 3){ set #PTEVENTO, #PTEVENTO + 10; dispbottom "[rYokai Eventos] - Agora você tem "+#PTEVENTO+"x Pontos de Evento."; warp "prontera",156,182; announce "[Sortudo]: O jogador "+strcharinfo(0)+" ganhou Box 10x Pontos de Evento.",8; end; }
+	if(@rand_premio == 4){ warp "prontera",156,182; announce "[Sortudo]: O jogador "+strcharinfo(0)+" foi enviado para prontera.",8; end; }
+}

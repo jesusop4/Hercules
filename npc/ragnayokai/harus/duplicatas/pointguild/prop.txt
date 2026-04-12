@@ -1,0 +1,41 @@
+louyang,85,258,5	duplicate(Empacotador de Emblemas)	Empacotador#prop	54
+louyang,97,258,3	duplicate(Telma 2.0)	Telma#prop	701
+louyang,87,258,5	duplicate(Resetadora)	Resetadora#prop	859
+louyang,91,261,3	duplicate(HealerG)	Curandeira#prop	971,2,2
+louyang,91,258,5	duplicate(gomora)	Batalha Campal#prop	733
+louyang,95,258,3	duplicate(PM_source)	Arenas de Batalha#prop	470
+
+
+louyang,93,258,3	script	Kafra Yokai#prop	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "louyang",91,253;
+	close;
+	}
+}
+
+louyang,89,258,5	duplicate(ultYokai)	Utilidades#prop	838
+
+louyang,88,261,4	script	Prophecy#1	722,{
+OnInit:
+	flagemblem 220;
+	end;
+}
+
+louyang,94,261,4	script	Prophecy#2	722,{
+OnInit:
+	flagemblem 220;
+	end;
+}

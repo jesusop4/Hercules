@@ -1,0 +1,53 @@
+// Deixa eu ver se eu entendi..
+// 1° Eu digito o nome do char, com o nome do char eu consigo o <ID da conta> e com o ele eu consigo o <last_mac>
+// 2° Com o <last_mac> eu procuro todas as contas que logaram por ele.
+// 3° Eu listo todos os chars das contas encontradas.
+
+sec_in02,35,171,4	script	Rastreador de Lixos[GM]	50,{
+
+	if(getgmlevel() < 60) end;
+	
+	set .name$, "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	
+	mes .name$;
+	mes "Gostaria de encontrar as esferas do dragão?";
+	mes "Brincadeira, mas posso rastrear um personagem se quiser.";
+	if(select("Sim eu quero.:Eu queria as esferas ;( [Sair]")==2) close;
+	next;
+	mes .name$;
+	mes "Digite o nome do personagem que deseja rastrear";
+	input .@char$;
+	//query_sql("SELECT login.last_mac FROM `char` Left join `login` on char.account_id = login.account_id WHERE char.name = "+.@char$, .@last_mac$);
+	query_sql("SELECT account_id, userid, last_mac FROM `login` WHERE last_mac = (SELECT login.last_mac FROM `char` Left join `login` ON char.account_id = login.account_id WHERE char.name = '"+.@char$+"')", .@account$, .@userid$, .@last_mac$);
+	mes "^D9007Esystem:^000000 ^B3B3B3 last_mac ("+ .@last_mac$[0] + ")^000000";
+	mes "^D9007Esystem:^000000 ^B3B3B3 accounts ("+ getarraysize(.@account$) + ")^000000";
+	mes " ";
+	mes "Account List ( MAC: "+ .@last_mac$[0] + ")^000000";
+	
+	/* Imprime a Lista */
+	for( set .@i, 0; .@i <= getarraysize(.@account$) - 1 ; set .@i, .@i + 1 )
+	{
+		mes "" + .@i + ". ^0099CC" + .@userid$[ .@i ] + "^000000 ^D9007E(ID: " + .@account$[ .@i ] + ")^000000"; 
+	}
+	mes "~Fim da lista~";
+	next;
+	mes .name$;
+	mes "Gostaria de saber o nome dos personagens vinculados a essa(s) conta(s)?";
+	if(select("Sim eu quero.:Não, muito obrigado.")==2) close;
+	
+	query_sql("SELECT char.name, char.account_id, login.userid FROM `char` LEFT JOIN `login` ON char.account_id = login.account_id WHERE login.last_mac ='" + .@last_mac$[0]+"'", .@chars$, .@account$, .@userid$);
+	
+	mes "^D9007Esystem:^000000 ^B3B3B3 chars ("+ getarraysize(.@chars$) + ")^000000";
+	mes " ";
+	
+	/* Imprime a Lista */
+	for( set .@i, 0; .@i <= getarraysize(.@account$) - 1 ; set .@i, .@i + 1 )
+	{
+		mes "" + .@i + ". ^0099CC" + .@chars$[.@i] + "^000000 ^D9007E("+ .@userid$[ .@i ] + " | " + .@account$[ .@i ] + ")^000000"; 
+	}
+	mes "~Fim da lista~";
+	
+	close;
+	
+}
+/* Fim do NPC */

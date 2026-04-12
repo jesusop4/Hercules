@@ -1,0 +1,4 @@
+prontera,147,174,5	script	Mercado Negro	853,{
+warp "ra_in01",246,267;
+end;
+}

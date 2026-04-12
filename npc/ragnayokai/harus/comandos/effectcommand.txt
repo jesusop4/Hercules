@@ -1,0 +1,47 @@
+-	script	HiddenEffect	111,{
+		// Not sure if this is needed but it seems like only changing .Effect will not stop While from looping
+		if (.Effect) {
+				misceffect 1;
+				misceffect 7;
+				misceffect 12;
+				misceffect 15;
+				misceffect 16;
+				misceffect 28;
+				misceffect 30;
+				misceffect 34;
+				misceffect 43;
+				misceffect 65;
+				misceffect 67;
+				misceffect 75;
+				misceffect 77;
+				misceffect 85;
+				misceffect 97;
+				misceffect 98;
+				misceffect 102;
+				misceffect 104;
+				misceffect 119;
+				misceffect 121;
+				misceffect 128;
+				misceffect 130;
+				misceffect 134;
+				misceffect 153;
+				misceffect 170;
+				misceffect 226;
+				end;
+}
+
+OnToggle:
+	if (.Effect) {
+		set .Effect, 0;
+		dispbottom "Effect enabled!";
+	} else {
+		set .Effect, 1;
+		dispbottom "Effect disabled!";
+	}
+	end;
+
+OnInit:
+	bindatcmd("dropeffect", "HiddenEffect::OnToggle");
+	set .Effect, 0; // Disabled by default
+	end;
+}

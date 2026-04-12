@@ -1,0 +1,40 @@
+poring_c01,98,107,5	duplicate(HealerG)	Curandeira#MAKO	971,2,2
+poring_c01,105,107,3	duplicate(gomora)	Batalha Campal#MAKO	733
+poring_c01,109,107,3	duplicate(PM_source)	Arenas de Batalha#MAKO	470
+
+
+poring_c01,107,107,3	script	Kafra Yokai#MAKO	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "poring_c01",104,102;
+	close;
+	}
+}
+
+poring_c01,100,107,5	duplicate(ultYokai)	Utilidades#MAKO	838
+
+poring_c01,102,107,5	duplicate(Resetadora)	Resetadora#MAKO	859
+
+poring_c01,100,111,4	script	Makotos#MAKO	722,{
+OnInit:
+	flagemblem 3;
+	end;
+}
+
+poring_c01,107,111,4	script	Makotos#MAKO2	722,{
+OnInit:
+	flagemblem 3;
+	end;
+}

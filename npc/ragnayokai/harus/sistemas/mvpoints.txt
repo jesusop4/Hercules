@@ -1,0 +1,42 @@
+-	script	countpointsmvp	-1,{
+OnNPCKillEvent:
+setarray.@monstereasy[0],1418,1685,1511,1492,1623,1785,1086,1039,2068,1630,1399,1272,1719,1046,1990,1389,1112,1115,1087,1779,1980,1885,1252,1658,1688,1768,1991,1373,1147,1059,1087,1190,1038,1157,1159,1685; // Adicione aqui os ID Dos MVPS Faceis
+setarray.@monstermedium[0],1644,1642,1150,1251,1871,1312,1734,1583,1708; // Adicione aqui os ID Dos MVPS Medio
+setarray.@monsterhard[0],1647,1651,1650,1646,1917,1874,1087,1649,1623,1873,2022,1648,1751,1832; // Adicione aqui os ID Dos MVPS Dificil
+for(set @a,0; @a <= getarraysize(.@monstereasy); set @a,@a+1)
+if(killedrid == .@monstereasy[@a])
+{
+set #mvp_points,#mvp_points+1;
+dispbottom "Parabéns "+strcharinfo(0)+", você acaba de receber 1 MvP Point Yokai! Agora você possui "+#mvp_points+" Points.";
+end;
+}
+for(set @a,0; @a <= getarraysize(.@monstermedium); set @a,@a+1)
+if(killedrid == .@monstermedium[@a])
+{
+set #mvp_points,#mvp_points+2;
+dispbottom "Parabéns "+strcharinfo(0)+", você acaba de receber 2 MvP Points Yokai! Agora você possui "+#mvp_points+" Points.";
+end;
+}
+for(set @a,0; @a <= getarraysize(.@monsterhard); set @a,@a+1)
+if(killedrid == .@monsterhard[@a])
+{
+set #mvp_points,#mvp_points+5;
+dispbottom "Parabéns "+strcharinfo(0)+", você acaba de receber 5 MvP Points Yokai! Agora você possui "+#mvp_points+" Points.";
+end;
+}
+}
+
+prontera,140,182,5	script	MvP Points Yokai#1	61,{
+		
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Olá ^0000FF"+strcharinfo (0)+"^000000, eu posso trocar seus MVP Points Yokai por alguns itens...";
+	mes "Deseja trocar os seus Pontos MvP Yokai?";
+	mes "Você possui ^FF0000"+#mvp_points+"^000000 MvP Yokai Points";
+	if (select ("- Sim, claro!:- Não, obrigado.") == 2) close;
+		close2;
+		callshop "mvpshop",1;
+		end;
+
+}
+
+-	cashshop(#mvp_points)	mvpshop	-1,12210:6,12214:15,12103:15,10228:6,10229:12

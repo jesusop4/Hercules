@@ -1,0 +1,392 @@
+//===== rAthena Script =======================================
+//= Yokai Square
+//===== By: ==================================================
+//= Kirlein, Stillhard (translation), AnnieRuru (rewrite)
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= rAthena Project
+//===== Description: =========================================
+//= Yokai Square, based on the event in MU Online.
+//= Defeat three waves of monsters for treasure.
+//===== Additional Comments: =================================
+//= 1.0 First version, edited. [Euphy]
+//============================================================
+
+que_qaru01,128,137,6	script	Yokai Square#1	795,{
+	set .@gm_level, 99; // GM level required to start/stop the event
+
+	mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Esta é a entrada para a ^01116BYokai Square^000000.";
+	mes "O que deseja fazer?";
+	next;
+	switch(select("- Entrar:- Informações:" + ((getgmlevel() >= .@gm_level) ? "- GM Menu" : "") + ":- Cancelar")) {
+	case 1:
+		if (.start != 1) { // registration period
+			mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Yokai Square está fechada.";
+			mes "Ela abre automaticamente todos os dias às:";
+			mes "14:35";
+			mes "19:35";
+			close;
+		}
+		if (BaseLevel < 70) { // requirements
+			mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "You do not meet the requirements to enter Yokai Square.";
+			mes " ";
+			mes "Requirements:";
+			mes " - Base Level 70";
+			close;
+		}
+		announce strcharinfo(0)+" entrou na Yokai Square.", bc_npc;
+		set #SECUDEVIL,0;
+		percentheal 100,100;
+		warp "ordeal_1-1",150,149;
+		close;
+	case 2:
+		mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		close;
+	case 3:
+		mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		switch (.start) { // event states
+			case 0: mes "Yokai Square has not yet started."; break;
+			case 1: mes "Yokai Square is currently accepting participants."; break;
+			case 2: mes "Yokai Square Event is currently running on Round "+ .round +" with "+ .mob +" monsters remaining."; break;
+		}
+		next;
+		switch(select("Start event.:Stop event.:Cancel.")) {
+		case 1:
+			mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			if (.start)
+				mes "Yokai Square has already started.";
+			else {
+				mes "Starting Yokai Square...";
+				donpcevent strnpcinfo(0)+"::OnStartEvent";
+			}
+			close;
+		case 2:
+			mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			if (!.start)
+				mes "Yokai Square has not yet started.";
+			else {
+				mes "Stopping Yokai Square...";
+				donpcevent strnpcinfo(0)+"::OnStopEvent";
+			}
+			close;
+		case 3:
+			break;
+		}
+		break;
+	case 4:
+		break;
+	}
+	mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Farewell.";
+	close;
+
+OnStartEvent:
+OnClock1405:
+OnClock2105:
+	set .start,1;
+	//disablenpc "ord11-12"; //from npc/warps/pvp.txt
+	disablenpc "Yokai Square#2";
+	mapannounce "ordeal_1-1","Yokai Square is now closed.", bc_map;
+	getmapxy .@map$, .@x, .@y, 1;
+	mapwarp "ordeal_1-1", .@map$, .@x, .@y;
+	killmonsterall "ordeal_1-1";
+	announce "[ @eventos ] A Yokai Square está ABERTA.", bc_all;
+	sleep 60000;
+	announce "[ @eventos ] 4 minutos para o inicio da Yokai Square.", bc_all;
+	sleep 60000;
+	announce "[ @eventos ] 3 minutos para o inicio da Yokai Square.", bc_all;
+	sleep 60000;
+	announce "[ @eventos ] 2 minutos para o inicio da Yokai Square.", bc_all;
+	sleep 60000;
+	announce "[ @eventos ] 1 minuto para o inicio da Yokai Square. Corra, é a última chamada!", bc_all;
+	sleep 60000;
+	announce "[ @eventos ] Entrada fechada, até a próxima.", bc_all;
+	sleep 60000;
+	if ( !getmapusers("ordeal_1-1") )  {
+		killmonsterall "ordeal_1-1";
+		// enablenpc "ord11-12"; //from npc/warps/pvp.txt
+		enablenpc "Yokai Square#2";
+		set .start,0;
+		set .round,0;
+		set .mob,0;
+		announce "[ @eventos ] A Yokai Square foi CANCELADA. Motivo: falta de participantes.", bc_all;
+		end;	
+	}
+		
+	mapannounce "ordeal_1-1","Yokai Square: 1º Round, invasão da família Poring no centro do mapa!",8;
+	/* Round 1 */
+	set .start,2;
+	set .round,1;
+	set .mob,55;
+	/* Mini Boss */
+	areamonster "ordeal_1-1",164,169,133,134,"[DS] ArchAngeling",1388,2,strnpcinfo(0)+"::OnDevilDead";
+	areamonster "ordeal_1-1",164,169,133,134,"[DS] Deviling",1582,2,strnpcinfo(0)+"::OnDevilDead";
+	areamonster "ordeal_1-1",164,169,133,134,"[DS] Mastering",1090,2,strnpcinfo(0)+"::OnDevilDead";
+	areamonster "ordeal_1-1",164,169,133,134,"[DS] Angeling",1096,2,strnpcinfo(0)+"::OnDevilDead";
+	areamonster "ordeal_1-1",164,169,133,134,"[DS] Ghostring",1120,2,strnpcinfo(0)+"::OnDevilDead";
+	/* Normal Mobs */
+	areamonster "ordeal_1-1",164,169,133,134,"[DS] Poring",1002,20,strnpcinfo(0)+"::OnDevilDead";
+	areamonster "ordeal_1-1",164,169,133,134,"[DS] Poporing",1031,10,strnpcinfo(0)+"::OnDevilDead";
+	areamonster "ordeal_1-1",164,169,133,134,"[DS] Magmaring",1836,10,strnpcinfo(0)+"::OnDevilDead";
+	areamonster "ordeal_1-1",164,169,133,134,"[DS] Marin",1242,5,strnpcinfo(0)+"::OnDevilDead";
+	end;
+
+OnDevilDead:
+	set .mob, .mob - 1;
+	if ( .mob > 0 )
+		announce "Yokai Square: faltam "+ .mob +" monstros para o fim do 1º Round.", bc_map;
+	else if ( .mob <= 0 ) {
+		announce "Yokai Square: 2º Round, monstros de Água invadem o Nordeste do mapa!", bc_map;
+		goto OnDevil2;
+	}
+	end;
+
+OnDevil2:
+	set .round,2;
+	set .mob,39;
+	areamonster "ordeal_1-1",189,189,244,242,"[DS] Hatii",1252,2,strnpcinfo(0)+"::OnDevilDead2";
+	areamonster "ordeal_1-1",189,189,244,242,"[DS] Bebe Hatii",1515,2,strnpcinfo(0)+"::OnDevilDead2";
+	areamonster "ordeal_1-1",189,189,244,242,"[DS] Foca",1317,5,strnpcinfo(0)+"::OnDevilDead2";
+	areamonster "ordeal_1-1",189,189,244,242,"[DS] Fen",1158,5,strnpcinfo(0)+"::OnDevilDead2";
+	areamonster "ordeal_1-1",189,189,244,242,"[DS] Deviace",1108,5,strnpcinfo(0)+"::OnDevilDead2";
+	areamonster "ordeal_1-1",189,189,244,242,"[DS] Congelador",1319,10,strnpcinfo(0)+"::OnDevilDead2";
+	areamonster "ordeal_1-1",189,189,244,242,"[DS] Cavalo-Marinho",1045,10,strnpcinfo(0)+"::OnDevilDead2";
+	end;
+
+OnDevilDead2:
+	set .mob, .mob - 1;
+	if ( .mob > 0 )
+		announce "Yokai Square: faltam "+ .mob +" monstros para o fim do 2º Round.", bc_map;
+	else if ( .mob <= 0 ) {
+		announce "Yokai Square: 3º Round, monstros de Fogo invadem o Leste do mapa!", bc_map;
+		goto OnDevil3;
+	}
+	end;
+
+OnDevil3:
+	set .round ,3;
+	set .mob,25;
+	areamonster "ordeal_1-1",204,150,267,149,"[DS] Bode",1372,10,strnpcinfo(0)+"::OnDevilDead3";
+	areamonster "ordeal_1-1",204,150,267,149,"[DS] Aquecedor",1318,10,strnpcinfo(0)+"::OnDevilDead3";
+	areamonster "ordeal_1-1",204,150,267,149,"[DS] Gato de Nove Caudas",1307,3,strnpcinfo(0)+"::OnDevilDead3";
+	areamonster "ordeal_1-1",204,150,267,149,"[DS] Eddga",1115,2,strnpcinfo(0)+"::OnDevilDead3";
+	end;
+
+OnDevilDead3:
+	set .mob, .mob - 1;
+	if ( .mob > 0 )
+		announce "Yokai Square: faltam "+ .mob +" monstros para o fim do 3º Round.", bc_map;
+	else if ( .mob <= 0 ) {
+		announce "Yokai Square: 4º Round, monstros de Vento invadem o Sudeste do mapa!", bc_map;
+		goto OnDevil4;
+	}
+	end;
+	
+OnDevil4:
+	set .round ,4;
+	set .mob,40;
+	areamonster "ordeal_1-1",188,111,241,57,"[DS] Zangão",1004,10,strnpcinfo(0)+"::OnDevilDead4";
+	areamonster "ordeal_1-1",188,111,241,57,"[DS] Coringa",1131,10,strnpcinfo(0)+"::OnDevilDead4";
+	areamonster "ordeal_1-1",188,111,241,57,"[DS] Andarilho",1208,10,strnpcinfo(0)+"::OnDevilDead4";
+	areamonster "ordeal_1-1",188,111,241,57,"[DS] Driad",1493,5,strnpcinfo(0)+"::OnDevilDead4";
+	areamonster "ordeal_1-1",188,111,241,57,"[DS] Grifo",1259,3,strnpcinfo(0)+"::OnDevilDead4";
+	areamonster "ordeal_1-1",188,111,241,57,"[DS] Abelha Rainha",1059,2,strnpcinfo(0)+"::OnDevilDead4";
+	end;
+
+OnDevilDead4:
+	set .mob, .mob - 1;
+	if ( .mob > 0 )
+		announce "Yokai Square: faltam "+ .mob +" monstros para o fim do 4º Round.", bc_map;
+	else if ( .mob <= 0 ) {
+		announce "Yokai Square: 5º Round, monstros Envenenados invadem o Sul do mapa!", bc_map;
+		goto OnDevil5;
+	}
+	end;
+	
+OnDevil5:
+	set .round ,5;
+	set .mob,32;
+	areamonster "ordeal_1-1",150,91,149,34,"[DS] Argiope",1099,10,strnpcinfo(0)+"::OnDevilDead5";
+	areamonster "ordeal_1-1",150,91,149,34,"[DS] Aranha Gigante",1304,10,strnpcinfo(0)+"::OnDevilDead5";
+	areamonster "ordeal_1-1",150,91,149,34,"[DS] Penomena",1216,10,strnpcinfo(0)+"::OnDevilDead5";
+	areamonster "ordeal_1-1",150,91,149,34,"[DS] Incantation Samurai",1492,2,strnpcinfo(0)+"::OnDevilDead5";
+	end;
+
+OnDevilDead5:
+	set .mob, .mob - 1;
+	if ( .mob > 0 )
+		announce "Yokai Square: faltam "+ .mob +" monstros para o fim do 5º Round.", bc_map;
+	else if ( .mob <= 0 ) {
+		announce "Yokai Square: 6º Round, monstros Sagrados invadem o Sudoeste do mapa!", bc_map;
+		goto OnDevil6;
+	}
+	end;
+	
+OnDevil6:
+	set .round ,6;
+	set .mob,32;
+	areamonster "ordeal_1-1",111,110,59,58,"[DS] Antonio",1247,10,strnpcinfo(0)+"::OnDevilDead6";
+	areamonster "ordeal_1-1",111,110,59,58,"[DS] Swift Vanberk",2627,10,strnpcinfo(0)+"::OnDevilDead6";
+	areamonster "ordeal_1-1",111,110,59,58,"[DS] Isilla Ringleader",1772,10,strnpcinfo(0)+"::OnDevilDead6";
+	areamonster "ordeal_1-1",111,110,59,58,"[DS] Vesper",1685,2,strnpcinfo(0)+"::OnDevilDead6";
+	end;
+
+OnDevilDead6:
+	set .mob, .mob - 1;
+	if ( .mob > 0 )
+		announce "Yokai Square: faltam "+ .mob +" monstros para o fim do 6º Round.", bc_map;
+	else if ( .mob <= 0 ) {
+		announce "Yokai Square: 7º Round, monstros Sombrios invadem o Oeste do mapa!", bc_map;
+		goto OnDevil7;
+	}
+	end;
+	
+OnDevil7:
+	set .round ,7;
+	set .mob,32;
+	areamonster "ordeal_1-1",95,150,34,148,"[DS] Raydric",1163,10,strnpcinfo(0)+"::OnDevilDead7";
+	areamonster "ordeal_1-1",95,150,34,148,"[DS] Inccubus",1374,10,strnpcinfo(0)+"::OnDevilDead7";
+	areamonster "ordeal_1-1",95,150,34,148,"[DS] Succubus",1370,10,strnpcinfo(0)+"::OnDevilDead7";
+	areamonster "ordeal_1-1",95,150,34,148,"[DS] Fallen Bishop",1871,2,strnpcinfo(0)+"::OnDevilDead7";
+	end;
+
+OnDevilDead7:
+	set .mob, .mob - 1;
+	if ( .mob > 0 )
+		announce "Yokai Square: faltam "+ .mob +" monstros para o fim do 7º Round.", bc_map;
+	else if ( .mob <= 0 ) {
+		announce "Yokai Square: 8º Round, monstros Fantasmas invadem o Noroeste do mapa!", bc_map;
+		goto OnDevil8;
+	}
+	end;
+	
+OnDevil8:
+	set .round ,8;
+	set .mob,21;
+	areamonster "ordeal_1-1",109,188,57,239,"[DS] Marionete",1143,10,strnpcinfo(0)+"::OnDevilDead8";
+	areamonster "ordeal_1-1",109,188,57,239,"[DS] Pesadelo",1061,10,strnpcinfo(0)+"::OnDevilDead8";
+	areamonster "ordeal_1-1",109,188,57,239,"[DS] Beelzebub",1873,1,strnpcinfo(0)+"::OnDevilDead8";
+	end;
+
+OnDevilDead8:
+	set .mob, .mob - 1;
+	if ( .mob > 0 )
+		announce "Yokai Square: faltam "+ .mob +" monstros para o fim do 8º Round.", bc_map;
+	else if ( .mob <= 0 ) {
+		announce "Yokai Square: Final, os Prêmios e Saída estão no Norte do mapa!", bc_map;
+		goto OnStopEvent;
+	}
+	end;
+
+OnStopEvent:
+	killmonsterall "ordeal_1-1";
+	// enablenpc "ord11-12"; //from npc/warps/pvp.txt
+	enablenpc "Yokai Square#2";
+	set .start,0;
+	set .round,0;
+	set .mob,0;
+	end;
+}
+
+ordeal_1-1,149,273,7	script	Yokai Square#2	406,{
+	mes "[Exit]";
+	if( #SECUDEVIL == 1) { 
+		mes "Já recebeu papi.";
+		close2;
+		warp "SavePoint",0,0;
+		end;
+	}
+	mes "Parabéns.";
+	close2;
+	set #SECUDEVIL,1;
+	set #PTEVENTO, #PTEVENTO + 20; dispbottom "[rYokai Eventos] - Agora você tem "+#PTEVENTO+"x Pontos de Evento.";
+	warp "SavePoint",0,0;
+	end;
+}
+
+ordeal_1-1,164,169,7	script	Yokai Square#placa1	837,{
+	end;
+	
+OnInit:
+	waitingroom "Elemento: Água",0;
+	end;
+}
+
+ordeal_1-1,175,155,7	script	Yokai Square#placa2	837,{
+	end;
+	
+OnInit:
+	waitingroom "Elemento: Fogo",0;
+	end;
+}
+
+ordeal_1-1,170,136,7	script	Yokai Square#placa3	837,{
+	end;
+	
+OnInit:
+	waitingroom "Elemento: Vento",0;
+	end;
+}
+
+ordeal_1-1,156,125,7	script	Yokai Square#placa4	837,{
+	end;
+	
+OnInit:
+	waitingroom "Elemento: Veneno",0;
+	end;
+}
+
+ordeal_1-1,129,135,7	script	Yokai Square#placa5	837,{
+	end;
+	
+OnInit:
+	waitingroom "Elemento: Sagrado",0;
+	end;
+}
+
+ordeal_1-1,124,155,7	script	Yokai Square#placa6	837,{
+	end;
+	
+OnInit:
+	waitingroom "Elemento: Sombrio",0;
+	end;
+}
+
+ordeal_1-1,124,155,7	script	Yokai Square#placa7	837,{
+	end;
+	
+OnInit:
+	waitingroom "Elemento: Sombrio",0;
+	end;
+}
+
+ordeal_1-1,134,170,7	script	Yokai Square#placa8	837,{
+	end;
+	
+OnInit:
+	waitingroom "Elemento: Fantasma",0;
+	end;
+}
+
+ordeal_1-1,152,177,7	script	Yokai Square#placa9	837,{
+	end;
+	
+OnInit:
+	waitingroom "Premiação & Saída",0;
+	end;
+}
+
+ordeal_1-1	mapflag	nowarp
+ordeal_1-1	mapflag	nowarpto
+ordeal_1-1	mapflag	noteleport
+ordeal_1-1	mapflag	noreturn
+ordeal_1-1	mapflag	monster_noteleport
+ordeal_1-1	mapflag	nosave	SavePoint
+ordeal_1-1	mapflag	nomemo
+ordeal_1-1	mapflag	nobranch
+ordeal_1-1	mapflag	nopenalty
+ordeal_1-1	mapflag	noicewall

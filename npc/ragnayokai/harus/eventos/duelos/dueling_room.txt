@@ -1,0 +1,154 @@
+// .----------------------------------------------------------.
+// .                ___________________                       .
+// .               /   _____/\______   \                      .
+// .               \_____  \  |    |  _/                      .
+// .               /        \ |    |   \                      .
+// .              /_______  / |______  /                      .
+// .                      \/         \/                       .
+// .               [ Advanced Scripts ]                       .
+// .                                                    v1.2  .
+// .----------------------------------------------------------.
+// ;               https:github.com/SoulBlaker/               ;
+// .----------------------------------------------------------.
+// . Script:                                                  .
+// .   Sitema de Duelos                                       .
+// .----------------------------------------------------------.
+// . Por: SoulBlaker   Compátivel: eAthena Based              .
+// . Versão: 1.1                                              .
+// .----------------------------------------------------------.
+// . Descrição:                                               .
+// .  Contém os npcs de recrutamentos e teleportadores.       .
+// .----------------------------------------------------------.
+// . Changelog da Versão:                                     .
+// .  * 1.0 [SoulBlaker]                                      .
+// .	- Iniciado NPC.                                       .
+// .  * 1.1 [SoulBlaker]                                      .
+// .    - Corrigido erros relacionado a waitingroom.          .
+// *----------------------------------------------------------*
+// Recrutadores
+x1_room,141,179,3	script	Recrutador#d_pvp01	50,{
+	mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Bem-vindo ao sistema de duelos.";
+	mes "Em que posso ajudar?";
+	next;
+	if( select("- Como funciona?", "^FF0000- Cancelar.^000000") == 1 )
+	{
+		mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		mes "Basta você entrar no Sala de Espera com seu adversário.";
+		mes "Você será teleportado para arena aonde vai acontecer o duelo,";
+		mes "quando estiver na arena, basta fazer ou não fazer aposta.";
+		close;
+	}
+	mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Tudo bem, estarei aqui caso precisar.";
+	close;
+	
+OnInit:
+OnStartArena:
+	set .@npc, atoi(charat(strnpcinfo(2),6));
+	set .@check$,getwaitingroomstate(4);
+	if( .@check$ == "-1" )
+	{
+		waitingroom .@npc+"ª Arena de Duelos PvP", 3, strnpcinfo(0)+"::OnWaitingStart", 2;
+		if( !getd("$dueling_arena_"+.@npc) )
+				enablewaitingroomevent strnpcinfo(0);
+	}
+	end;
+	
+OnWaitingStart:
+	set .@npc, atoi(charat(strnpcinfo(2),6));
+	switch(.@npc)
+	{
+		case 1: setarray .@config$[0], 1, "x1_arena_01", 50, 50; break;
+		case 2: setarray .@config$[0], 2, "x1_arena_02", 50, 50; break;
+		case 3: setarray .@config$[0], 3, "x1_arena_03", 50, 50; break;
+		case 4: setarray .@config$[0], 4, "x1_arena_04", 50, 50; break;
+		default:
+			debugmes "Arena de Duelo não encontrada.";
+			end;
+	}
+	
+	warpwaitingpc .@config$[1], atoi(.@config$[2]), atoi(.@config$[3]);
+	delwaitingroom;
+	sleep 2000;
+	donpcevent "Dueling_0"+atoi(.@config$[0])+"::OnStart";
+	end;
+}
+
+x1_room,149,179,3	duplicate(Recrutador#d_pvp01)	Recrutador#d_pvp02	50
+x1_room,157,179,3	duplicate(Recrutador#d_pvp01)	Recrutador#d_pvp03	50
+x1_room,165,179,3	duplicate(Recrutador#d_pvp01)	Recrutadors#d_pvp04	50
+
+// Ír para Sala de Espera
+prontera,143,190,5	script	Arenas de x1#d_pvp_1	629,{
+	set .@loop_1, 1;
+	while(.@loop_1)
+	{
+		mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		mes "Bem-vindo, sou uma Funcionária da ^FF0000Central de Duelistas^000000.";
+		mes "Em que posso te ajudar?";
+		next;
+		switch( select("- Entrar na Sala de Espera.", "^0000FF- Informações.^000000", "^FF0000- Cancelar.^000000") )
+		{
+			case 1:
+				mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Tem certeza que deseja entrar na ^FF0000Central de Duelistas^000000?";
+				next;
+				if( select("- Sim, por favor.", "^FF0000- Não, obrigado.^000000") == 1 )
+				{
+					mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+					mes "Muito bem, vou te mandar para lá!";
+					close2;
+					warp "x1_room", 154, 150;
+					end;
+				}
+				break;
+			case 2:
+				mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "No momento a ^FF0000Central de Duelistas^000000 possuí quatro arenas.";
+				mes "Você pode convidar um amigo para duelar, basta vocês dois entrar na sala de espera,";
+				mes "visualizar uma arena que contenha 2 espaços livres, ingressar e automáticamente será levado para a arena.";
+				next;
+				mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Na arena vocês podem fazer apostas, e concordarem com a aposta de ambos adversário.";
+				mes "Uma vez dentro da arena, não poderam saír.";
+				mes "Então se não desejar fazer apostas é aceitável de acordo com seu adversário!";
+				next;
+				break;
+			case 3:
+				set .@loop_1, 0;
+				break;
+		}
+	}
+	mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Tudo bem, volte quando desejar duelar com algum adversário!";
+	close;
+}
+
+// Retorno para Prontera
+x1_room,147,152,3	script	Duelista#d_pvp_2	50,{
+	mes "^FF0000[Duelista]^000000";
+	mes "Deseja retornar para prontera?";
+	next;
+	if( select("- Sim, por favor.", "- Não, obrigado.") == 2 )
+	{
+		mes "[Duelista]";
+		mes "Tudo bem, sinta-se livre para visualizar as arenas.";
+		close;
+	}
+	mes "^FF0000[Duelista]^000000";
+	mes "Vou te mandar agora mesmo para prontera.";
+	close2;
+	warp "prontera", 156, 176;
+	end;
+
+OnInit:
+	waitingroom "Retornar para Cidade", 0;
+	end;
+}
+
+x1_room	mapflag	nomemo
+x1_room	mapflag	noreturn
+x1_room	mapflag	nosave
+x1_room	mapflag	noteleport
+x1_room	mapflag	nowarp

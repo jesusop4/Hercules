@@ -1,0 +1,23 @@
+-	script	Warp WoE	-1,{
+	end;
+
+OnWarpWoE:
+mes "[^010849===^000000 ^016B14GdE ragnaYOKAI^000000 ^010849===^000000]";
+mes "Olá "+strcharinfo(0)+", atualmente temos os seguintes dias/horários de WoE:";
+mes "=====================";
+mes " ^016B14Domingo^000000 (Horn & Vidblainn) | ^016B1421h^000000 às ^016B1423h^000000";
+mes "=====================";
+switch(select("- ^016B14Domingo^000000 (Horn) | ^016B14Registro^000000:- ^016B14Domingo^000000 (Vidblainn) | ^016B14Livre^000000:^808080- Nada, obrigado...^000000")) {
+case 1:
+close2;
+warp "aru_gld",68,164;
+end;
+case 2:
+close2;
+warp "sch_gld",98,194;
+end;
+
+case 3:
+close;
+}		
+}

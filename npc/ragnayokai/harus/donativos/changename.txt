@@ -1,0 +1,76 @@
+function	script	Change Name	{
+set .@char_name_letters$, "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"; 
+mes "[^010849===^000000 ^016B14Mudança de Nome^000000 ^010849===^000000]";
+mes "Deseja alterar o nome do personagem?";
+switch(select("- Sim, desejo..:- Não, Obrigado. Tentarei mais tarde...")) {
+case 1:
+next;		
+			mes "[^010849===^000000 ^016B14Mudança de Nome^000000 ^010849===^000000]";
+			mes "Digite o novo nome que deseja na caixa:";
+			mes "OBS: ^016B14Serão aceitos nicks com 4~24 caracteres!^000000";
+			mes "OBS 2: ^016B14Não serão aceitos caracteres especiais!^000000";
+			input .@nick$;
+			next;
+			Query_Sql "SELECT `name` FROM `char` WHERE `name`= '"+.@nick$+"'", .@exist$;
+			mes "[^010849===^000000 ^016B14Mudança de Nome^000000 ^010849===^000000]";
+			if(.@exist$[0]!="")
+			{
+				mes "Esse nome já está em uso, tente algo diferente.";
+				getitem 3000,1;
+				close;
+			} else
+			if (getcharid(1)) {
+				mes "Você não pode alterar o nome estando em um Grupo.";
+				getitem 3000,1;
+				close;
+			} else 
+			if (getcharid(2)) {
+				mes "Você não pode alterar o nome estando em uma Guilda.";
+				getitem 3000,1;
+				close;
+			} else
+			if(getstrlen(.@nick$) < 4 || getstrlen(.@nick$) > 24)
+			{
+				mes "Numero de caracteres acima ou abaixo do permitido.";
+				getitem 3000,1;
+				close;
+			} else
+			for (set .@i,0; .@i<getstrlen(.@nick$); set .@i,.@i+1) {
+				if (!compare(.@char_name_letters$, charat(.@nick$,.@i))) {
+					mes "Caractere inválido: " + charat(.@nick$,.@i);
+					getitem 3000,1;
+					close;
+				}
+			}
+			mes "Tem certeza que deseja alterar o nome do personagem?";
+			if(select("- Sim, por favor!:- Não, acho que vou pensar mais um pouco...")==2) { getitem 3000,1; close; }
+			if( @menu == 255 ) { getitem 3000,1; end; }
+			next;
+
+			mes "[^010849===^000000 ^016B14Mudança de Nome^000000 ^010849===^000000]";
+			mes "Seu nome foi alterado com sucesso!";
+			mes "Por motivos de segurança você será desconectado em 5 segundos...";
+			next;
+			mes "[^010849===^000000 ^016B14Mudança de Nome^000000 ^010849===^000000]";
+			sleep2 1000;
+			mes "5";
+			sleep2 1000;
+			mes "4";
+			sleep2 1000;
+			mes "3";
+			sleep2 1000;
+			mes "2";
+			sleep2 1000;
+			mes "1";
+			sleep2 1000;
+			mes "...";
+
+			Query_sql "UPDATE `char` SET `name` = '"+.@nick$+"' WHERE `char_id` = '"+getcharid(0)+"'";
+			atcommand "@kick "+strcharinfo(0);
+			End();
+
+case 2: getitem 3000,1; close;
+case 255: getitem 3000,1; end;
+}
+
+}

@@ -1,0 +1,1245 @@
+1@mist,135,200,3	shop	Capturar Pet	81,643:3000,619:1000,624:2500,630:10,632:5000,635:300,636:100,639:18000,621:20,626:1500,625:100,623:4000,629:300,633:20,634:20,622:2500,631:20,642:1800,628:10000,641:100,637:350,620:1500,14569:20,14571:20,14570:20,640:3000,627:7000,638:12000,659:500,660:20000,14574:20,12225:20,661:20000,14573:20,14572:20,12370:20000,12364:20000,12366:20000,12395:20000
+
+function	script	Porteiro ViP	{
+mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+if (getgmlevel() == 0){
+mes "Você não é um usúario ViP.";
+mes "Para se tornar ViP acesse:";
+mes "^016B14www.ragnayokai.com.br^000000";
+close;
+}
+mes "Olá "+strcharinfo(0)+",";
+mes "o que deseja fazer?";
+switch(select("- Entrar na Sala ViP:- Encatador:- Utilidades:- Build Manager:- Resetadora:- Removedor de Cartas:- Refinador:- Torpedo:- Trocar Sexo:- Teste Emperium")) {
+case 1:
+close2;
+warp "1@mist",133,194;
+end;
+case 2: close2; callfunc "Encantador";
+case 3: close2; callfunc "Utilidades ViP";
+case 4: close2; callfunc "Build Manager";
+case 5: close2; callfunc "Resetadora VIP";
+case 6: close2; callfunc "Removedora de Cartas";
+case 7: close2; callfunc "Refinador Especial";
+case 8: close2; callfunc "Torpedo VIP";
+case 9: close2; callfunc "Dr.Rey";
+case 10: close2; callfunc "Emperos";
+}
+}
+
+function	script	Removedora de Cartas	{
+
+
+if(getgmlevel() < 1){
+    mes "Removedora 100% eficaz disponível somente para VIPs.";
+    close;
+    }
+UPGRADEROOT:
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Olá, eu tenho o poder de remover cartas que já foram usados nos seus equipamentos totalmente de graça e com 100% de eficiência. Você quer utilizar desse serviço?";
+	next;
+	menu "Sim, certamente.",REMOVEMENU,
+	     "Não obrigado.",CLOSEOUT;
+
+REMOVEMENU:
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Onkie-Dukie! Qual ítem quer que eu examine para você?";
+	next;
+	menu "Deixe-me pensar.",CLOSEOUT,
+	     getequipname(1),SLOT1,
+	     getequipname(2),SLOT2,
+	     getequipname(3),SLOT3,
+	     getequipname(4),SLOT4,
+	     getequipname(5),SLOT5,
+	     getequipname(6),SLOT6,
+	     getequipname(7),SLOT7,
+	     getequipname(8),SLOT8,
+	     getequipname(9),SLOT9,
+	     getequipname(10),SLOT10;
+
+SLOT1:
+	set @part,1;
+	goto CARDNUMCHECK;
+
+SLOT2:
+	set @part,2;
+	goto CARDNUMCHECK;
+
+SLOT3:
+	set @part,3;
+	goto CARDNUMCHECK;
+
+SLOT4:
+	set @part,4;
+	goto CARDNUMCHECK;
+
+SLOT5:
+	set @part,5;
+	goto CARDNUMCHECK;
+
+SLOT6:
+	set @part,6;
+	goto CARDNUMCHECK;
+
+SLOT7:
+	set @part,7;
+	goto CARDNUMCHECK;
+
+SLOT8:
+	set @part,8;
+	goto CARDNUMCHECK;
+
+SLOT9:
+	set @part,9;
+	goto CARDNUMCHECK;
+
+SLOT10:
+	set @part,10;
+	goto CARDNUMCHECK;
+
+CARDNUMCHECK:
+	if(getequipcardcnt(@part) == 0) goto DENYCARDCOUNT;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "^FF3355Atenção não faça isso se estiver carregando excesso de peso (50% ou 90% acima do peso)! Sua carta e seu item CAIRÃO NO CHÃO caso você esteja acima do peso. Deseja continuar o processo?";
+	goto CARDNUMPOSTMSG;
+
+CARDNUMPOSTMSG:
+	next;
+	menu "Sim, não estou com excesso de peso.",REMOVECARD,
+	     "Não, estou com excesso de peso.",CLOSEOUT;
+
+REMOVECARD:
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Muito bem. Vamos nessa!";
+	successremovecards @part;
+	next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Pronto! Tome suas cartas e seus ítens! Volte sempre!";
+	close;
+
+DENYCARDCOUNT:
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Desculpe mas não há cartas equipadas neste ítem.";
+	close;
+
+CLOSEOUT:
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Tudo bem. Volte quando precisar dos meus serviços.";
+	close;
+}
+
+function	script	Resetadora VIP	{
+
+//===== Configurações: =======================================
+set .@atrib, 0;	// Reset de Atributos
+set .@habil, 0;	// Reset de Habilidades
+set .@ambos, 0;	// Reset de Ambos
+//============================================================
+
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Olá, posso resetar seus pontos.";
+	mes "Qual você deseja resetar?";
+	next;
+	if (select ("Resetar Atributos ["+.@atrib+"z]:Resetar Habilidades ["+.@habil+"z]:Resetar Ambos ["+.@ambos+"z]:Cancelar") == 4) close;
+	mes "[Resetadora]";
+	if (@menu == 1) callsub F_Reset, .@atrib, 1, 0;
+	if (@menu == 2) callsub F_Reset, .@habil, 0, 1;
+	if (@menu == 3) callsub F_Reset, .@ambos, 1, 1;
+	mes "Pronto, resetado. Fale comigo mais vezes se precisar!";
+	close;
+
+	F_Reset:
+		if (Zeny < getarg(0))
+		{
+			mes "Me desculpe, mas você não possui o Zeny necessário.";
+			close;
+		}
+		set Zeny, Zeny - getarg(0);
+		if (getarg(1)) resetstatus;
+		if (getarg(2)) resetskill;
+	return;
+}
+
+function	script	Dr.Rey	{
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Olá, eu sou o ^008B00"+strnpcinfo(1)+"^000000";
+	mes "Renomado cirurgião plástico nos EUA.";
+	mes "Tento alegrar mais as pessoas que estão infelizes com seu corpo...";
+	mes "Estou aqui para mudar o sexo das pessoas.";
+	mes "E fazer com que elas fiquem mais felizes.";	
+	next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "^FF0000LEIA COM ATENÇÃO^000000: Se sua conta possuir ^9370DBBardo/Menestrel^000000 ou ^9370DBCigana/Odalisca^000000, é aconselhável que faça a troca de sexo com esses personagens.";
+	next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "^FF0000NÃO^000000 resete as habilidades ANTES da mudança e use TODOS os pontos, caso contrário os pontos serão perdidos.";
+	next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Após a mudança de sexo resete as habilidades, caso você tenha uma das classes citadas anteriormente.";
+	next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Então, você quer mesmo mudar de sexo?";
+	if (select ("Sim, quero!:Não, estou feliz com meu corpo.") == 2) close;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Então vamos começar...";
+	next;
+	sc_end SC_ALL;
+	nude;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Agulha... Bisturi...";
+	next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Pronto, sua cirurgia foi um sucesso, espero que goste do resultado.";
+	next;
+	atcommand "@changesex";
+	close;
+}
+
+function	script	Torpedo VIP	{
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+
+	if(#delaytorpedo > gettimetick(2)){ 
+		mes "O serviço estará disponível novamente em "+((#delaytorpedo-gettimetick(2))/60)+" minutos."; 
+		close; 
+	}
+	mes "Olá, eu sou responsável pelos torpedos enviados para todos os jogadores, escolha abaixo qual opção de torpedo você deseja.";
+	if(select("- Torpedo livre:- Não, obrigado...") == 2) close;
+	next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "^FF0000ATENÇÃO^000000: o mau uso desta área acarretará em punição.";
+			mes "Escreva o torpedo que deseja enviar:";
+			input @procurarvip$;	
+			next;
+			setarray .palavras$[1],"viado","ragnarawn","ragnabr","lixo","lag","puta","pnc","noob","ragna","fdp","vagabunda","adm","[adm]","axl","mãe","[gm]","gm","pvp","mvp","mob","também","tambem","gg","ggserv";
+			for(set .@i,1; .@i < getarraysize(.palavras$); set .@i,.@i+1)
+			{
+			if(compare(@procurarvip$,.palavras$[.@i]))
+			{
+			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "Desculpe, mas não é permitido palavrões no anuncio.";
+			close;
+			}
+			}
+			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			if( @procurarvip$ == "null" ) {
+			mes "Você deve digitar algo";
+			close;
+			}
+
+			announce "[Torpedo - "+strcharinfo(0)+"]: "+@procurarvip$+".",bc_all,0x8BE2E2;
+			set #delaytorpedo, gettimetick(2)+1800;
+			close;
+}
+
+function	script	Utilidades ViP	{
+
+mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+mes "Olá "+strcharinfo(0)+"";
+mes "O que deseja?";
+switch(select("- Comprar Utilidades:- Comprar Flechas")){
+	case 1:
+		close2;
+		callshop "Loja1",1;
+		end;
+	
+	case 2:
+		close2;
+		callshop "Loja2",1;
+		end;
+		
+
+}
+}
+
+-	shop	Loja1	-1,611:40,506:40,501:50,502:200,503:550,504:1200,525:500,601:60,602:300,1065:100,645:800,656:1500,657:3000,610:4000,514:200,533:300,521:400,522:8500,578:500,715:600,717:600,716:600,7521:150,7522:150,7523:150,7524:300,1750:1,1751:3,1756:3,1752:3,1755:3,1754:3,1771:50,713:6
+-	shop	Loja2	-1,1750:1,1751:2,1752:3,1753:6,1754:3,1755:3,1756:3,1757:10,1758:30,1759:10,1760:10,1761:10,1762:3,1763:10,1764:30,1765:30,1767:3,1768:10,1769:30,1770:3,1772:3
+
+function	script	Encantador	{
+
+	set .@npcencantador$,"[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	set @PrecoEncantar,25000;	// Preço para encantar a arma
+
+	mes .@npcencantador$;
+	mes "Olá ^0000CD"+strcharinfo(0)+"^000000, bem vindo(a), eu posso Encantar a sua Arma com qualquer elemento por 30 minutos!";
+	mes "Para encantar sua arma cobrarei "+@PrecoEncantar+"z.";
+	next;
+	if(select("Sim.:Não.")==2){
+		mes .@npcencantador$;
+		mes "Volte quando precisar.";
+		close;
+	}
+	if(zeny < @PrecoEncantar){
+		mes .@npcencantador$;
+		mes "Você não tem o dinheiro suficiente.";
+		close;
+	}
+	mes .@npcencantador$;
+	mes "Qual elemento você quer?";
+	set zeny,zeny-@PrecoEncantar;
+	next;
+	switch(select("Geada.:Chamas:Terremoto.:Ventania.:Sagrado:Maldito:Sair.")){
+	case 1:
+		sc_start SC_WATERWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Geada, Duração: 5 Minutos, Level 5
+		close;
+	case 2:
+		sc_start SC_FIREWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Chama, Duração: 5 Minutos, Level 5
+		close;
+	case 3:
+		sc_start SC_EARTHWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Terremoto, Duração: 5 Minutos, Level 5
+		close;
+	case 4:
+		sc_start SC_WINDWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Ventania, Duração: 5 Minutos, Level 5
+		close;
+	case 5:
+		sc_start SC_ASPERSIO,12000000,5;				// 400000 = 1 Minuto: Encantar com Sagrado, Duração: 5 Minutos, Level 5
+		close;
+	case 6:
+		sc_start SC_SHADOWWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Maldito, Duração: 5 Minutos, Level 5
+		close;
+	case 7:
+		set zeny,zeny+@PrecoEncantar;
+		close;
+	}
+}
+
+function	script	Refinador Especial	{
+
+
+set .n$, "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+
+if (getgmlevel() < 1 ){
+mes .n$;
+mes "Você não é um player vip, saia daqui!";
+close;
+}
+
+
+
+mes .n$;
+mes "Olá Senhor oque deseja refinar?";
+next;
+        setarray .@position$[1], "Cabeça cima","Corpo","Mão esquerda","Mão direita","Capa","Botas","Accessório 1","Accessório 2","Cabeça meio","Cabeça baixo";
+        set .@menu$,"";
+        for( set .@i,1; .@i <= 10; set .@i,.@i+1 )
+        {
+                if( getequipisequiped(.@i) )
+                        set .@menu$, .@menu$ + .@position$[.@i] + "-" + "[" + getequipname(.@i) + "]";
+
+                set .@menu$, .@menu$ + ":";
+        }
+        set .@part,select(.@menu$);
+if(getequiprefinerycnt(.@part) >= 10)
+{
+mes .n$;
+mes "Eu não posso refinar este item.";
+mes "Ele ja foi refinado ao máximo permitido.";
+close;
+}
+
+
+if(!getequipisenableref(.@part)) {
+                mes .n$;
+                mes "Eu acho que não posso";
+                mes "refinar este item...";
+                close;
+        }
+switch(getequipweaponlv(.@part)){
+        case 0:         //Refine Armor
+                set .@price,2000;
+                set .@material,985;
+                set .@safe,4;
+                break;
+        case 1:         //Refine Level 1 Weapon
+                set .@price,50;
+                set .@material,1010;
+                set .@safe,7; 
+                break;
+        case 2:         //Refine Level 2 Weapon
+                set .@price,200;
+                set .@material,1011;
+                set .@safe,6; 
+                break;
+        case 3:         //Refine Level 3 Weapon
+                set .@price,5000;
+                set .@material,984;
+                set .@safe,5; 
+                break;
+        case 4:         //Refine Level 4 Weapon
+                set .@price,20000;
+                set .@material,984;
+                set .@safe,4; 
+                break;
+        case 5:         //Refine other stuff?
+                set .@price,2000;
+                set .@material,985;
+                set .@safe,4; 
+                break;
+}
+
+set .@refineitemid, getequipid(.@part);
+mes .n$;
+mes "Eu posso refinar seu item até uma quantia segura... A escolha é sua!";
+set .@menu2$,select("Para uma limite seguro.","Eu irei decidir quantas vezes!","Eu mudei de idéia");
+switch(.@menu2$){
+
+case 01:
+if(getequiprefinerycnt(.@part) >= .@safe)
+{
+next;
+mes .n$;
+mes "Este item já foi refinado ao máximo do seguro.";
+close;
+}
+set .@refinecnt,.@safe - getequiprefinerycnt(.@part);
+break;
+
+case 02:
+next;
+mes .n$;
+mes "Digite quantas vezes deseja refinar seu item..";
+next;
+input .@refinecnt;
+set .@refinecheck,.@refinecnt+getequiprefinerycnt(.@part);
+if(.@refinecnt <1 || .@refinecheck >10){
+mes .n$;
+mes "Não posso refinar esse item tantas vezes.";
+close;
+
+}
+if(.@refinecheck > .@safe)
+{
+set .@refinecheck,.@refinecheck-.@safe;
+mes .n$;
+mes "Eu irei tentar refinar o equipamento "+.@refinecheck+" do limite seguro... Seu equipamento pode ser destruído, Está bem?";
+next;
+if(select("Sim:Não")==2){
+mes .n$;
+mes "Bem.. que assi seja.";
+close;
+}
+}
+break;
+case 03:
+next;
+mes .n$;
+mes "Bem.. que assim seja!";
+close;
+}
+set .@fullprice,.@price * .@refinecnt;
+next;
+mes .n$;
+mes "Isso irá te custar "+.@refinecnt+" "+getitemname(.@material)+" e "+.@fullprice+" Zeny, Está ok?";
+if(select("Sim:Não")==2){
+next;
+mes .n$;
+mes "Bem.. que assim seja!";
+close;
+}
+if(countitem(.@material) <.@refinecnt || Zeny < .@fullprice) {
+next;
+mes .n$;
+mes "È tudo que você tem? Desculpe, Não posso trabalhar por um preço baixo ou pouco itens.";
+close;
+}
+set Zeny,Zeny-.@fullprice;
+delitem .@material,.@refinecnt;
+while(.@refinecnt){
+if (getequipid(.@part) != .@refineitemid || (.@menu2 == 1 && getequippercentrefinery(.@part) < 100)) {
+mes .n$;
+mes "Acha que sou estúpido!?";
+mes "Você trocou de item..";
+mes "Saia daqui antes que eu te estoure com meu martelo!!!";
+close;
+}
+next;
+mes "Clang, Clang!!";
+if(getequippercentrefinery(.@part) <= rand(100)) {
+failedrefitem .@part;
+emotion 23;
+next;
+mes .n$;
+mes "WAHHHH...Me desculpe...Eu avisei que poderia acontecer!!";
+set .@refinecnt,.@refinecnt-1;
+if(.@refinecnt==0)close;
+mes "Aqui está os itens que não usei";
+getitem .@material,.@refinecnt;
+set Zeny,Zeny+.@fullprice;
+close;
+}
+successrefitem .@part;
+emotion 21;
+set .@refinecnt,.@refinecnt-1;
+next;
+}
+mes .n$;
+mes "Tudo pronto.. Volte aqui quando quiser";
+close;
+} 
+
+function	script	Build Manager	{
+// Menu do script
+// 1 = Todas as opções
+// 2 = Resetar Status
+// 4 = Resetar Habilidades
+// 7 = All of Above [ 1+2+4 = 7 ]
+set .BMMode,7;
+
+// Slots disponíveis para salvar builds
+set .MaxSlots,5;
+
+// Ativar renomeação de slot
+set .StatRename,1;
+				
+while(1){
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+mes "Hey garotão,";
+mes "Eu controlo todo o sistema de armazenamento de Builds do rYokai!";
+mes "Aqui você pode salvar builds para determinadas ocasiões e utiliza-las da forma mais simples possível :D";
+switch( select( ( .BMMode & 1 )?"^0000FFBuilds já Salvas^000000":"",
+				( .BMMode & 1 )?"^0000FFSalvar Build^000000":"",	
+				( .BMMode & 2 )?"^0000FFResetar Status^000000":"",	
+				( .BMMode & 4 )?"^0000FFResetar Habilidades^000000":"")){
+	Case 1:
+		next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+		mes "Escolha sua build de acordo com a sequência númerica ( 1 - 5 )";
+		message strcharinfo(0),"Coloque 0 para cancelar";
+		mes "^FF0000Slot[X]^000000-[^0000FFSTR|AGI|VIT|INT|DEX|LUK^000000]";
+		mes "^0000FF_____________________________^000000";
+		for( set .@i,1; .@i <= .MaxSlots; set .@i,.@i + 1 ){
+			mes "^FF0000"+.@i+".^0000FF"+getd( "Slot_"+.@i+"$" )+"^000000 [^0000FF"+getd("STR_"+.@i)+"|"+getd("AGI_"+.@i)+"|"+getd("VIT_"+.@i)+"|"+getd("INT_"+.@i)+"|"+getd("DEX_"+.@i)+"|"+getd("LUK_"+.@i)+"^000000]";
+			}
+		mes "^0000FF_____________________________^000000";
+		input .@a,0,.MaxSlots;
+		if( .@a != 0 ){
+			callfunc("SwitchBuild",.@a);
+			message strcharinfo(0),"Done";
+			}
+		next;
+		break;
+	Case 2:
+		next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+		mes "Escolha o slot no qual a build que você está salvando ficará! ( 1 - 5)";		
+		mes "^0000FF_____________________________^000000";
+		mes "^FF0000@^000000 STR - "+readparam(bStr)+" ^FF0000@^000000 AGI - "+readparam(bAgi)+" ^FF0000@^000000 VIT - "+readparam(bVit)+"";
+		mes "^FF0000@^000000 INT - "+readparam(bInt)+" ^FF0000@^000000 DEX - "+readparam(bDex)+" ^FF0000@^000000 LUK - "+readparam(bLuk)+"";
+		mes "^0000FF_____________________________^000000";
+		message strcharinfo(0),"Coloque 0 para cancelar";
+		mes "^FF0000Slot[X]^000000-[^0000FFSTR|AGI|VIT|INT|DEX|LUK^000000]";
+		mes "^0000FF_____________________________^000000";
+		for( set .@i,1; .@i <= .MaxSlots; set .@i,.@i + 1 ){
+			mes "^FF0000"+.@i+".^0000FF"+getd( "Slot_"+.@i+"$" )+"^000000 [^0000FF"+getd("STR_"+.@i)+"|"+getd("AGI_"+.@i)+"|"+getd("VIT_"+.@i)+"|"+getd("INT_"+.@i)+"|"+getd("DEX_"+.@i)+"|"+getd("LUK_"+.@i)+"^000000]";
+			}
+		mes "^0000FF_____________________________^000000";
+		input .@a,0,.MaxSlots;
+		if( .@a != 0 ){
+			callfunc("SaveBuild",.@a,.StatRename);
+			}
+		next;
+		break;
+	Case 3:
+		next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+		ResetStatus;
+		mes "Seu status foi resetado com sucesso. Você ganhou de volta seus ^FF0000pontos de status padrões.^000000";
+		next;
+		break;
+	Case 4:
+		next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+		ResetSkill;
+		mes "Seu status foi resetado com sucesso. Você ganhou de volta seus ^FF0000pontos de status padrões.^000000";
+		next;
+		break;
+		}
+	}
+}
+
+function	script	SaveBuild	{
+	setd "STR_"+getarg(0),readparam(bStr);
+	setd "AGI_"+getarg(0),readparam(bAgi);
+	setd "VIT_"+getarg(0),readparam(bVIT);
+	setd "INT_"+getarg(0),readparam(bInt);
+	setd "DEX_"+getarg(0),readparam(bDex);
+	setd "LUK_"+getarg(0),readparam(bLuk);
+	if( getarg(1) ){
+		do{
+			message strcharinfo(0),"Digite um nome para esse slot. [ Max. 12 Letras ]";
+			input getd( "Slot_"+getarg(0)+"$" );
+		}while( getstrlen( getd( "Slot_"+getarg(0)+"$" ) ) > 12 );
+	}else{
+	set getd( "Slot_"+getarg(0)+"$" ),"Stats "+getarg(0);
+	}
+return;
+}
+
+function	script	SwitchBuild	{
+	ResetStatus;
+	statusup2 bStr,getd( "STR_"+getarg(0) )-1;
+	statusup2 bAgi,getd( "AGI_"+getarg(0) )-1;
+	statusup2 bVit,getd( "VIT_"+getarg(0) )-1;
+	statusup2 bInt,getd( "INT_"+getarg(0) )-1;
+	statusup2 bDex,getd( "DEX_"+getarg(0) )-1;
+	statusup2 bLuk,getd( "LUK_"+getarg(0) )-1;
+	set StatusPoint,0;
+return;
+}
+
+function	script	Emperos	{
+
+        set $@EmpeMAV,1288;                     //Id mob emperium2.
+        set $@EmpeBMR,5;                       //Rank size (max. 120 recomended) [rank > 127 = ERROR].
+        set .nm,99;                             //Minimum level to use the rooms.
+        set .Emp$,"[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";  //Npc name.
+
+        if (getgmlevel() >= 80) {
+                while (!.@c) {
+                        callsub OnCheck02;
+                        mes .Emp$;
+                        callsub CS_Conf;
+                        next;
+                        switch(select("^8A0808Default menu.^000000:Clear Records.:Options.:^8A0808Exit.^000000")) {
+
+                        case 1: set .@c,1; break;
+                        case 2:
+                                while (!.@c) {
+                                        callsub CS_Rec;
+                                        if (getarraysize($EmpeBRec) == 0) {
+                                                mes .Emp$;
+                                                mes "Não a registro para excluir.";
+                                                next;
+                                                break;
+                                        }
+                                        mes .Emp$;
+                                        mes "Qual o registro que você deseja excluir?";
+                                        next;
+                                        switch(select("Enter record number.:Clear all records.:^8A0808Back.^000000")) {
+                                        case 1:
+                                                mes .Emp$;
+                                                mes "Digite o número do registro para excluir.";
+                                                mes " ";
+                                                mes " ";
+                                                mes " ";
+                                                mes " ";
+                                                mes "Enter (^0404B40^000000) to return.";
+                                                next;
+                                                input .@a;
+
+                                                if (!.@a) break;
+                                                if ($EmpeBRec[.@a] == 0) break;
+
+                                                set $EmpeBName$[.@a],"";
+                                                set $EmpeBRec[.@a],0;
+                                                for (set .@b,.@a; .@b <= $@EmpeBMR; set .@b,.@b+1) {
+                                                        set $EmpeBName$[.@b],$EmpeBName$[(.@b + 1)];
+                                                        set $EmpeBRec[.@b],$EmpeBRec[(.@b + 1)];
+                                                }
+                                                callsub CS_Rec;
+                                                close;
+
+                                        case 2:
+                                                for (set .@b,1; .@b <= $@EmpeBMR; set .@b,.@b+1) {
+                                                        set $EmpeBName$[.@b],"";
+                                                        set $EmpeBRec[.@b],0;
+                                                }
+                                                callsub CS_Rec;
+                                                close;
+
+                                        case 3:
+                                                set .@c,1;
+                                        }
+                                }
+                                set .@c,0;
+                                break;
+
+                        case 3:
+                                mes .Emp$;
+                                callsub CS_Conf;
+                                next;
+                                switch(select("Enable/Disable Emperium Breaker.:Enable/Disable in War Of Emperium.:Enable/Disable Zeny cost.:^8A0808Back.^000000")) {
+                                case 1:
+                                        while (!.@c) {
+                                                mes .Emp$;
+                                                mes "Status: "+($EmpeEstado == 0 ? "^ED2020Disabled^000000":"^01DF01Enabled^000000")+".";
+                                                mes "^8A0808A desativação dessa opção, os jogadores dentro das salas são expulsos, os blocos são retirados e será negada a entrada nas salas.^000000";
+                                                if (.@d) close;
+                                                next;
+                                                switch(select("Enable Emperium Breaker.:Disable Emperium Breaker.:^8A0808Back.^000000")) {
+                                                case 1:
+                                                        if ($EmpeEstado) break;
+                                                        set $EmpeEstado,1;
+                                                        doevent strnpcinfo(0)+"::OnStart";
+                                                        set .@d,1;
+                                                        break;
+
+                                                case 2:
+                                                        if (!$EmpeEstado) break;
+                                                        set $EmpeEstado,0;
+                                                        doevent strnpcinfo(0)+"::OnStop";
+                                                        set .@d,1;
+                                                        break;
+                                               
+                                                case 3:
+                                                        set .@c,1;
+                                                }
+                                        }
+                                        set .@c,0;
+                                        break;
+
+                                case 2:
+                                        while (!.@c) {
+                                                mes .Emp$;
+                                                mes "Status: "+($EmpeWEstado == 0 ? "^01DF01Enabled^000000":"^ED2020Disabled^000000")+".";
+                                                mes "^8A0808Desativando esta opção sempre que WOE é ativado, o acesso às salas será negada.^000000";
+                                                next;
+                                                switch(select("Enabled in WOE.:Disabled in WOE.:^8A0808Back.^000000")) {
+                                                case 1:
+                                                        if (!$EmpeWEstado) break;
+                                                        set $EmpeWEstado,0;
+                                                        break;
+
+                                                case 2:
+                                                        if ($EmpeWEstado) break;
+                                                        set $EmpeWEstado,1;
+                                                        if (agitcheck() == 1) { mapwarp "pvp_n_5-5","prontera",169,206; }
+                                                        break;
+                                               
+                                                case 3:
+                                                        set .@c,1;
+                                                }
+                                        }
+                                        set .@c,0;
+                                        break;
+
+                                case 3:
+                                        while (!.@c) {
+                                                mes .Emp$;
+                                                mes "Status: "+($EmpeZEstado == 0 ? "^ED2020Disabled^000000":"^01DF01Enabled^000000")+".";
+                                                mes "Zeny cost: "+($EmpeZEstado != 0 ? "^A4A4A4"+$EmpeZEstado+"^000000 Z":"---");
+                                                mes "^8A0808Ativar essa opção toda vez que quiser entrar nas salas exigirá uma quantidade de Zeny.^000000";
+                                                next;
+                                                switch(select("Enable Zeny cost.:Disable Zeny cost.:^8A0808Back.^000000")) {
+                                                case 1:
+                                                        mes .Emp$;
+                                                        mes "Digite a quantidade de Zeny";
+                                                        mes " ";
+                                                        mes " ";
+                                                        mes " ";
+                                                        mes " ";
+                                                        mes "Enter (^0404B40^000000) to return.";
+                                                        next;
+                                                        input .@z;
+                                                        if (.@z == 0) break;
+                                                        set $EmpeZEstado,.@z;
+                                                        break;
+
+                                                case 2:
+                                                        if (!$EmpeZEstado) break;
+                                                        set $EmpeZEstado,0;
+                                                        break;
+                                               
+                                                case 3:
+                                                        set .@c,1;
+                                                }
+                                        }
+                               
+                                case 4:
+                                }
+                        set .@c,0;
+                        break;
+
+                        case 4:
+                                mes .Emp$;
+                                mes "Tenha um bom dia.";
+                                close;
+                        }
+                }
+        }
+
+        if (@EmpMSP == 1 && MaxSp == 1) {
+                if (readparam(bLuk) <= 1) { statusup2 bLuk,1; statusup2 bLuk,-1; } else { statusup2 bLuk,-1; statusup2 bLuk,1; }
+                percentheal 0,100;
+        }
+        set @EmpMSP,0;
+        mes .Emp$;
+        mes "Bem vindo "+strcharinfo(0)+".";
+        next;
+        switch(select("- Salas:- Top "+ $@EmpeBMR +" Emperium Breaker.:^8A0808- Sair^000000.")) {
+        case 1:
+                callsub OnCheck01;
+                callsub OnCheck03;
+                if ($EmpeZEstado && (Zeny < $EmpeZEstado)) {
+                        mes .Emp$;
+                        mes "Você não tem Zeny suficiente.";
+                        close;
+                }
+                if (BaseLevel < .nm) {
+                        mes .Emp$;
+                        mes "Necessita de pelo menos um nível "+ .nm +" para entra na sala.";
+                        close;
+                }
+                mes .Emp$;
+                mes "Selecione a sala para usar.";
+                if ($EmpeZEstado) mes "Zeny cost: ^B40404"+$EmpeZEstado+" Z^000000.";
+                next;
+                while (1) {
+                        callsub OnCheck02;
+                        set .@s1,getareausers ("pvp_n_5-5",60,94,71,105);
+                        set .@s2,getareausers ("pvp_n_5-5",94,128,105,139);
+                        set .@s3,getareausers ("pvp_n_5-5",128,94,139,105);
+                        set .@s4,getareausers ("pvp_n_5-5",94,60,105,71);
+                        set .@ss,select("^848484Sala 1^000000 [ ^ED2020 "+.@s1+" / 1 ^000000 ] "+.sd$[1]+":^848484Sala 2^000000 [ ^ED2020 "+.@s2+" / 1 ^000000 ] "+.sd$[2]+":^848484Sala 3^000000 [ ^ED2020 "+.@s3+" / 1 ^000000 ] "+.sd$[3]+":^848484Sala 4^000000 [ ^ED2020 "+.@s4+" / 1 ^000000 ] "+.sd$[4]);
+                        callsub OnCheck01;
+                        callsub OnCheck03;
+                        setarray .@warpx[1],62,96,130,96;
+                        setarray .@warpy[1],96,130,96,62;
+                        for (set .@a,1; .@a <= 4; set .@a,.@a + 1) {
+                                if (.@ss == .@a && compare(.sd$[.@a],"Not") == 0) {
+                                        if ($EmpeZEstado) set Zeny,Zeny - $EmpeZEstado;
+                                        set .sd$[.@a],"^ED2020< Not Available >^000000";
+                                        warp "pvp_n_5-5",.@warpx[.@a],.@warpy[.@a];
+                                        end;
+                                }
+                        }
+                }
+
+        case 2:
+                mes .Emp$;
+                mes "Aguarde o envio de informações.";
+                close2;
+                callsub CS_Rec;
+                end;
+       
+        case 3:
+                mes .Emp$;
+                mes "Tenha um Bom dia.";
+                close;
+        }
+
+OnCheck01:
+        if (!$EmpeEstado) {
+                mes .Emp$;
+                mes "Desculpa, está sala esta desabilitada";
+                close;
+        }
+        return;
+
+OnCheck02:
+        set .@s1,getareausers ("pvp_n_5-5",60,94,71,105);
+        set .@s2,getareausers ("pvp_n_5-5",94,128,105,139);
+        set .@s3,getareausers ("pvp_n_5-5",128,94,139,105);
+        set .@s4,getareausers ("pvp_n_5-5",94,60,105,71);
+        if (!.@s1) { set .sd$[1],"^01DF01< Livre >^000000"; killmonster "pvp_n_5-5","Emperos#S1::OnEDie"; } else set .sd$[1],"^ED2020< Em uso >^000000";
+        if (!.@s2) { set .sd$[2],"^01DF01< Livre >^000000"; killmonster "pvp_n_5-5","Emperos#S2::OnEDie"; } else set .sd$[2],"^ED2020< Em uso >^000000";
+        if (!.@s3) { set .sd$[3],"^01DF01< Livre >^000000"; killmonster "pvp_n_5-5","Emperos#S3::OnEDie"; } else set .sd$[3],"^ED2020< Em uso >^000000";
+        if (!.@s4) { set .sd$[4],"^01DF01< Livre >^000000"; killmonster "pvp_n_5-5","Emperos#S4::OnEDie"; } else set .sd$[4],"^ED2020< Em uso >^000000";
+        return;
+
+OnCheck03:
+        if ($EmpeWEstado == 1 && agitcheck() == 1) {
+                mes .Emp$;
+                mes "As Salas não estão disponiveis, quando está acontecendo a WOE.";
+                close;
+        }
+        return;
+
+CS_Rec:
+        if ($@EmpeBMR) {
+                announce "~~~~~~~~~~~~~~ [ Top "+ $@EmpeBMR +" Emperium Breaker ] ~~~~~~~~~~~~~~",bc_self,0xF7F8E0;
+                for (set .@b,$@EmpeBMR; .@b > 0; set .@b,.@b-1) {
+                        set .@EmpeRec[.@b],$EmpeBRec[.@b];
+                        set .@Min[.@b],(.@EmpeRec[.@b] / 60000);
+                        set .@EmpeRec[.@b],.@EmpeRec[.@b] - (.@Min[.@b] * 60000);
+                        set .@Seg[.@b],(.@EmpeRec[.@b] / 1000);
+                        set .@EmpeRec[.@b],.@EmpeRec[.@b] - (.@Seg[.@b] * 1000);
+                        if (.@b == 1) { set .@c$,"0xFFFF00"; } else { set .@c$,"0xF2F5A9"; }
+                        if ($EmpeBName$[.@b] == "") { announce .@b+"º Lugar: Nenhum.",bc_self,0xD8D8D8; continue; }
+                        announce .@b+"º Lugar: "+$EmpeBName$[.@b]+" ~ "+.@Min[.@b]+" Minuto"+(.@Min[.@b] == 1 ? "":"s")+" ~ "+.@Seg[.@b]+" Segundo"+(.@Seg[.@b] == 1 ? "":"s")+" ~ "+.@EmpeRec[.@b]+" Milissegundos.",bc_self,.@c$;
+                }
+                announce "~~~~~~~~~~~~~~ [ Top "+ $@EmpeBMR +" Emperium Breaker ] ~~~~~~~~~~~~~~",bc_self,0xF7F8E0;
+                return;
+        }
+        mes .Emp$;
+        mes "Ranking disabled.";
+        close;
+       
+CS_Conf:
+        mes "Using rooms: "+(compare(.sd$[1],"Not") == 0 ? "^01DF01":"^ED2020")+"[1] "+(compare(.sd$[2],"Not") == 0 ? "^01DF01":"^ED2020")+"[2] "+(compare(.sd$[3],"Not") == 0 ? "^01DF01":"^ED2020")+"[3] "+(compare(.sd$[4],"Not") == 0 ? "^01DF01":"^ED2020")+"[4]^000000";
+        mes "Emperium Breaker: "+($EmpeEstado == 0 ? "^ED2020Disabled^000000":"^01DF01Enabled^000000");
+        mes "Activated in WOE:  "+($EmpeWEstado == 0 ? "^01DF01Enabled^000000":"^ED2020Disabled^000000");
+        mes "Enable Zeny cost: "+($EmpeZEstado == 0 ? "^ED2020Disabled^000000":"^01DF01Enabled^000000");
+        mes "Zeny cost: "+($EmpeZEstado != 0 ? "^A4A4A4"+$EmpeZEstado+"^000000 Z":" ---");
+        return;
+
+OnStart:
+        setwall "pvp_n_5-5",72,98,4,0,1,"EmpeWallST01";
+        setwall "pvp_n_5-5",101,127,4,2,1,"EmpeWallST02";
+        setwall "pvp_n_5-5",127,98,4,0,1,"EmpeWallST03";
+        setwall "pvp_n_5-5",101,72,4,2,1,"EmpeWallST04";
+
+        setcell "pvp_n_5-5",72,98,79,101,cell_walkable,0; //Limitadores sala 1.
+        setcell "pvp_n_5-5",80,82,81,117,cell_walkable,0;
+        setcell "pvp_n_5-5",98,120,101,127,cell_walkable,0; //Limitadores sala 2.
+        setcell "pvp_n_5-5",82,118,117,119,cell_walkable,0;
+        setcell "pvp_n_5-5",120,98,127,101,cell_walkable,0; //Limitadores sala 3.
+        setcell "pvp_n_5-5",118,82,119,117,cell_walkable,0;
+        setcell "pvp_n_5-5",98,72,101,79,cell_walkable,0; //Limitadores sala 4.
+        setcell "pvp_n_5-5",82,80,117,81,cell_walkable,0;
+        mapwarp "pvp_n_5-5","prontera",169,206;
+        end;
+
+OnStop:
+        delwall "EmpeWallST01";
+        delwall "EmpeWallST02";
+        delwall "EmpeWallST03";
+        delwall "EmpeWallST04";
+
+        setcell "pvp_n_5-5",72,98,79,101,cell_walkable,1;
+        setcell "pvp_n_5-5",80,82,81,117,cell_walkable,1;
+        setcell "pvp_n_5-5",98,120,101,127,cell_walkable,1;
+        setcell "pvp_n_5-5",82,118,117,119,cell_walkable,1;
+        setcell "pvp_n_5-5",120,98,127,101,cell_walkable,1;
+        setcell "pvp_n_5-5",118,82,119,117,cell_walkable,1;
+        setcell "pvp_n_5-5",98,72,101,79,cell_walkable,1;
+        setcell "pvp_n_5-5",82,80,117,81,cell_walkable,1;
+        mapwarp "pvp_n_5-5","prontera",169,206;
+        end;
+
+OnAgitStart:
+OnAgitStart2:
+        if ($EmpeWEstado) mapwarp "pvp_n_5-5","prontera",169,206;
+        end;
+
+OnInit:
+        if ($EmpeEstado) mapwarp "pvp_n_5-5","prontera",169,206;
+        end;
+}
+
+pvp_n_5-5,62,105,5	script	Emperos#S1	405,{
+
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+        mes "*^ED2020Não mude o seu equipamento.^000000";
+        mes "*^ED2020Não mude seu stats de base.^000000";
+        mes "^610B0BSe você não cumprir essas regras após o Emperium está quebrado vai ser expulso da sala e você não vai ter o seu registro.^000000";
+        if (@EmpMSP) { set .@a,select("Sair da Sala."); set .@a,.@a+1; }
+        else { set .@a,select("Iniciar. [ 3 Seconds ]:Sair da Sala."); }
+        if (.@a == 2) {
+                if (readparam(bLuk) <= 1) { statusup2 bLuk,1; statusup2 bLuk,-1; } else { statusup2 bLuk,-1; statusup2 bLuk,1; }
+                percentheal 0,100;
+                warp "prontera",169,206;
+                end;
+        }
+        close2;
+        areaannounce "pvp_n_5-5",60,94,71,105,"Emperium irá aparecer ...",0;
+        percentheal 0,-100;
+        set MaxSp,1;
+        set @EmpMSP,1;
+        initnpctimer;
+        end;
+
+OnTimer1000:
+        areaannounce "pvp_n_5-5",60,94,71,105,"3",0;
+        end;
+
+OnTimer2000:
+        areaannounce "pvp_n_5-5",60,94,71,105,"2",0;
+        end;
+
+OnTimer3000:
+        areaannounce "pvp_n_5-5",60,94,71,105,"1",0;
+        end;
+
+OnTimer4000:
+        areaannounce "pvp_n_5-5",60,94,71,105,"GO!",0;
+        monster "pvp_n_5-5",66,99,"Emperos Slave",$@EmpeMAV,1,strnpcinfo(0)+"::OnEDie";
+        end;
+
+OnTimer304000:
+        areaannounce "pvp_n_5-5",60,94,71,105,"Limite de tempo excedido.",0;
+        killmonster "pvp_n_5-5",strnpcinfo(0)+"::OnEDie";
+        sleep2 2000;
+        areawarp "pvp_n_5-5",60,94,71,105,"prontera",169,206;
+        stopnpctimer;
+        end;
+
+OnEDie:
+        stopnpctimer;
+        if (getareausers ("pvp_n_5-5",60,94,71,105) == 0) end;
+        if (MaxSp > 1) { warp "prontera",169,206; end; }
+        if (readparam(bLuk) <= 1) { statusup2 bLuk,1; statusup2 bLuk,-1;} else { statusup2 bLuk,-1; statusup2 bLuk,1; }
+        percentheal 0,100;
+
+        callsub CS_Vars;
+
+        set .@Min,.MyTime / 60000;
+        set .MyTime,.MyTime - (.@Min * 60000);
+        set .@Seg,.MyTime / 1000;
+        set .MyTime,.MyTime - (.@Seg * 1000);
+
+        areaannounce "pvp_n_5-5",60,94,71,105,"Seu Record é: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
+        sleep2 3000;
+        areawarp "pvp_n_5-5",60,94,71,105,"prontera",169,206;
+        end;
+       
+CS_Vars:
+        set .MyTime,getnpctimer(0) - 4000;
+        for (set .@a,1; .@a <= $@EmpeBMR; set .@a,.@a+1) {
+                if (.MyTime < $EmpeBRec[.@a] || $EmpeBRec[.@a] == 0) {
+                        for (set .@b,$@EmpeBMR; .@b >= .@a; set .@b,.@b-1) {
+                                set $EmpeBRec[.@b],$EmpeBRec[(.@b - 1)];
+                                set $EmpeBName$[.@b],$EmpeBName$[(.@b - 1)];
+                        }
+                        set $EmpeBRec[.@a],.MyTime;
+                        set $EmpeBName$[.@a],strcharinfo(0);
+                        return;
+                }
+        }
+        return;
+}
+
+pvp_n_5-5,96,139,5	script	Emperos#S2	405,{
+
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+        mes "*^ED2020Não mude o seu equipamento.^000000";
+        mes "*^ED2020Não mude seu stats de base.^000000";
+        mes "^610B0BSe você não cumprir essas regras após o Emperium está quebrado vai ser expulso da Sala e você não vai ter o seu registro.^000000";
+        if (@EmpMSP) { set .@a,select("Sair da Sala"); set .@a,.@a+1; }
+        else { set .@a,select("Iniciar. [ 3 Seconds ]:Sair da Sala."); }
+        if (.@a == 2) {
+                if (readparam(bLuk) <= 1) { statusup2 bLuk,1; statusup2 bLuk,-1; } else { statusup2 bLuk,-1; statusup2 bLuk,1; }
+                percentheal 0,100;
+                warp "prontera",169,206;
+                end;
+        }
+        close2;
+        areaannounce "pvp_n_5-5",94,128,105,139,"Emperium irá aparecer ...",0;
+        percentheal 0,-100;
+        set MaxSp,1;
+        set @EmpMSP,1;
+        initnpctimer;
+        end;
+
+OnTimer1000:
+        areaannounce "pvp_n_5-5",94,128,105,139,"3",0;
+        end;
+
+OnTimer2000:
+        areaannounce "pvp_n_5-5",94,128,105,139,"2",0;
+        end;
+
+OnTimer3000:
+        areaannounce "pvp_n_5-5",94,128,105,139,"1",0;
+        end;
+
+OnTimer4000:
+        areaannounce "pvp_n_5-5",94,128,105,139,"GO!",0;
+        monster "pvp_n_5-5",100,133,"Emperos Slave",$@EmpeMAV,1,strnpcinfo(0)+"::OnEDie";
+        end;
+
+OnTimer304000:
+        areaannounce "pvp_n_5-5",94,128,105,139,"Limite de tempo excedido",0;
+        killmonster "pvp_n_5-5",strnpcinfo(0)+"::OnEDie";
+        sleep2 2000;
+        areawarp "pvp_n_5-5",94,128,105,139,"prontera",169,206;
+        stopnpctimer;
+        end;
+
+OnEDie:
+        stopnpctimer;
+        if (getareausers ("pvp_n_5-5",94,128,105,139) == 0) end;
+        if (MaxSp > 1) { warp "prontera",169,206; end; }
+        if (readparam(bLuk) <= 1) { statusup2 bLuk,1; statusup2 bLuk,-1;} else { statusup2 bLuk,-1; statusup2 bLuk,1; }
+        percentheal 0,100;
+
+        callsub CS_Vars;
+
+        set .@Min,.MyTime / 60000;
+        set .MyTime,.MyTime - (.@Min * 60000);
+        set .@Seg,.MyTime / 1000;
+        set .MyTime,.MyTime - (.@Seg * 1000);
+
+        areaannounce "pvp_n_5-5",94,128,105,139,"Seu Record é: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
+        sleep2 3000;
+        areawarp "pvp_n_5-5",94,128,105,139,"prontera",169,206;
+        end;
+       
+CS_Vars:
+        set .MyTime,getnpctimer(0) - 4000;
+        for (set .@a,1; .@a <= $@EmpeBMR; set .@a,.@a+1) {
+                if (.MyTime < $EmpeBRec[.@a] || $EmpeBRec[.@a] == 0) {
+                        for (set .@b,$@EmpeBMR; .@b >= .@a; set .@b,.@b-1) {
+                                set $EmpeBRec[.@b],$EmpeBRec[(.@b - 1)];
+                                set $EmpeBName$[.@b],$EmpeBName$[(.@b - 1)];
+                        }
+                        set $EmpeBRec[.@a],.MyTime;
+                        set $EmpeBName$[.@a],strcharinfo(0);
+                        return;
+                }
+        }
+        return;
+}
+
+pvp_n_5-5,130,105,5	script	Emperos#S3	405,{
+
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+        mes "*^ED2020Não mude o seu equipamento.^000000";
+        mes "*^ED2020Não mude seu stats de base.^000000";
+        mes "^610B0BSe você não cumprir essas regras após o Emperium está quebrado vai ser expulso da Sala e você não vai ter o seu registro.^000000";
+        if (@EmpMSP) { set .@a,select("Sair da Sala."); set .@a,.@a+1; }
+        else { set .@a,select("Iniciar. [ 3 Seconds ]:Sair da Sala."); }
+        if (.@a == 2) {
+                if (readparam(bLuk) <= 1) { statusup2 bLuk,1; statusup2 bLuk,-1; } else { statusup2 bLuk,-1; statusup2 bLuk,1; }
+                percentheal 0,100;
+                warp "prontera",169,206;
+                end;
+        }
+        close2;
+        areaannounce "pvp_n_5-5",128,94,139,105,"Emperium irá aparecer ...",0;
+        percentheal 0,-100;
+        set MaxSp,1;
+        set @EmpMSP,1;
+        initnpctimer;
+        end;
+
+OnTimer1000:
+        areaannounce "pvp_n_5-5",128,94,139,105,"3",0;
+        end;
+
+OnTimer2000:
+        areaannounce "pvp_n_5-5",128,94,139,105,"2",0;
+        end;
+
+OnTimer3000:
+        areaannounce "pvp_n_5-5",128,94,139,105,"1",0;
+        end;
+
+OnTimer4000:
+        areaannounce "pvp_n_5-5",128,94,139,105,"GO!",0;
+        monster "pvp_n_5-5",134,99,"Emperos Slave",$@EmpeMAV,1,strnpcinfo(0)+"::OnEDie";
+        end;
+
+OnTimer304000:
+        areaannounce "pvp_n_5-5",128,94,139,105,"Limite de tempo excedido.",0;
+        killmonster "pvp_n_5-5",strnpcinfo(0)+"::OnEDie";
+        sleep2 2000;
+        areawarp "pvp_n_5-5",128,94,139,105,"prontera",169,206;
+        stopnpctimer;
+        end;
+
+OnEDie:
+        stopnpctimer;
+        if (getareausers ("pvp_n_5-5",128,94,139,105) == 0) end;
+        if (MaxSp > 1) { warp "prontera",169,206; end; }
+        if (readparam(bLuk) <= 1) { statusup2 bLuk,1; statusup2 bLuk,-1;} else { statusup2 bLuk,-1; statusup2 bLuk,1; }
+        percentheal 0,100;
+
+        callsub CS_Vars;
+
+        set .@Min,.MyTime / 60000;
+        set .MyTime,.MyTime - (.@Min * 60000);
+        set .@Seg,.MyTime / 1000;
+        set .MyTime,.MyTime - (.@Seg * 1000);
+
+        areaannounce "pvp_n_5-5",128,94,139,105,"Seu Record é: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
+        sleep2 3000;
+        areawarp "pvp_n_5-5",128,94,139,105,"prontera",169,206;
+        end;
+       
+CS_Vars:
+        set .MyTime,getnpctimer(0) - 4000;
+        for (set .@a,1; .@a <= $@EmpeBMR; set .@a,.@a+1) {
+                if (.MyTime < $EmpeBRec[.@a] || $EmpeBRec[.@a] == 0) {
+                        for (set .@b,$@EmpeBMR; .@b >= .@a; set .@b,.@b-1) {
+                                set $EmpeBRec[.@b],$EmpeBRec[(.@b - 1)];
+                                set $EmpeBName$[.@b],$EmpeBName$[(.@b - 1)];
+                        }
+                        set $EmpeBRec[.@a],.MyTime;
+                        set $EmpeBName$[.@a],strcharinfo(0);
+                        return;
+                }
+        }
+        return;
+}
+
+pvp_n_5-5,96,71,5	script	Emperos#S4	405,{
+
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+        mes "*^ED2020Não mude o seu equipamento.^000000";
+        mes "*^ED2020Não mude seu stats de base.^000000";
+        mes "^610B0BSe você não cumprir essas regras após o Emperium está quebrado vai ser expulso da Sala e você não vai ter o seu registro.^000000";
+        if (@EmpMSP) { set .@a,select("Sair da Sala."); set .@a,.@a+1; }
+        else { set .@a,select("Iniciar. [ 3 Seconds ]:Sair da Sala."); }
+        if (.@a == 2) {
+                if (readparam(bLuk) <= 1) { statusup2 bLuk,1; statusup2 bLuk,-1; } else { statusup2 bLuk,-1; statusup2 bLuk,1; }
+                percentheal 0,100;
+                warp "prontera",169,206;
+                end;
+        }
+        close2;
+        areaannounce "pvp_n_5-5",94,60,105,71,"Emperium irá aparecer ...",0;
+        percentheal 0,-100;
+        set MaxSp,1;
+        set @EmpMSP,1;
+        initnpctimer;
+        end;
+
+OnTimer1000:
+        areaannounce "pvp_n_5-5",94,60,105,71,"3",0;
+        end;
+
+OnTimer2000:
+        areaannounce "pvp_n_5-5",94,60,105,71,"2",0;
+        end;
+
+OnTimer3000:
+        areaannounce "pvp_n_5-5",94,60,105,71,"1",0;
+        end;
+
+OnTimer4000:
+        areaannounce "pvp_n_5-5",94,60,105,71,"GO!",0;
+        monster "pvp_n_5-5",100,65,"Emperos Slave",$@EmpeMAV,1,strnpcinfo(0)+"::OnEDie";
+        end;
+
+OnTimer304000:
+        areaannounce "pvp_n_5-5",94,60,105,71,"Limite de tempo excedido",0;
+        killmonster "pvp_n_5-5",strnpcinfo(0)+"::OnEDie";
+        sleep2 2000;
+        areawarp "pvp_n_5-5",94,60,105,71,"prontera",169,206;
+        stopnpctimer;
+        end;
+
+OnEDie:
+        stopnpctimer;
+        if (getareausers ("pvp_n_5-5",94,60,105,71) == 0) end;
+        if (MaxSp > 1) { warp "prontera",169,206; end; }
+        if (readparam(bLuk) <= 1) { statusup2 bLuk,1; statusup2 bLuk,-1;} else { statusup2 bLuk,-1; statusup2 bLuk,1; }
+        percentheal 0,100;
+
+        callsub CS_Vars;
+
+        set .@Min,.MyTime / 60000;
+        set .MyTime,.MyTime - (.@Min * 60000);
+        set .@Seg,.MyTime / 1000;
+        set .MyTime,.MyTime - (.@Seg * 1000);
+
+        areaannounce "pvp_n_5-5",94,60,105,71,"Seu Record é: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
+        sleep2 3000;
+        areawarp "pvp_n_5-5",94,60,105,71,"prontera",169,206;
+        end;
+       
+CS_Vars:
+        set .MyTime,getnpctimer(0) - 4000;
+        for (set .@a,1; .@a <= $@EmpeBMR; set .@a,.@a+1) {
+                if (.MyTime < $EmpeBRec[.@a] || $EmpeBRec[.@a] == 0) {
+                        for (set .@b,$@EmpeBMR; .@b >= .@a; set .@b,.@b-1) {
+                                set $EmpeBRec[.@b],$EmpeBRec[(.@b - 1)];
+                                set $EmpeBName$[.@b],$EmpeBName$[(.@b - 1)];
+                        }
+                        set $EmpeBRec[.@a],.MyTime;
+                        set $EmpeBName$[.@a],strcharinfo(0);
+                        return;
+                }
+        }
+        return;
+} 

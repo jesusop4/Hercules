@@ -1,0 +1,58 @@
+1@mist	mapflag	nowarp
+1@mist	mapflag	noteleport
+1@mist	mapflag	nowarpto
+1@mist	mapflag	nobranch
+1@mist	mapflag	nosave	SavePoint
+1@mist	mapflag	nosave
+1@mist	mapflag	nomemo
+1@mist	mapflag	nopenalty
+1@mist	mapflag	noexp
+
+-	script	Warp ViP	-1,{
+	end;
+
+OnWarpViP:
+	callfunc "Porteiro ViP";
+}
+
+1@mist,133,187,0	warp	WarpSALAVIP	1,1,prontera,156,175
+
+prontera,149,194,5	script	Porteiro ViP#1	616,{
+	callfunc "Porteiro ViP";
+}
+
+1@mist,139,196,3	script	Removedora de Cartas#1	863,{
+	callfunc "Removedora de Cartas";
+}
+
+1@mist,127,197,5	script	Resetadora VIP#1	77,{
+	callfunc "Resetadora VIP";
+}
+
+1@mist,129,199,5	script	Dr.Rey#1	402,{
+	callfunc "Dr.Rey";
+}
+
+1@mist,131,200,5	script	Torpedo VIP#1	888,{
+	callfunc "Torpedo VIP";
+}
+
+1@mist,139,193,3	script	Utilidades ViP#1	478,{
+	callfunc "Utilidades ViP";
+}
+
+1@mist,126,191,5	script	Encantador#1	58,{
+	callfunc "Encantador";
+}
+
+1@mist,138,199,3	script	Refinador Especial#1	813,{
+	callfunc "Refinador Especial";
+}
+
+1@mist,126,194,5	script	Build Manager#1	411,{
+	callfunc "Build Manager";
+}
+
+1@mist,139,191,3	script	Emperos#S0	2105,{
+	callfunc "Emperos";
+}

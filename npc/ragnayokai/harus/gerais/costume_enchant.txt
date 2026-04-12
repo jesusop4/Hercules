@@ -1,0 +1,463 @@
+//==============================================================
+// Costume Enchantment System
+//
+// Slots:  EQI_COS_HEAD_TOP(11), EQI_COS_MID_TOP(12),
+//         EQI_COS_LOW_TOP(13), EQI_GARMENT(5)
+//
+// Vars per slot (permanent char):
+//   CE_T1..CE_T4  top costume   (stone_id 25010-25030 or 0=empty)
+//   CE_M1..CE_M4  mid costume
+//   CE_L1..CE_L4  lower costume
+//   CE_G1..CE_G4  garment
+//
+// Stones 25010-25030 (see item_db2.txt)
+// Stone box 25031 — drops 10% from MVP kills
+// Materials: 25032=Mystic Tree Branch, 25033=Proof of Donation
+//            25034=Energy Power, 25035=Green Bijou
+//            25036=Red Bijou, 25037=Yellow Bijou
+//
+// SC design:
+//   Stats (STR/AGI/VIT/INT/DEX/LUK) use SC_FOOD_*_CASH — no TG conflict
+//   ATK%/MATK% use SC_ATKPOTION/SC_MATKPOTION (flat) — no TG conflict
+//   Flee/MaxHP%/MaxSP% are combined with TG values in F_CE_ApplyBuff
+//     (this NPC's OnPCLoginEvent fires AFTER TownGovernorSystem's)
+//==============================================================
+
+//--------------------------------------------------------------
+// F_CE_GetBonus(stone_id)
+// Returns total count of stone_id across all 16 CE vars
+//--------------------------------------------------------------
+function	script	F_CE_GetBonus	{
+	set @_gb_s, getarg(0);
+	set @_gb_n, 0;
+	set @_gb_i, 1;
+	while (@_gb_i <= 4) {
+		if (getd("CE_T" + @_gb_i) == @_gb_s) set @_gb_n, @_gb_n + 1;
+		if (getd("CE_M" + @_gb_i) == @_gb_s) set @_gb_n, @_gb_n + 1;
+		if (getd("CE_L" + @_gb_i) == @_gb_s) set @_gb_n, @_gb_n + 1;
+		if (getd("CE_G" + @_gb_i) == @_gb_s) set @_gb_n, @_gb_n + 1;
+		set @_gb_i, @_gb_i + 1;
+	}
+	return @_gb_n;
+}
+
+//--------------------------------------------------------------
+// F_CE_HasStone(prefix$, stone_id)
+// Returns 1 if stone_id is already in slots 1-4 for prefix
+//--------------------------------------------------------------
+function	script	F_CE_HasStone	{
+	set @_hs_pfx$, getarg(0);
+	set @_hs_s, getarg(1);
+	set @_hs_i, 1;
+	while (@_hs_i <= 4) {
+		if (getd(@_hs_pfx$ + @_hs_i) == @_hs_s) return 1;
+		set @_hs_i, @_hs_i + 1;
+	}
+	return 0;
+}
+
+//--------------------------------------------------------------
+// F_CE_NextSlot(prefix$)
+// Returns next empty slot# (1-4), 0 if all full
+//--------------------------------------------------------------
+function	script	F_CE_NextSlot	{
+	set @_ns_pfx$, getarg(0);
+	set @_ns_i, 1;
+	while (@_ns_i <= 4) {
+		if (getd(@_ns_pfx$ + @_ns_i) == 0) return @_ns_i;
+		set @_ns_i, @_ns_i + 1;
+	}
+	return 0;
+}
+
+//--------------------------------------------------------------
+// F_CE_StoneName$(stone_id)
+// Returns display name for a stone
+//--------------------------------------------------------------
+function	script	F_CE_StoneName$	{
+	set @_sn, getarg(0);
+	if (@_sn == 25010) return "STR +1";
+	if (@_sn == 25011) return "AGI +1";
+	if (@_sn == 25012) return "VIT +1";
+	if (@_sn == 25013) return "INT +1";
+	if (@_sn == 25014) return "LUK +1";
+	if (@_sn == 25015) return "DEX +1";
+	if (@_sn == 25016) return "ATK +1%";
+	if (@_sn == 25017) return "MATK +1%";
+	if (@_sn == 25018) return "Flee +5";
+	if (@_sn == 25019) return "Perfect Dodge +3";
+	if (@_sn == 25020) return "Critical +5";
+	if (@_sn == 25021) return "MDEF +2";
+	if (@_sn == 25022) return "DEF +2";
+	if (@_sn == 25023) return "Max HP +150";
+	if (@_sn == 25024) return "Max SP +50";
+	if (@_sn == 25025) return "Healing +3%";
+	if (@_sn == 25026) return "ASPD +1";
+	if (@_sn == 25027) return "Long-Range +2%";
+	if (@_sn == 25028) return "Crit DMG +3%";
+	if (@_sn == 25029) return "Drop Rate +2%";
+	if (@_sn == 25030) return "EXP Rate +2%";
+	return "Unknown";
+}
+
+//--------------------------------------------------------------
+// F_CE_PosEQI(pos) — EQI constant for slot position (0-3)
+//--------------------------------------------------------------
+function	script	F_CE_PosEQI	{
+	set @_pe_p, getarg(0);
+	if (@_pe_p == 0) return EQI_COS_HEAD_TOP;
+	if (@_pe_p == 1) return EQI_COS_MID_TOP;
+	if (@_pe_p == 2) return EQI_COS_LOW_TOP;
+	return EQI_GARMENT;
+}
+
+//--------------------------------------------------------------
+// F_CE_PosPrefix$(pos) — variable name prefix for position
+//--------------------------------------------------------------
+function	script	F_CE_PosPrefix$	{
+	set @_pp_p, getarg(0);
+	if (@_pp_p == 0) return "CE_T";
+	if (@_pp_p == 1) return "CE_M";
+	if (@_pp_p == 2) return "CE_L";
+	return "CE_G";
+}
+
+//--------------------------------------------------------------
+// F_CE_PosName$(pos) — display label for position
+//--------------------------------------------------------------
+function	script	F_CE_PosName$	{
+	set @_pn_p, getarg(0);
+	if (@_pn_p == 0) return "Top Costume";
+	if (@_pn_p == 1) return "Mid Costume";
+	if (@_pn_p == 2) return "Lower Costume";
+	return "Garment";
+}
+
+//--------------------------------------------------------------
+// F_CE_HasMats(stone_id)
+// Returns 1 if player has all required materials + zeny
+//--------------------------------------------------------------
+function	script	F_CE_HasMats	{
+	set @_hm_s, getarg(0);
+	if (!countitem(@_hm_s))     return 0;  // enchantment stone x1
+	if (countitem(985) < 10)    return 0;  // Elunium x10
+	if (countitem(984) < 10)    return 0;  // Oridecon x10
+	if (!countitem(7263))       return 0;  // Cat's Eye x1
+	if (!countitem(25035))      return 0;  // Green Bijou x1
+	if (!countitem(25036))      return 0;  // Red Bijou x1
+	if (!countitem(25037))      return 0;  // Yellow Bijou x1
+	if (countitem(25032) < 5)   return 0;  // Mystic Tree Branch x5
+	if (countitem(12303) < 5)   return 0;  // Water of Blessing x5
+	if (countitem(25033) < 100) return 0;  // Proof of Donation x100
+	if (countitem(25034) < 500) return 0;  // Energy Power x500
+	if (Zeny < 2500000)         return 0;
+	return 1;
+}
+
+//--------------------------------------------------------------
+// F_CE_TakeMats(stone_id) — consume all materials & zeny
+//--------------------------------------------------------------
+function	script	F_CE_TakeMats	{
+	set @_tm_s, getarg(0);
+	delitem @_tm_s, 1;
+	delitem 985, 10;
+	delitem 984, 10;
+	delitem 7263, 1;
+	delitem 25035, 1;
+	delitem 25036, 1;
+	delitem 25037, 1;
+	delitem 25032, 5;
+	delitem 12303, 5;
+	delitem 25033, 100;
+	delitem 25034, 500;
+	set Zeny, Zeny - 2500000;
+	return;
+}
+
+//--------------------------------------------------------------
+// F_CE_ApplyBuff
+// Applies all active costume enchant SCs to the current player.
+// Also handles flee/MaxHP%/MaxSP% combined with TownGovernor.
+// This fires AFTER TownGovernorSystem::OnPCLoginEvent, so it
+// can safely override those 3 shared SCs with combined values.
+//--------------------------------------------------------------
+function	script	F_CE_ApplyBuff	{
+	set @_ab_dur, 604800000; // 7 days
+
+	// ── Stats: SC_FOOD_*_CASH (no TG conflict) ──────────────
+	set @_n, callfunc("F_CE_GetBonus", 25010);
+	if (@_n > 0) sc_start SC_FOOD_STR_CASH, @_ab_dur, @_n, 0;
+
+	set @_n, callfunc("F_CE_GetBonus", 25011);
+	if (@_n > 0) sc_start SC_FOOD_AGI_CASH, @_ab_dur, @_n, 0;
+
+	set @_n, callfunc("F_CE_GetBonus", 25012);
+	if (@_n > 0) sc_start SC_FOOD_VIT_CASH, @_ab_dur, @_n, 0;
+
+	set @_n, callfunc("F_CE_GetBonus", 25013);
+	if (@_n > 0) sc_start SC_FOOD_INT_CASH, @_ab_dur, @_n, 0;
+
+	set @_n, callfunc("F_CE_GetBonus", 25014);
+	if (@_n > 0) sc_start SC_FOOD_LUK_CASH, @_ab_dur, @_n, 0;
+
+	set @_n, callfunc("F_CE_GetBonus", 25015);
+	if (@_n > 0) sc_start SC_FOOD_DEX_CASH, @_ab_dur, @_n, 0;
+
+	// ── ATK/MATK flat (avoids conflict with TG's rate SCs) ──
+	set @_n, callfunc("F_CE_GetBonus", 25016);
+	if (@_n > 0) sc_start SC_ATKPOTION, @_ab_dur, @_n * 10, 0;
+
+	set @_n, callfunc("F_CE_GetBonus", 25017);
+	if (@_n > 0) sc_start SC_MATKPOTION, @_ab_dur, @_n * 10, 0;
+
+	// ── Flee: combine TG baseline + CE stones ───────────────
+	// TG towns that give Flee +10: Morocc(1), Payon(3), Louyang(12)
+	set @_tg_flee, 0;
+	if (TG_BUFF_TOWN > 0) {
+		set @_t, TG_BUFF_TOWN - 1;
+		if (@_t == 1 || @_t == 3 || @_t == 12) set @_tg_flee, 10;
+	}
+	set @_n, callfunc("F_CE_GetBonus", 25018) * 5 + @_tg_flee;
+	if (@_n > 0) sc_start SC_INCFLEE, @_ab_dur, @_n, 0;
+
+	// ── HIT (substitute for Perfect Dodge) ──────────────────
+	set @_n, callfunc("F_CE_GetBonus", 25019);
+	if (@_n > 0) sc_start SC_INCHIT, @_ab_dur, @_n * 3, 0;
+
+	// ── Critical ────────────────────────────────────────────
+	set @_n, callfunc("F_CE_GetBonus", 25020);
+	if (@_n > 0) sc_start SC_INCCRI, @_ab_dur, @_n * 5, 0;
+
+	// ── MDEF (25021): no SC equivalent — enchant tracked only
+
+	// ── DEF rate ────────────────────────────────────────────
+	set @_n, callfunc("F_CE_GetBonus", 25022);
+	if (@_n > 0) sc_start SC_INCDEFRATE, @_ab_dur, @_n * 2, 0;
+
+	// ── MaxHP%: combine TG baseline + CE stones ─────────────
+	// TG towns that give MaxHP +10%: Prontera(0), Hugel(13)
+	set @_tg_hp, 0;
+	if (TG_BUFF_TOWN > 0) {
+		set @_t, TG_BUFF_TOWN - 1;
+		if (@_t == 0 || @_t == 13) set @_tg_hp, 10;
+	}
+	set @_n, callfunc("F_CE_GetBonus", 25023) * 2 + @_tg_hp;
+	if (@_n > 0) sc_start SC_INCMHPRATE, @_ab_dur, @_n, 0;
+
+	// ── MaxSP%: combine TG baseline + CE stones ─────────────
+	// TG towns that give MaxSP +5%: Prontera(0), Izlude(5)
+	set @_tg_sp, 0;
+	if (TG_BUFF_TOWN > 0) {
+		set @_t, TG_BUFF_TOWN - 1;
+		if (@_t == 0 || @_t == 5) set @_tg_sp, 5;
+	}
+	set @_n, callfunc("F_CE_GetBonus", 25024) * 3 + @_tg_sp;
+	if (@_n > 0) sc_start SC_INCMSPRATE, @_ab_dur, @_n, 0;
+
+	// ── Healing ─────────────────────────────────────────────
+	set @_n, callfunc("F_CE_GetBonus", 25025);
+	if (@_n > 0) sc_start SC_INCHEALRATE, @_ab_dur, @_n * 3, 0;
+
+	// ── ASPD ─────────────────────────────────────────────────
+	set @_n, callfunc("F_CE_GetBonus", 25026);
+	if (@_n > 0) sc_start SC_ASPDPOTION0, @_ab_dur, 0, 0;
+
+	// ── LongRange (25027): no SC equivalent — enchant tracked only
+	// ── CritDmg  (25028): no SC equivalent — enchant tracked only
+
+	// ── Drop Rate ────────────────────────────────────────────
+	set @_n, callfunc("F_CE_GetBonus", 25029);
+	if (@_n > 0) sc_start SC_ITEMBOOST, @_ab_dur, @_n * 2, 0;
+
+	// ── EXP Rate ─────────────────────────────────────────────
+	set @_n, callfunc("F_CE_GetBonus", 25030);
+	if (@_n > 0) sc_start SC_EXPBOOST, @_ab_dur, @_n * 2, 0;
+
+	return;
+}
+
+//==============================================================
+// Enchant Costume NPC — Payon
+//==============================================================
+payon,169,248,4	script	Costume_Enchanter	71,{
+
+	// ── OnPCLoginEvent: re-apply all CE buffs (fires after TG) ──
+	OnPCLoginEvent:
+		callfunc "F_CE_ApplyBuff";
+		end;
+
+	// ── Main dialog ─────────────────────────────────────────────
+	mes "^663300[ Costume Enchantment ]^000000";
+	mes "Welcome! I can embed ^FF8800Enchantment Stones^000000 into your costumes.";
+	mes " ";
+	mes "^888888Obtain stones by defeating MVPs.^000000";
+	mes "^888888Each MVP has a 10% chance to drop a Stone Box!^000000";
+	next;
+
+	// Build costume slot menu from equipped items
+	set @_ce_slot_cnt, 0;
+	set @_ce_pos, 0;
+	while (@_ce_pos < 4) {
+		set @_ce_eqi, callfunc("F_CE_PosEQI", @_ce_pos);
+		if (getequipid(@_ce_eqi) > 0) {
+			set @_ce_pos_map[@_ce_slot_cnt], @_ce_pos;
+			set @_ce_slot_cnt, @_ce_slot_cnt + 1;
+		}
+		set @_ce_pos, @_ce_pos + 1;
+	}
+
+	if (@_ce_slot_cnt == 0) {
+		mes "^663300[ Costume Enchantment ]^000000";
+		mes "^FF0000You have no costume items equipped.^000000";
+		mes "Equip a costume headgear (top/mid/lower) or garment first!";
+		close;
+	}
+
+	// Build slot select string
+	set @_ce_smenu$, "";
+	set @_ce_i, 0;
+	while (@_ce_i < @_ce_slot_cnt) {
+		set @_ce_pos, @_ce_pos_map[@_ce_i];
+		set @_ce_eqi, callfunc("F_CE_PosEQI", @_ce_pos);
+		set @_ce_pfx$, callfunc("F_CE_PosPrefix$", @_ce_pos);
+		set @_ce_next, callfunc("F_CE_NextSlot", @_ce_pfx$);
+		set @_ce_entry$, callfunc("F_CE_PosName$", @_ce_pos) + " [" + getitemname(getequipid(@_ce_eqi)) + "]";
+		if (@_ce_next == 0)
+			set @_ce_entry$, @_ce_entry$ + " ^888888(full)^000000";
+		else
+			set @_ce_entry$, @_ce_entry$ + " ^00AA00(slot " + @_ce_next + " free)^000000";
+		if (strlen(@_ce_smenu$) > 0) set @_ce_smenu$, @_ce_smenu$ + ":";
+		set @_ce_smenu$, @_ce_smenu$ + @_ce_entry$;
+		set @_ce_i, @_ce_i + 1;
+	}
+	set @_ce_smenu$, @_ce_smenu$ + ":^888888Close^000000";
+	set @_ce_sel, select(@_ce_smenu$);
+	if (@_ce_sel > @_ce_slot_cnt) close;
+
+	set @_ce_pos, @_ce_pos_map[@_ce_sel - 1];
+	set @_ce_pfx$, callfunc("F_CE_PosPrefix$", @_ce_pos);
+	set @_ce_eqi, callfunc("F_CE_PosEQI", @_ce_pos);
+	set @_ce_iid, getequipid(@_ce_eqi);
+
+L_ShowSlot:
+	mes "^663300[ " + callfunc("F_CE_PosName$", @_ce_pos) + " — " + getitemname(@_ce_iid) + " ]^000000";
+	mes " ";
+	mes "^888888Current Enchantments:^000000";
+	set @_ce_i, 1;
+	while (@_ce_i <= 4) {
+		set @_ce_sv, getd(@_ce_pfx$ + @_ce_i);
+		if (@_ce_sv > 0)
+			mes " Slot ^FF8800" + @_ce_i + "^000000 : ^00AA00" + callfunc("F_CE_StoneName$", @_ce_sv) + "^000000";
+		else
+			mes " Slot ^FF8800" + @_ce_i + "^000000 : ^888888(empty)^000000";
+		set @_ce_i, @_ce_i + 1;
+	}
+
+	set @_ce_next, callfunc("F_CE_NextSlot", @_ce_pfx$);
+	mes " ";
+	if (@_ce_next == 0) {
+		mes "^AA8800All 4 slots are filled.^000000 Maximum enchantments reached!";
+		next;
+		close;
+	}
+	mes "Next: ^00AA00Slot " + @_ce_next + "^000000 (success rate ^00AA0090%^000000)";
+	next;
+
+	// Build owned-stone select (exclude duplicates on this costume)
+	set @_ce_smenu2$, "";
+	set @_ce_smap_cnt, 0;
+	set @_ce_i, 25010;
+	while (@_ce_i <= 25030) {
+		if (countitem(@_ce_i) > 0 && !callfunc("F_CE_HasStone", @_ce_pfx$, @_ce_i)) {
+			if (strlen(@_ce_smenu2$) > 0) set @_ce_smenu2$, @_ce_smenu2$ + ":";
+			set @_ce_smenu2$, @_ce_smenu2$ + callfunc("F_CE_StoneName$", @_ce_i) + " (x" + countitem(@_ce_i) + ")";
+			set @_ce_smap[@_ce_smap_cnt], @_ce_i;
+			set @_ce_smap_cnt, @_ce_smap_cnt + 1;
+		}
+		set @_ce_i, @_ce_i + 1;
+	}
+
+	if (@_ce_smap_cnt == 0) {
+		mes "^663300[ No Stones Available ]^000000";
+		if (callfunc("F_CE_NextSlot", @_ce_pfx$) > 0)
+			mes "You have no enchantment stones, or all your stones are already applied to this costume.";
+		mes "Defeat ^FF8800MVPs^000000 for a ^FF880010% chance^000000 to receive a ^FF8800Stone Box^000000!";
+		close;
+	}
+
+	mes "^663300[ Select Stone for Slot " + @_ce_next + " ]^000000";
+	mes "Owned stones not yet on this costume:";
+	next;
+	set @_ce_smenu2$, @_ce_smenu2$ + ":^888888Cancel^000000";
+	set @_ce_sel2, select(@_ce_smenu2$);
+	if (@_ce_sel2 > @_ce_smap_cnt) end;
+	set @_ce_stone, @_ce_smap[@_ce_sel2 - 1];
+
+	// Confirm + show materials
+	mes "^663300[ Confirm Enchantment ]^000000";
+	mes "Costume : ^FF8800" + getitemname(@_ce_iid) + "^000000";
+	mes "Stone   : ^00AA00" + callfunc("F_CE_StoneName$", @_ce_stone) + " Stone^000000";
+	mes "Slot    : ^FF8800" + @_ce_next + "^000000   |   Success: ^00AA0090%^000000";
+	mes " ";
+	mes "^888888Required Materials:^000000";
+	mes " Enchantment Stone x1";
+	mes " ^FF8800Elunium^000000 x10";
+	mes " ^FF8800Oridecon^000000 x10";
+	mes " ^FF8800Cat's Eye^000000 x1 (Olho de Gato)";
+	mes " ^00AA00Green Bijou^000000 x1";
+	mes " ^FF0000Red Bijou^000000 x1";
+	mes " ^FFAA00Yellow Bijou^000000 x1";
+	mes " ^8888FFMystic Tree Branch^000000 x5";
+	mes " ^8888FFWater of Blessing^000000 x5";
+	mes " ^FF8800Proof of Donation^000000 x100";
+	mes " ^FF8800Energy Power^000000 x500";
+	mes " ^FF8800Zeny^000000 2,500,000z";
+	mes " ";
+	mes "^888888Materials are consumed whether successful or not.^000000";
+	mes "^888888Your existing enchantments are safe on failure.^000000";
+	next;
+	set @_ce_sel3, select("Proceed with Enchantment", "^888888Cancel^000000");
+	if (@_ce_sel3 == 2) end;
+
+	// Check materials
+	if (!callfunc("F_CE_HasMats", @_ce_stone)) {
+		mes "^663300[ Costume Enchantment ]^000000";
+		mes "^FF0000You are missing required materials.^000000";
+		mes " ";
+		set @_ce_check_i, 0;
+		if (!countitem(@_ce_stone))     { set @_ce_check_i, 1; mes "  — Enchantment Stone x1"; }
+		if (countitem(985) < 10)        { set @_ce_check_i, 1; mes "  — Elunium (need 10, have " + countitem(985) + ")"; }
+		if (countitem(984) < 10)        { set @_ce_check_i, 1; mes "  — Oridecon (need 10, have " + countitem(984) + ")"; }
+		if (!countitem(7263))           { set @_ce_check_i, 1; mes "  — Cat's Eye x1"; }
+		if (!countitem(25035))          { set @_ce_check_i, 1; mes "  — Green Bijou x1"; }
+		if (!countitem(25036))          { set @_ce_check_i, 1; mes "  — Red Bijou x1"; }
+		if (!countitem(25037))          { set @_ce_check_i, 1; mes "  — Yellow Bijou x1"; }
+		if (countitem(25032) < 5)       { set @_ce_check_i, 1; mes "  — Mystic Tree Branch (need 5, have " + countitem(25032) + ")"; }
+		if (countitem(12303) < 5)       { set @_ce_check_i, 1; mes "  — Water of Blessing (need 5, have " + countitem(12303) + ")"; }
+		if (countitem(25033) < 100)     { set @_ce_check_i, 1; mes "  — Proof of Donation (need 100, have " + countitem(25033) + ")"; }
+		if (countitem(25034) < 500)     { set @_ce_check_i, 1; mes "  — Energy Power (need 500, have " + countitem(25034) + ")"; }
+		if (Zeny < 2500000)             { set @_ce_check_i, 1; mes "  — Zeny (need 2,500,000z)"; }
+		close;
+	}
+
+	// Consume materials
+	callfunc "F_CE_TakeMats", @_ce_stone;
+
+	// Roll 90% success
+	if (rand(100) < 90) {
+		setd @_ce_pfx$ + @_ce_next, @_ce_stone;
+		callfunc "F_CE_ApplyBuff";
+		mes "^663300[ Costume Enchantment ]^000000";
+		mes "^00AA00★ Enchantment Successful! ★^000000";
+		mes " ";
+		mes "^00AA00" + callfunc("F_CE_StoneName$", @_ce_stone) + "^000000 applied to ^FF8800" + getitemname(@_ce_iid) + "^000000 (Slot " + @_ce_next + ")!";
+		mes "Your bonuses have been refreshed.";
+	} else {
+		mes "^663300[ Costume Enchantment ]^000000";
+		mes "^FF0000✗ Enchantment Failed!^000000";
+		mes " ";
+		mes "The materials were consumed but your existing enchantments are untouched.";
+		mes "Better luck next time!";
+	}
+	close;
+}

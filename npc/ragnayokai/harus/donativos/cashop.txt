@@ -1,0 +1,205 @@
+prontera,169,190,3	script	ROP's Trader	564,{
+mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+mes "Olá "+strcharinfo(0)+",";
+mes "[ ^016B14A V I S O^000000 ]";
+mes "Alguns Itens ^016B14VISUAIS^000000 não estão aparecendo, porém o Visual está ^016B14funcionando^000000, pode ^016B14comprar^000000 com ^016B14tranquilidade^000000.";
+if(select("- Comprar ^016B14Itens ROP^000000:- Comprar ^016B14Itens Visuais^000000:- Nada, Obrigado") == 3)close;
+if(@menu == 1) {
+		close2;
+		callshop "v1cash",1;
+		end;
+}
+		close2;
+		callshop "v2cash",1;
+		end;	
+}
+
+-	cashshop(#CASHPOINTS)	v1cash	-1,8000:1000,5357:50000,18550:50000,19009:40000,5654:30000,5780:30000,18503:30000,19008:25000,5366:25000,5403:20000,5412:15000,5155:15000,5800:15000,5594:15000,5423:20000,5801:18000,5374:15000,5518:12000,5483:12000,5137:12000,5225:12000,5480:12000,5548:12000,5596:12000,5846:12000,5377:12000,5325:12000,5788:10000,18507:10000,2204:10000,7619:10000,7620:10000,4000:10000,677:8000,8905:2000,10114:5000,3000:5000,7776:500
+-	cashshop(#CASHPOINTS)	v2cash	-1,8000:1000,18740:15000,20242:15000,19996:15000,20036:15000,18720:15000,20110:15000,19762:15000,19700:15000,19575:15000,20247:15000,20212:15000,20179:15000,20169:15000,20162:15000,20008:15000,20239:15000,19770:15000,19764:15000,19692:15000,19672:15000,20201:15000,20255:15000,19739:10000,19751:10000,19824:10000,19860:10000,19882:10000,19883:10000,19884:10000,19903:10000,19922:10000,19935:10000,19936:10000,19937:10000,19972:10000,19973:10000,20000:10000,20034:10000,20199:10000,19587:10000,19576:10000,19542:10000,19543:10000,19544:10000,19706:10000,19772:5000,19519:5000,19540:5000,19777:5000,19976:5000,19518:5000,19520:5000,19589:5000,19707:5000,19521:5000,19661:5000,5776:2500,5766:2500,5660:2500,5777:2500,5656:2500,5659:2500,5789:2500,5666:2500,5603:2500,5604:2500,5605:2500
+
+prontera,170,188,3	script	Experimentar ROPs	508,{
+function Addx; function Chkx; function Slotx; function A_Anx;
+	mes "[ ^016B14A V I S O^000000 ]";
+	mes "Alguns Itens ^016B14VISUAIS^000000 não estão aparecendo, porém o Visual está ^016B14funcionando^000000, pode ^016B14comprar/experimentar^000000 com ^016B14tranquilidade^000000.";
+	mes "Clique em ^016B14FECHAR^000000 para ^016B14continuar~^000000";
+	close2;
+	if(.Shopsx$ != "") set .@i,1;
+	else {
+		set .@menux$,"";
+		for(set .@i,1; .@i<=getarraysize(.Shopsx$); set .@i,.@i+1)
+			set .@menux$, .@menux$+.Shopsx$[.@i]+":";
+		set .@i, select(.@menux$); }
+	dispbottom "Selecione o item desejado e o compre para abrir os requerimentos.";
+	callshop "doe"+.@i,1;
+	npcshopattach "doe"+.@i;
+	end;
+
+function Addx {
+	if (getitemname(getarg(1))=="null") {
+		debugmes "Quest reward #"+getarg(1)+" invalid (skipped)."; return; }
+	for(set .@n,5; .@n<127; set .@n,.@n+2) {
+		if (!getarg(.@n,0)) break;
+		if (getitemname(getarg(.@n))=="null") {
+			debugmes "Quest requirement #"+getarg(.@n)+" invalid (skipped)."; return; } }
+	for(set .@i,2; .@i<.@n; set .@i,.@i+1)
+		set getd(".q_"+getarg(1)+"["+(.@i-2)+"]"), getarg(.@i);
+	npcshopAdditem "doe"+getarg(0),getarg(1),((.ShowZeny)?getarg(3):0);
+	sleep 1;
+	return; }
+function Chkx {
+	if (getarg(0)<getarg(1)) { set @qe0,1; return "^FF0000"; }
+	else return "^00FF00"; }
+function Slotx {
+	set .@s$,getitemname(getarg(0));
+	switch(.ShowSlotx){
+		case 1: if (!getitemSlots(getarg(0))) return .@s$;
+		case 2: if (getiteminfo(getarg(0),11)>0) return .@s$+" ["+getitemSlots(getarg(0))+"]";
+		default: return .@s$; } }
+function A_Anx {
+	setarray .@A$[0],"a","e","i","o","u";
+	set .@B$, "_"+getarg(0);
+	for(set .@i,0; .@i<5; set .@i,.@i+1)
+		if (compare(.@B$,"_"+.@A$[.@i])) return "an "+getarg(0);
+	return "a "+getarg(0); }
+
+OnBuyItem:
+	set .@q[0],@bought_nameid;
+	copyarray .@q[1],getd(".q_"+@bought_nameid+"[0]"),getarraysize(getd(".q_"+@bought_nameid+"[0]"));
+	if (!.@q[1]) { message strcharinfo(0),"An error has occurred."; end; }
+	set @qe1, getiteminfo(.@q[0],5); set @qe2, getiteminfo(.@q[0],11);
+	Addtimer 1000, strnpcinfo(1)+"::OnEnd";
+	while(1){
+		switch(select(""+((((@qe1&1) || (@qe1&256) || (@qe1&512) || (@qe1&1024) || (@qe1&2048)  || (@qe1&4096)) && @qe2>0 && !@qe6)?" ~ Experimentar...":"")+": ~ ^777777Cancelar^000000")) {
+			case 1:
+				set @qe3, getlook(3); set @qe4, getlook(4); set @qe5, getlook(5);
+				if (@qe1&1) atcommand "@changelook 3 "+@qe2;
+				if (@qe1&256) atcommand "@changelook 1 "+@qe2;
+				if (@qe1&512) atcommand "@changelook 2 "+@qe2;
+				if (@qe1&1024) atcommand "@changelook 1 "+@qe2;
+				if (@qe1&2048) atcommand "@changelook 2 "+@qe2;
+				if (@qe1&4096) atcommand "@changelook 3 "+@qe2;
+				set @qe6,1;
+				break;
+			case 2:
+				close; 
+	} 
+}
+OnEnd:
+	if (@qe6) { atcommand "@changelook 3 "+@qe3; atcommand "@changelook 1 "+@qe4; atcommand "@changelook 2 "+@qe5; }
+	for(set .@i,0; .@i<7; set .@i,.@i+1) setd "@qe"+.@i,0;
+	end;
+OnInit:
+// --------------------- Config ---------------------
+// Custom points, if needed: "<variable>","<name to display>"
+	setarray .Points$[0],"#CASHPOINTS","Cash Points";
+
+	set .Announce,1;	// Announce quest completion? (1: yes / 0: no)
+	set .ShowSlotx,1;	// Show item Slotxs? (2: all equipment / 1: if Slotxs > 0 / 0: never)
+	set .DisplayID,1;	// Show item IDs? (1: yes / 0: no)
+	set .ShowZeny,0;	// Show Zeny cost, if any? (1: yes / 0: no)
+
+// Shop categories, if needed: "<Shop 1>","<Shop 2>"{,...};
+// Duplicate dummy data for any Addxitional shops (bottom of script).
+// If no categories, use the second line instead (remove //).
+
+	setarray .Shopsx$[1],"- Experimentar ^016B14Itens ROP^000000","- Experimentar ^016B14Itens Visuais^000000";
+	// set .Shopsx$,"n/a";
+
+// Addx(<shop number>,<reward ID>,<reward amount>,<Zeny cost>,<point cost>,
+//     <required item ID>,<required item amount>{,...});
+// Shop number corresponds with order above (default is 1).
+// Note: Do NOT use a reward item more than once!
+
+	// ROPS
+	Addx(1,5357,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,18550,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5654,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5780,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,18503,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,19008,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5366,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,19009,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5403,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5412,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5155,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5800,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5594,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5423,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5801,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5374,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5518,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5483,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5137,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5225,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5480,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5548,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5596,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5846,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5377,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5325,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,5788,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,18507,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,2202,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(1,2204,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+
+
+	// VISUAIS
+	Addx(2,18740,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19996,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19739,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19751,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19824,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19860,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19882,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19883,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19884,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19903,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19922,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19935,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19936,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19937,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19972,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19973,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,20000,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,20034,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,20199,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19587,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19576,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19542,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19543,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19544,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19706,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19772,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19519,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19540,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19777,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19976,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19518,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19520,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19589,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19707,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19521,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,19661,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5776,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5766,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5660,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5777,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5656,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5659,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5789,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5666,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5603,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5604,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+	Addx(2,5605,1,0,50000,0,0,0,0,0,0,0,0,0,0);
+
+
+
+// --------------------------------------------------
+	for(set .@i,1; .@i<=getarraysize(.Shopsx$); set .@i,.@i+1)
+		npcshopdelitem "doe"+.@i,909;
+	end;
+}
+
+// -------- Dummy data (duplicate as needed) --------
+-	shop	doe1	-1,909:-1
+-	shop	doe2	-1,909:-1

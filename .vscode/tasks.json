@@ -1,0 +1,177 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Release (All)",
+            "type": "shell",
+            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "args": [
+                "Hercules.sln",
+                "/p:Configuration=Release",
+                "/p:Platform=Win32",
+                "/t:Build",
+                "/m",
+                "/nologo",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Debug (All)",
+            "type": "shell",
+            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "args": [
+                "Hercules.sln",
+                "/p:Configuration=Debug",
+                "/p:Platform=Win32",
+                "/t:Build",
+                "/m",
+                "/nologo",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build map-server (Release)",
+            "type": "shell",
+            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "args": [
+                "vcproj\\map-server.vcxproj",
+                "/p:Configuration=Release",
+                "/p:Platform=Win32",
+                "/t:Build",
+                "/m",
+                "/nologo",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build login-server (Release)",
+            "type": "shell",
+            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "args": [
+                "vcproj\\login-server.vcxproj",
+                "/p:Configuration=Release",
+                "/p:Platform=Win32",
+                "/t:Build",
+                "/m",
+                "/nologo",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build char-server (Release)",
+            "type": "shell",
+            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "args": [
+                "vcproj\\char-server.vcxproj",
+                "/p:Configuration=Release",
+                "/p:Platform=Win32",
+                "/t:Build",
+                "/m",
+                "/nologo",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Clean (All)",
+            "type": "shell",
+            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "args": [
+                "Hercules.sln",
+                "/p:Configuration=Release",
+                "/p:Platform=Win32",
+                "/t:Clean",
+                "/m",
+                "/nologo"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Rebuild Release (All)",
+            "type": "shell",
+            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "args": [
+                "Hercules.sln",
+                "/p:Configuration=Release",
+                "/p:Platform=Win32",
+                "/t:Rebuild",
+                "/m",
+                "/nologo",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Copy Server Files",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "-NoProfile",
+                "-Command",
+                "$src = 'C:\\Users\\KOREA\\Desktop\\Hercules'; $dst = 'C:\\Users\\KOREA\\Desktop\\Hercules'; Write-Host 'Copiando arquivos do servidor...'; Copy-Item -Path \"$src\\*.exe\" -Destination $dst -Force; Copy-Item -Path \"$src\\*.dll\" -Destination $dst -Force; foreach ($folder in @('conf','db','npc','data','maps','plugins','save','log')) { $s = \"$src\\$folder\"; $d = \"$dst\\$folder\"; if (Test-Path $s) { robocopy $s $d /E /NFL /NDL /NJH /NJS | Out-Null; Write-Host \" -> $folder OK\" } }; Write-Host 'Copia concluida.'"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build and Deploy",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build Release (All)",
+                "Copy Server Files"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

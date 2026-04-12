@@ -1,0 +1,58 @@
+que_qaru01,134,137,3	cashshop(#PTEVENTO)	Trocar Pontos	671,10234:5,10235:3,677:30,10114:15,3000:15,8905:10,10229:10,10237:5,10230:5,10228:5,10236:3,10238:3	
+que_qaru01,131,136,3	script	Encontre o Poring	909,{
+	if(getgmlevel() == 99 && $poring == 0) {
+	if(select("Ligar:Não") == 2) close;
+		callsub OnPoringStart;
+	}
+	if($poring == 0){ mes "[^ff0000 "+strnpcinfo(1)+" ^000000]"; mes "Evento fechado no momento."; close; }
+	if(BaseLevel < 69){ mes "[^ff0000 "+strnpcinfo(1)+" ^000000]"; mes "Apenas jogadores com o nível maior que 70 podem receber a bonificação."; close; }
+	percentheal 100,100;
+	warp "job3_war01",24,25; end;
+
+	OnClock0802: callsub OnPoringStart;
+	OnClock1602: callsub OnPoringStart;
+	OnClock0002: callsub OnPoringStart;
+
+OnPoringStart:
+	killmonsterall "job3_war01";
+	set $poring,1;
+	announce "[ @eventos ]: O Encontre o Poring acaba de abrir, corra para acha-lo.",8;
+	monster "job3_war01",0,0,"Por1ng",1002,3,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Porlng",1002,5,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"P0ring",1002,5,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Puring",1002,5,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Por1ng",1002,5,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Porings",1002,5,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Poringão",1002,2,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Drops",1002,5,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Poring",1002,1,"Encontre o Poring::OnPoringReal";
+	monster "job3_war01",0,0,"Marin",1002,5,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Poporing",1002,5,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Porinng",1002,5,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"P0r1ng",1002,7,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Purings",1002,7,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Porings",1002,7,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Proing",1002,7,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Poirng",1002,7,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Poing",1002,7,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Porimg",1002,7,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Porinq",1002,7,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Por|ng",1002,7,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Porong",1002,7,"Encontre o Poring::OnPoringDie";
+	end;
+
+OnPoringDie:
+	warp "que_qaru01",131,129;
+	end;
+
+OnPoringReal:
+	announce "[Encontre o Poring]: "+strcharinfo(0)+" encontrou o poring verdadeiro.",8;
+	set #PTEVENTO, #PTEVENTO + 3; dispbottom "[rYokai Eventos] - Agora você tem "+#PTEVENTO+"x Pontos de Evento.";
+	mapwarp "job3_war01","prontera",156,182;
+	killmonsterall "job3_war01";
+	set $poring,0;
+	end;
+OnInit:
+	set $poring,0;
+
+}

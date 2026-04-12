@@ -1,0 +1,119 @@
+//Itens Visuais
+//By Filipe
+
+prontera,137,167,6	script	Yokai Disguise 2.0::yokaidis	704,{
+	set @pos,0;
+
+ 	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "Olá "+strcharinfo(0)+", eu posso disfarçar o Visual dos seus itens.";
+	mes "Gostaria de esperimentar algum dos meus serviços?";
+	mes "Obs: Meu serviço custará 150 Kafra Points caso não seja ViP!";
+	switch (select (((UT)?"- Último visual":"")+":- Novo visual:- Remover Visual:- Nada obrigad"+((!Sex) ? "a":"o ")+"")){ next;
+	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+		case 1:
+		callfunc ("Disgui_func",UT);
+		close;
+
+		case 2:
+			while(1){
+					mes "Digite o ID do item que deseja usar "+strcharinfo(0);
+					input @id;
+					callfunc ("Disgui_func",@id); continue; 
+					close;
+				}
+			mes "Ocorreu um pequeno problema, tente novamente...";
+			close;
+		case 3:
+			mes "Deseja remover qual Visual do seu personagem?";
+			switch(select("Topo:Meio:Baixo:Nada, obrigado")) {
+			case 1: 
+				if(getequipid(EQI_HEAD_TOP) > 0)  {
+					setlook 4,getiteminfo(getequipid(EQI_HEAD_TOP),11);  
+					} else { 
+  				changelook 4,0;
+				} 
+				set topview,0;
+				mes "Feito!";
+				close;
+				
+			case 2:
+				if(getequipid(EQI_HEAD_MID) > 0)  {
+					setlook 5,getiteminfo(getequipid(EQI_HEAD_MID),11);  
+					} else { 
+  				changelook 5,0;
+				} 
+				set midview,0;
+				mes "Feito!";
+				close;
+
+			case 3:
+				if(getequipid(EQI_HEAD_LOW) > 0)  {
+					setlook 3,getiteminfo(getequipid(EQI_HEAD_LOW),11);  
+					} else { 
+  				changelook 3,0;
+				} 
+				set lowview,0;
+				mes "Feito!";
+				close;
+			}			
+		case 4:
+				mes "Precisando de um visual novo estarei aqui para lhe servir "+strcharinfo(0);
+				close;
+				}
+OnPCLoadMapEvent:
+	if( pos == 4 && topview != 0 ) { changelook 4,topview; }
+	else if( pos == 5 && midview != 0 ) { changelook 5,midview; }
+	else if( pos == 3 && lowview != 0) { changelook 3,lowview; }
+	end;
+
+}
+
+
+function	script	Disgui_func	{
+
+			if(getiteminfo(getarg(0),5) == 256){ set @pos,4; set pos,4;}
+			if(getiteminfo(getarg(0),5) == 512){ set @pos,5; set pos,5;}
+			if(getiteminfo(getarg(0),5) == 1){   set @pos,3; set pos,3;}
+
+
+			next;
+ 			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			if(#TRIUMPHPOINTS < 150 && getgmlevel() == 0)
+			{ 
+				mes "Desculpe mas você não tem os Kafra Points necessários"; 
+				close;
+			}
+			if(@pos == 0)
+			{ 
+				mes "Desculpe mas este item não existe ou você não pode experimentar este item."; 
+				next; 
+				return;
+			}
+			else if(!getequipisequiped(EQI_HEAD_TOP) && @pos == 4) { 
+				mes "Desculpe mas você deve ter um item TOP equipado."; 
+				close; 
+			}
+			else if(!getequipisequiped(EQI_HEAD_MID) && @pos == 5) { 
+				mes "Desculpe mas você deve ter um item MID equipado."; 
+				close; 
+			}
+			else if(!getequipisequiped(EQI_HEAD_LOW) && @pos == 3) {
+				mes "Desculpe mas você deve ter um item LOW equipado."; 
+				close;
+			}
+			else if( @id == 23057 || @id == 23043 || @id == 23012 || @id == 23007 || @id == 18550 || @id == 5780 || @id == 18503 || @id == 19008 || @id == 5366 || @id == 19009 || @id == 5452 
+				|| @id == 5453 || @id == 5357 || @id == 5654 || @id == 5788 || @id == 5776 || @id == 5603 || @id == 5604 
+				|| @id == 5605 || @id == 5777 || @id == 5656 || @id == 5766 || @id == 5659 || @id == 5660 || @id == 5789 
+				|| @id == 5666 ) { 
+				mes "Item não permitido!"; 
+				close; 
+			}
+				set @view,getiteminfo(getarg(0),11);
+				if( @pos == 4 ) { set topview,@view; }
+				else if( @pos == 5 ) { set midview,@view;}
+				else if( @pos == 3 ) { set lowview,@view; }
+				setlook @pos,@view;
+				set UT,getarg(0);
+				if(getgmlevel() == 0) set #TRIUMPHPOINTS,#TRIUMPHPOINTS - 150; 
+				close;
+}

@@ -1,0 +1,275 @@
+-	script	Batalha Campal#du::cidadesd	-1,{
+	mes "[^010849======^000000 ^016B14Batalha Campal^000000 ^010849======^000000]";
+	mes "Bem Vindo a Batalha Campal ragnaYokai!";
+	mes "Aqui você pode registrar-se no sistema.";
+	mes "O sistema seleciona os Times e Arena randomicamente e segue alternando as Arenas de forma consecutiva.";
+	mes "Oque deseja fazer?";
+	next;
+		if( select("Ir ao Bat Romm:Cancelar")  == 2 ) close;
+			mes "[^010849========^000000 ^016B14Batalha Campal^000000 ^010849========^000000]";
+			mes "Vamos!";
+			close2;
+			warp "prontera",142,170;
+			end;
+}
+
+
+morocc,155,96,6	duplicate(Resetadora)	Resetadora#m	859
+morocc,159,97,3	duplicate(HealerG)	Curandeira#m	971,4,4
+morocc,153,95,6	duplicate(ultYokai)	Utilidades#m	838
+morocc,163,95,3	duplicate(cidadesd)	Batalha Campal#md	733
+morocc,161,96,3	duplicate(PM_source)	PvP Master#m	470
+
+morocc,157,97,6	script	Kafra Yokai#m	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "morocc",158,93;
+	close;
+	}
+}
+
+geffen,114,64,6	duplicate(ultYokai)	Utilidades#g	838
+geffen,116,64,6	duplicate(Resetadora)	Resetadora#g	859
+geffen,118,64,6	script	Kafra Yokai#g	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "geffen",119,59;
+	close;
+	}
+}
+
+geffen,120,64,3	duplicate(HealerG)	Curandeira#g	971,4,4
+geffen,122,64,3	duplicate(cidadesd)	Batalha Campal#g	733
+geffen,124,64,3	duplicate(PM_source)	PvP Master#g	470
+
+payon,159,238,6	duplicate(ultYokai)	Utilidades#pa	838
+payon,161,238,6	duplicate(Resetadora)	Resetadora#pa	859
+payon,163,238,6	script	Kafra Yokai#pa	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "payon",162,233;
+	close;
+	}
+}
+
+payon,165,238,3	duplicate(HealerG)	Curandeira#pa	971,4,4
+payon,167,238,3	duplicate(cidadesd)	Batalha Campal#pa	733
+payon,169,238,3	duplicate(PM_source)	PvP Master#pa	470
+
+alberta,24,238,6	duplicate(ultYokai)	Utilidades#alb	838
+alberta,26,238,6	duplicate(Resetadora)	Resetadora#alb	859
+alberta,28,238,6	script	Kafra Yokai#alb	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "alberta",29,233;
+	close;
+	}
+}
+
+alberta,30,238,3	duplicate(HealerG)	Curandeira#alb	971,4,4
+alberta,32,238,3	duplicate(cidadesd)	Batalha Campal#alb	733
+alberta,34,238,3	duplicate(PM_source)	PvP Master#alb	470
+
+izlude,123,119,6	duplicate(ultYokai)	Utilidades#iz	838
+izlude,125,119,6	duplicate(Resetadora)	Resetadora#iz	859
+izlude,127,119,6	script	Kafra Yokai#iz	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "izlude",128,114;
+	close;
+	}
+}
+
+izlude,129,119,3	duplicate(HealerG)	Curandeira#iz	971,4,4
+izlude,131,119,3	duplicate(cidadesd)	Batalha Campal#iz	733
+izlude,133,119,3	duplicate(PM_source)	PvP Master#iz	470
+
+aldebaran,137,122,6	duplicate(ultYokai)	Utilidades#ald	838
+aldebaran,139,122,6	duplicate(Resetadora)	Resetadora#ald	859
+aldebaran,141,122,6	script	Kafra Yokai#ald	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "aldebaran",140,118;
+	close;
+	}
+}
+
+aldebaran,143,122,3	duplicate(HealerG)	Curandeira#ald	971,4,4
+aldebaran,145,122,3	duplicate(cidadesd)	Batalha Campal#ald	733
+aldebaran,147,122,3	duplicate(PM_source)	PvP Master#ald	470
+
+xmas,142,123,6	duplicate(ultYokai)	Utilidades#xm	838
+xmas,144,123,6	duplicate(Resetadora)	Resetadora#xm	859
+xmas,146,123,6	script	Kafra Yokai#xm	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "xmas",148,119;
+	close;
+	}
+}
+
+xmas,148,123,3	duplicate(HealerG)	Curandeira#xm	971,4,4
+xmas,150,123,3	duplicate(cidadesd)	Batalha Campal#xm	733
+xmas,152,123,3	duplicate(PM_source)	PvP Master#xm	470
+
+comodo,206,148,6	duplicate(ultYokai)	Utilidades#com	838
+comodo,208,148,6	duplicate(Resetadora)	Resetadora#com	859
+comodo,210,148,6	script	Kafra Yokai#com	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "comodo",209,143;
+	close;
+	}
+}
+
+comodo,212,148,3	duplicate(HealerG)	Curandeira#com	971,4,4
+comodo,214,148,3	duplicate(cidadesd)	Batalha Campal#com	733
+comodo,216,148,3	duplicate(PM_source)	PvP Master#com	470
+
+amatsu,193,88,6	duplicate(ultYokai)	Utilidades#ama	838
+amatsu,195,88,6	duplicate(Resetadora)	Resetadora#ama	859
+amatsu,197,88,6	script	Kafra Yokai#ama	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "amatsu",198,84;
+	close;
+	}
+}
+
+amatsu,199,88,3	duplicate(HealerG)	Curandeira#ama	971,4,4
+amatsu,201,88,3	duplicate(cidadesd)	Batalha Campal#ama	733
+amatsu,203,88,3	duplicate(PM_source)	PvP Master#ama	470
+
+gonryun,154,126,6	duplicate(ultYokai)	Utilidades#gor	838
+gonryun,156,126,6	duplicate(Resetadora)	Resetadora#gor	859
+gonryun,158,126,6	script	Kafra Yokai#gor	894,{
+
+	mes "[^010849=========^000000 ^016B14Kafra Yokai^000000 ^010849=========^000000]";
+	mes "Bem-vindo à";
+	mes "Corporação Kafra~";
+	mes "Os Serviços Kafra estão";
+	mes "sempre aqui para ajudá-lo.";
+	mes "Então, como posso";
+	mes "ajudá-lo hoje?";
+	switch(select("Salvar Ponto de Retorno:Serviço de Teletrasporte:Nada, obrigado.")) {
+	case 3: close;
+	case 2:
+	next;	
+	callfunc "teleportop";
+	case 1:
+	savepoint "gonryun",160,120;
+	close;
+	}
+}
+
+gonryun,160,126,3	duplicate(HealerG)	Curandeira#gor	971,4,4
+gonryun,162,126,3	duplicate(cidadesd)	Batalha Campal#gor	733
+gonryun,164,126,3	duplicate(PM_source)	PvP Master#gor	470

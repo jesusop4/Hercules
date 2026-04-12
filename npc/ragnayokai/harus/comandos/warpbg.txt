@@ -1,0 +1,6 @@
+-	script	Warp BG	-1,{
+	end;
+
+OnWarpBG:
+callfunc "ShieldInGame";
+}
