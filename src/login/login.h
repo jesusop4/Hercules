@@ -51,7 +51,7 @@ enum password_enc {
 
 #define PASSWORDENC PWENC_BOTH
 
-#define PASSWD_LEN (32+1) // 23+1 for plaintext, 32+1 for md5-ed passwords
+#define PASSWD_LEN (255+1) // 23+1 for plaintext, 32+1 for md5-ed passwords, 255+1 for SSO tokens
 
 struct login_session_data {
 	int account_id;

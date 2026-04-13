@@ -1,5 +1,5 @@
-$src = 'C:\Users\KOREA\Desktop\Hercules'
-$dst = 'C:\Users\KOREA\Desktop\Hercules'
+$src = 'C:\Users\nKorea\Desktop\Harus\Hercules'
+$dst = 'C:\Users\nKorea\Desktop\Harus\Hercules'
 
 if ((Resolve-Path $src).Path -eq (Resolve-Path $dst).Path) {
     Write-Host 'Origem e destino sao a mesma pasta. Nada a copiar.'

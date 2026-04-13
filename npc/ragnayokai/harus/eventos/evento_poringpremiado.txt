@@ -1,11 +1,11 @@
-que_qaru01,134,137,3	cashshop(#PTEVENTO)	Trocar Pontos	671,10234:5,10235:3,677:30,10114:15,3000:15,8905:10,10229:10,10237:5,10230:5,10228:5,10236:3,10238:3	
+que_qaru01,134,137,3	cashshop	Trocar Pontos	671,10234:5,10235:3,677:30,10114:15,3000:15,8905:10,10229:10,10237:5,10230:5,10228:5,10236:3,10238:3	
 que_qaru01,131,136,3	script	Encontre o Poring	909,{
 	if(getgmlevel() == 99 && $poring == 0) {
-	if(select("Ligar:Não") == 2) close;
+	if(select("Ligar:Nï¿½o") == 2) close;
 		callsub OnPoringStart;
 	}
 	if($poring == 0){ mes "[^ff0000 "+strnpcinfo(1)+" ^000000]"; mes "Evento fechado no momento."; close; }
-	if(BaseLevel < 69){ mes "[^ff0000 "+strnpcinfo(1)+" ^000000]"; mes "Apenas jogadores com o nível maior que 70 podem receber a bonificação."; close; }
+	if(BaseLevel < 69){ mes "[^ff0000 "+strnpcinfo(1)+" ^000000]"; mes "Apenas jogadores com o nï¿½vel maior que 70 podem receber a bonificaï¿½ï¿½o."; close; }
 	percentheal 100,100;
 	warp "job3_war01",24,25; end;
 
@@ -23,7 +23,7 @@ OnPoringStart:
 	monster "job3_war01",0,0,"Puring",1002,5,"Encontre o Poring::OnPoringDie";
 	monster "job3_war01",0,0,"Por1ng",1002,5,"Encontre o Poring::OnPoringDie";
 	monster "job3_war01",0,0,"Porings",1002,5,"Encontre o Poring::OnPoringDie";
-	monster "job3_war01",0,0,"Poringão",1002,2,"Encontre o Poring::OnPoringDie";
+	monster "job3_war01",0,0,"Poringï¿½o",1002,2,"Encontre o Poring::OnPoringDie";
 	monster "job3_war01",0,0,"Drops",1002,5,"Encontre o Poring::OnPoringDie";
 	monster "job3_war01",0,0,"Poring",1002,1,"Encontre o Poring::OnPoringReal";
 	monster "job3_war01",0,0,"Marin",1002,5,"Encontre o Poring::OnPoringDie";
@@ -47,7 +47,7 @@ OnPoringDie:
 
 OnPoringReal:
 	announce "[Encontre o Poring]: "+strcharinfo(0)+" encontrou o poring verdadeiro.",8;
-	set #PTEVENTO, #PTEVENTO + 3; dispbottom "[rYokai Eventos] - Agora você tem "+#PTEVENTO+"x Pontos de Evento.";
+	set #PTEVENTO, #PTEVENTO + 3; dispbottom "[rYokai Eventos] - Agora vocï¿½ tem "+#PTEVENTO+"x Pontos de Evento.";
 	mapwarp "job3_war01","prontera",156,182;
 	killmonsterall "job3_war01";
 	set $poring,0;

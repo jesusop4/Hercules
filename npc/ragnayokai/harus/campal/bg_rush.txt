@@ -43,8 +43,8 @@ OnBuildTeams:
 	case 3: set .Castle$,"rush_cas04"; set .GX,270; set .GY,292; set .CX,270; set .CY,288; break;
 	}
 
-	set $@BG_Team1,bg_team_create(.Castle$,.GX,.GY,0,"Rush::OnGuillaumeQuit","");
-	set $@BG_Team2,bg_team_create(.Castle$,.CX,.CY,1,"Rush::OnCroixQuit","");
+	set $@BG_Team1,bg_team_create(.Castle$,.GX,.GY,"Rush::OnGuillaumeQuit","");
+	set $@BG_Team2,bg_team_create(.Castle$,.CX,.CY,"Rush::OnCroixQuit","");
 	end;
 
 OnReady:
@@ -99,11 +99,11 @@ OnReady:
 	end;
 
 OnTimer60000:
-	mapannounce .Castle$,"Batalha de Rush terminará em 6 minutos",1,0xDDA0DD;
+	mapannounce .Castle$,"Batalha de Rush terminarï¿½ em 6 minutos",1,0xDDA0DD;
 	end;
 
 OnTimer360000:
-	mapannounce .Castle$,"Batalha de Rush terminará em 1 minuto",1,0xDDA0DD;
+	mapannounce .Castle$,"Batalha de Rush terminarï¿½ em 1 minuto",1,0xDDA0DD;
 	end;
 
 OnEmperium:
@@ -117,13 +117,13 @@ OnEmperium:
 		if( .Defender == $@BG_Team1 )
 		{
 			set .Guillaume_Score,1;
-			mapannounce .Castle$,"Axl : Castelo conquistado, agora prepare-se para defendê-lo!!",1,0x03c219;
+			mapannounce .Castle$,"Axl : Castelo conquistado, agora prepare-se para defendï¿½-lo!!",1,0x03c219;
 			bg_warp $@BG_Team2,"RespawnPoint",0,0; // To Cementery and Wait
 		}
 		else
 		{
 			set .Croix_Score,1;
-			mapannounce .Castle$,"Trash : Castelo conquistado, agora prepare-se para defendê-lo!!",1,0x0391c1;
+			mapannounce .Castle$,"Trash : Castelo conquistado, agora prepare-se para defendï¿½-lo!!",1,0x0391c1;
 			bg_warp $@BG_Team1,"RespawnPoint",0,0; // To Cementery and Wait
 		}
 
@@ -150,9 +150,9 @@ OnEmperium:
 
 		sleep 5000;
 		if( .Defender != $@BG_Team1 ) {
-			mapannounce .Castle$,"Axl : Conquiste o Castelo, que é nossa última chance de vencê-los!!",1,0x03c219;
+			mapannounce .Castle$,"Axl : Conquiste o Castelo, que ï¿½ nossa ï¿½ltima chance de vencï¿½-los!!",1,0x03c219;
 		} else if( .Defender != $@BG_Team2 ) {
-			mapannounce .Castle$,"Trash : Conquiste o Castelo, que é nossa última chance de vencê-los!!",1,0x0391c1;
+			mapannounce .Castle$,"Trash : Conquiste o Castelo, que ï¿½ nossa ï¿½ltima chance de vencï¿½-los!!",1,0x0391c1;
 		}
 		end;
 	}
@@ -202,9 +202,9 @@ OnMatchEnd:
 	else
 		set .@Won,10;
 
-	bg_reward $@BG_Team1,7773,.@Reward,0,8510,"BG_RUSH",10,7,.@Won;
-	bg_reward $@BG_Team1,7828,.@Reward,0,8510,"BG_RUSH",1,7,.@Won;
-	bg_reward $@BG_Team1,7829,.@Reward,0,8510,"BG_RUSH",1,7,.@Won;
+	bg_reward $@BG_Team1,7773,.@Reward;
+	bg_reward $@BG_Team1,7828,.@Reward;
+	bg_reward $@BG_Team1,7829,.@Reward;
 	// =======================================================
 	set .@Reward, 15 + (.Croix_Score * 10);
 	if( .Croix_Score > .Guillaume_Score )
@@ -212,9 +212,9 @@ OnMatchEnd:
 	else
 		set .@Won,10;
 
-	bg_reward $@BG_Team2,7773,.@Reward,0,8510,"BG_RUSH",10,7,.@Won;
-	bg_reward $@BG_Team2,7828,.@Reward,0,8510,"BG_RUSH",1,7,.@Won;
-	bg_reward $@BG_Team2,7829,.@Reward,0,8510,"BG_RUSH",1,7,.@Won;
+	bg_reward $@BG_Team2,7773,.@Reward;
+	bg_reward $@BG_Team2,7828,.@Reward;
+	bg_reward $@BG_Team2,7829,.@Reward;
 	// =======================================================
 	set .Guillaume_Score, 0;
 	set .Croix_Score, 0;
@@ -231,7 +231,7 @@ OnMatchEnd:
 	end;
 
 OnTimer24000:
-	mapannounce .Castle$,"-- Acabaram de entrar reforços na batalha de Rush --",1,0xDDA0DD;
+	mapannounce .Castle$,"-- Acabaram de entrar reforï¿½os na batalha de Rush --",1,0xDDA0DD;
 	end;
 
 OnTimer25000:

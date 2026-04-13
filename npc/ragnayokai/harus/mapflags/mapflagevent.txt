@@ -2,7 +2,7 @@ prontera	mapflag	noicewall
 
 job3_war01	mapflag	nowarpto
 job3_war01	mapflag	nowarp
-job3_war01	mapflag	nogo
+// job3_war01	mapflag	nogo
 job3_war01	mapflag	nopenalty
 job3_war01	mapflag	nosave	SavePoint
 job3_war01	mapflag	nobranch
@@ -14,7 +14,7 @@ job3_war01	mapflag	noskill
 
 quiz_02	mapflag	nowarpto
 quiz_02	mapflag	nowarp
-quiz_02	mapflag	nogo
+// quiz_02	mapflag	nogo
 quiz_02	mapflag	nopenalty
 quiz_02	mapflag	nosave	SavePoint
 quiz_02	mapflag	nobranch
@@ -25,7 +25,7 @@ quiz_02	mapflag	noreturn
 
 p_track02	mapflag	nowarpto
 p_track02	mapflag	nowarp
-p_track02	mapflag	nogo
+// p_track02	mapflag	nogo
 p_track02	mapflag	nopenalty
 p_track02	mapflag	nosave	SavePoint
 p_track02	mapflag	nobranch
@@ -36,7 +36,7 @@ p_track02	mapflag	noreturn
 
 turbo_n_1	mapflag	nowarpto
 turbo_n_1	mapflag	nowarp
-turbo_n_1	mapflag	nogo
+// turbo_n_1	mapflag	nogo
 turbo_n_1	mapflag	nopenalty
 turbo_n_1	mapflag	nosave	SavePoint
 turbo_n_1	mapflag	nobranch
@@ -45,14 +45,14 @@ turbo_n_1	mapflag	novending
 turbo_n_1	mapflag	noicewall
 turbo_n_1	mapflag	noreturn
 turbo_n_1	mapflag	nostorage
-turbo_n_1	mapflag	noguildstorage
+// turbo_n_1	mapflag	noguildstorage
 turbo_n_1	mapflag	nocommand
 
 
 prt_are_in	mapflag	noloot
 prt_are_in	mapflag	nowarpto
 prt_are_in	mapflag	nowarp
-prt_are_in	mapflag	nogo
+// prt_are_in	mapflag	nogo
 prt_are_in	mapflag	nopenalty
 prt_are_in	mapflag	nosave	SavePoint
 prt_are_in	mapflag	nobranch

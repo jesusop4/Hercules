@@ -1,46 +1,46 @@
-prontera,171,182,3	script	Salas de Invocação	852,{
+prontera,171,182,3	script	Salas de InvocaÃ§Ã£o	852,{
 
 OnSALADEGALHOSECO:
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Escolha uma opção desejada.";
-	switch(select("- Arenas Livres:- Arenas Alugadas:- Informações")){ next;
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Escolha uma opÃ§Ã£o desejada.";
+	switch(select("- Arenas Livres:- Arenas Alugadas:- InformaÃ§Ãµes")){ next;
 
 		case 1:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Escolha qual você deseja.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Escolha qual vocÃª deseja.";
 			setarray .@mapsA$[1],"06guild_01","06guild_02","06guild_03","06guild_04","06guild_05";
 			select("- Arena Ruby:- Arena Saphira:- Arena Esmeralda:- Arena Diamante:- Arena Ametista");
 			close2; warp .@mapsA$[@menu],0,0; end;
 
 		case 2:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Escolha qual você deseja.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Escolha qual vocÃª deseja.";
 			select("- Arena Ruby ["+($arena_1 == 0 ? "^339900 Livre ^000000":"^FF0000 Alugada ^000000")+"]:- Arena Saphira ["+($arena_2 == 0 ? "^339900 Livre ^000000":"^FF0000 Alugada ^000000")+"]:- Arena Esmeralda ["+($arena_3 == 0 ? "^339900 Livre ^000000":"^FF0000 Alugada ^000000")+"]:- Arena Diamante ["+($arena_4 == 0 ? "^339900 Livre ^000000":"^FF0000 Alugada ^000000")+"]:- Arena Ametista ["+($arena_5 == 0 ? "^339900 Livre ^000000":"^FF0000 Alugada ^000000")+"]");
 			next;
 
 				if(@menu == 1){
 					if($arena_1 == 1){
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 						mes "Arena alugada, digite a senha para entrar.";
 						input .@pass_1$;
 						next;
-						if(.@pass_1$ != $pass_1$){ mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]"; mes "Senha incorreta."; close; }
+						if(.@pass_1$ != $pass_1$){ mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]"; mes "Senha incorreta."; close; }
 						close2; warp "pvp_n_1-1",0,0;
 						end;
 					}
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						mes "Arena livre, deseja alugá-la?";
-						if(select("- Sim:- Não")==2) close;
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						mes "Arena livre, deseja alugÃ¡-la?";
+						if(select("- Sim:- NÃ£o")==2) close;
 						next;
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						if(Zeny < 1000000){ mes "Você não tem 1.000.000 Zenys."; close; }
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						if(Zeny < 1000000){ mes "VocÃª nÃ£o tem 1.000.000 Zenys."; close; }
 						set Zeny,Zeny-1000000;
 						set $arena_1,1;
 						mes "Informe a senha para a sala.";
 						input $pass_1$;
 						next;
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						mes "Aluguel concluído, caso a arena fique 5 minutos vazia ela irá voltar a ser livre.";
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						mes "Aluguel concluÃ­do, caso a arena fique 5 minutos vazia ela irÃ¡ voltar a ser livre.";
 						initnpctimer "ContadorArena1";
 						close2; warp "pvp_n_2-1",0,0;
 						end;
@@ -48,27 +48,27 @@ OnSALADEGALHOSECO:
 
 				if(@menu == 2){
 					if($arena_2 == 1){
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 						mes "Arena alugada, digite a senha para entrar.";
 						input .@pass_2$;
 						next;
-						if(.@pass_2$ != $pass_2$){ mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]"; mes "Senha incorreta."; close; }
+						if(.@pass_2$ != $pass_2$){ mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]"; mes "Senha incorreta."; close; }
 						close2; warp "pvp_n_1-2",0,0;
 						end;
 					}
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						mes "Arena livre, deseja alugá-la?";
-						if(select("- Sim:- Não")==2) close;
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						mes "Arena livre, deseja alugÃ¡-la?";
+						if(select("- Sim:- NÃ£o")==2) close;
 						next;
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						if(Zeny < 1000000){ mes "Você não tem 1.000.000 Zenys."; close; }
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						if(Zeny < 1000000){ mes "VocÃª nÃ£o tem 1.000.000 Zenys."; close; }
 						set Zeny,Zeny-1000000;
 						set $arena_2,1;
 						mes "Informe a senha para a sala.";
 						input $pass_2$;
 						next;
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						mes "Aluguel concluído, caso a arena fique 5 minutos vazia ela irá voltar a ser livre.";
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						mes "Aluguel concluÃ­do, caso a arena fique 5 minutos vazia ela irÃ¡ voltar a ser livre.";
 						initnpctimer "ContadorArena2";
 						close2; warp "pvp_n_2-2",0,0;
 						end;
@@ -76,27 +76,27 @@ OnSALADEGALHOSECO:
 
 				if(@menu == 3){
 					if($arena_3 == 1){
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 						mes "Arena alugada, digite a senha para entrar.";
 						input .@pass_3$;
 						next;
-						if(.@pass_3$ != $pass_3$){ mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]"; mes "Senha incorreta."; close; }
+						if(.@pass_3$ != $pass_3$){ mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]"; mes "Senha incorreta."; close; }
 						close2; warp "pvp_n_1-3",0,0;
 						end;
 					}
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						mes "Arena livre, deseja alugá-la?";
-						if(select("- Sim:- Não")==2) close;
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						mes "Arena livre, deseja alugÃ¡-la?";
+						if(select("- Sim:- NÃ£o")==2) close;
 						next;
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						if(Zeny < 1000000){ mes "Você não tem 1.000.000 Zenys."; close; }
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						if(Zeny < 1000000){ mes "VocÃª nÃ£o tem 1.000.000 Zenys."; close; }
 						set Zeny,Zeny-1000000;
 						set $arena_3,1;
 						mes "Informe a senha para a sala.";
 						input $pass_3$;
 						next;
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						mes "Aluguel concluído, caso a arena fique 5 minutos vazia ela irá voltar a ser livre.";
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						mes "Aluguel concluÃ­do, caso a arena fique 5 minutos vazia ela irÃ¡ voltar a ser livre.";
 						initnpctimer "ContadorArena3";
 						close2; warp "pvp_n_2-3",0,0;
 						end;
@@ -104,27 +104,27 @@ OnSALADEGALHOSECO:
 
 				if(@menu == 4){
 					if($arena_4 == 1){
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 						mes "Arena alugada, digite a senha para entrar.";
 						input .@pass_4$;
 						next;
-						if(.@pass_4$ != $pass_4$){ mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]"; mes "Senha incorreta."; close; }
+						if(.@pass_4$ != $pass_4$){ mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]"; mes "Senha incorreta."; close; }
 						close2; warp "pvp_n_1-4",0,0;
 						end;
 					}
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						mes "Arena livre, deseja alugá-la?";
-						if(select("- Sim:- Não")==2) close;
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						mes "Arena livre, deseja alugÃ¡-la?";
+						if(select("- Sim:- NÃ£o")==2) close;
 						next;
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						if(Zeny < 1000000){ mes "Você não tem 1.000.000 Zenys."; close; }
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						if(Zeny < 1000000){ mes "VocÃª nÃ£o tem 1.000.000 Zenys."; close; }
 						set Zeny,Zeny-1000000;
 						set $arena_4,1;
 						mes "Informe a senha para a sala.";
 						input $pass_4$;
 						next;
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						mes "Aluguel concluído, caso a arena fique 5 minutos vazia ela irá voltar a ser livre.";
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						mes "Aluguel concluÃ­do, caso a arena fique 5 minutos vazia ela irÃ¡ voltar a ser livre.";
 						initnpctimer "ContadorArena4";
 						close2; warp "pvp_n_2-4",0,0;
 						end;
@@ -132,37 +132,37 @@ OnSALADEGALHOSECO:
 
 				if(@menu == 5){
 					if($arena_5 == 1){
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 						mes "Arena alugada, digite a senha para entrar.";
 						input .@pass_5$;
 						next;
-						if(.@pass_5$ != $pass_5$){ mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]"; mes "Senha incorreta."; close; }
+						if(.@pass_5$ != $pass_5$){ mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]"; mes "Senha incorreta."; close; }
 						close2; warp "pvp_n_1-5",0,0;
 						end;
 					}
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						mes "Arena livre, deseja alugá-la?";
-						if(select("- Sim:- Não")==2) close;
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						mes "Arena livre, deseja alugÃ¡-la?";
+						if(select("- Sim:- NÃ£o")==2) close;
 						next;
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						if(Zeny < 1000000){ mes "Você não tem 1.000.000 Zenys."; close; }
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						if(Zeny < 1000000){ mes "VocÃª nÃ£o tem 1.000.000 Zenys."; close; }
 						set Zeny,Zeny-1000000;
 						set $arena_5,1;
 						mes "Informe a senha para a sala.";
 						input $pass_5$;
 						next;
-						mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-						mes "Aluguel concluído, caso a arena fique 5 minutos vazia ela irá voltar a ser livre.";
+						mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+						mes "Aluguel concluÃ­do, caso a arena fique 5 minutos vazia ela irÃ¡ voltar a ser livre.";
 						initnpctimer "ContadorArena5";
 						close2; warp "pvp_n_2-5",0,0;
 						end;
 				}
 
 		case 3:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Existem 5 arenas Livres e 5 arenas Pagas, as pagas somentente quem pode ter acesso é quem alugou ou quem tem a senha, e as livres todos podem entrar a qualquer momento.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Existem 5 arenas Livres e 5 arenas Pagas, as pagas somentente quem pode ter acesso Ã© quem alugou ou quem tem a senha, e as livres todos podem entrar a qualquer momento.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "As salas alugadas perdem seus alugueis sempre que fica vazia por 5 minutos.";
 			close;
 

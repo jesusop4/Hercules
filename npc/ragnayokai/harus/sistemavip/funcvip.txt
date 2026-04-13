@@ -1,14 +1,14 @@
 1@mist,135,200,3	shop	Capturar Pet	81,643:3000,619:1000,624:2500,630:10,632:5000,635:300,636:100,639:18000,621:20,626:1500,625:100,623:4000,629:300,633:20,634:20,622:2500,631:20,642:1800,628:10000,641:100,637:350,620:1500,14569:20,14571:20,14570:20,640:3000,627:7000,638:12000,659:500,660:20000,14574:20,12225:20,661:20000,14573:20,14572:20,12370:20000,12364:20000,12366:20000,12395:20000
 
 function	script	Porteiro ViP	{
-mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 if (getgmlevel() == 0){
-mes "VocÍ n„o È um us˙ario ViP.";
+mes "Voc√™ n√£o √© um us√∫ario ViP.";
 mes "Para se tornar ViP acesse:";
 mes "^016B14www.ragnayokai.com.br^000000";
 close;
 }
-mes "Ol· "+strcharinfo(0)+",";
+mes "Ol√° "+strcharinfo(0)+",";
 mes "o que deseja fazer?";
 switch(select("- Entrar na Sala ViP:- Encatador:- Utilidades:- Build Manager:- Resetadora:- Removedor de Cartas:- Refinador:- Torpedo:- Trocar Sexo:- Teste Emperium")) {
 case 1:
@@ -31,19 +31,19 @@ function	script	Removedora de Cartas	{
 
 
 if(getgmlevel() < 1){
-    mes "Removedora 100% eficaz disponÌvel somente para VIPs.";
+    mes "Removedora 100% eficaz dispon√≠vel somente para VIPs.";
     close;
     }
 UPGRADEROOT:
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Ol·, eu tenho o poder de remover cartas que j· foram usados nos seus equipamentos totalmente de graÁa e com 100% de eficiÍncia. VocÍ quer utilizar desse serviÁo?";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Ol√°, eu tenho o poder de remover cartas que j√° foram usados nos seus equipamentos totalmente de gra√ßa e com 100% de efici√™ncia. Voc√™ quer utilizar desse servi√ßo?";
 	next;
 	menu "Sim, certamente.",REMOVEMENU,
-	     "N„o obrigado.",CLOSEOUT;
+	     "N√£o obrigado.",CLOSEOUT;
 
 REMOVEMENU:
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Onkie-Dukie! Qual Ìtem quer que eu examine para vocÍ?";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Onkie-Dukie! Qual √≠tem quer que eu examine para voc√™?";
 	next;
 	menu "Deixe-me pensar.",CLOSEOUT,
 	     getequipname(1),SLOT1,
@@ -99,46 +99,46 @@ SLOT10:
 
 CARDNUMCHECK:
 	if(getequipcardcnt(@part) == 0) goto DENYCARDCOUNT;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "^FF3355AtenÁ„o n„o faÁa isso se estiver carregando excesso de peso (50% ou 90% acima do peso)! Sua carta e seu item CAIR√O NO CH√O caso vocÍ esteja acima do peso. Deseja continuar o processo?";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "^FF3355Aten√ß√£o n√£o fa√ßa isso se estiver carregando excesso de peso (50% ou 90% acima do peso)! Sua carta e seu item CAIR√ÉO NO CH√ÉO caso voc√™ esteja acima do peso. Deseja continuar o processo?";
 	goto CARDNUMPOSTMSG;
 
 CARDNUMPOSTMSG:
 	next;
-	menu "Sim, n„o estou com excesso de peso.",REMOVECARD,
-	     "N„o, estou com excesso de peso.",CLOSEOUT;
+	menu "Sim, n√£o estou com excesso de peso.",REMOVECARD,
+	     "N√£o, estou com excesso de peso.",CLOSEOUT;
 
 REMOVECARD:
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 	mes "Muito bem. Vamos nessa!";
 	successremovecards @part;
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Pronto! Tome suas cartas e seus Ìtens! Volte sempre!";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Pronto! Tome suas cartas e seus √≠tens! Volte sempre!";
 	close;
 
 DENYCARDCOUNT:
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Desculpe mas n„o h· cartas equipadas neste Ìtem.";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Desculpe mas n√£o h√° cartas equipadas neste √≠tem.";
 	close;
 
 CLOSEOUT:
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Tudo bem. Volte quando precisar dos meus serviÁos.";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Tudo bem. Volte quando precisar dos meus servi√ßos.";
 	close;
 }
 
 function	script	Resetadora VIP	{
 
-//===== ConfiguraÁıes: =======================================
+//===== Configura√ß√µes: =======================================
 set .@atrib, 0;	// Reset de Atributos
 set .@habil, 0;	// Reset de Habilidades
 set .@ambos, 0;	// Reset de Ambos
 //============================================================
 
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Ol·, posso resetar seus pontos.";
-	mes "Qual vocÍ deseja resetar?";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Ol√°, posso resetar seus pontos.";
+	mes "Qual voc√™ deseja resetar?";
 	next;
 	if (select ("Resetar Atributos ["+.@atrib+"z]:Resetar Habilidades ["+.@habil+"z]:Resetar Ambos ["+.@ambos+"z]:Cancelar") == 4) close;
 	mes "[Resetadora]";
@@ -151,7 +151,7 @@ set .@ambos, 0;	// Reset de Ambos
 	F_Reset:
 		if (Zeny < getarg(0))
 		{
-			mes "Me desculpe, mas vocÍ n„o possui o Zeny necess·rio.";
+			mes "Me desculpe, mas voc√™ n√£o possui o Zeny necess√°rio.";
 			close;
 		}
 		set Zeny, Zeny - getarg(0);
@@ -161,34 +161,34 @@ set .@ambos, 0;	// Reset de Ambos
 }
 
 function	script	Dr.Rey	{
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Ol·, eu sou o ^008B00"+strnpcinfo(1)+"^000000";
-	mes "Renomado cirurgi„o pl·stico nos EUA.";
-	mes "Tento alegrar mais as pessoas que est„o infelizes com seu corpo...";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Ol√°, eu sou o ^008B00"+strnpcinfo(1)+"^000000";
+	mes "Renomado cirurgi√£o pl√°stico nos EUA.";
+	mes "Tento alegrar mais as pessoas que est√£o infelizes com seu corpo...";
 	mes "Estou aqui para mudar o sexo das pessoas.";
 	mes "E fazer com que elas fiquem mais felizes.";	
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "^FF0000LEIA COM ATEN«√O^000000: Se sua conta possuir ^9370DBBardo/Menestrel^000000 ou ^9370DBCigana/Odalisca^000000, È aconselh·vel que faÁa a troca de sexo com esses personagens.";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "^FF0000LEIA COM ATEN√á√ÉO^000000: Se sua conta possuir ^9370DBBardo/Menestrel^000000 ou ^9370DBCigana/Odalisca^000000, √© aconselh√°vel que fa√ßa a troca de sexo com esses personagens.";
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "^FF0000N√O^000000 resete as habilidades ANTES da mudanÁa e use TODOS os pontos, caso contr·rio os pontos ser„o perdidos.";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "^FF0000N√ÉO^000000 resete as habilidades ANTES da mudan√ßa e use TODOS os pontos, caso contr√°rio os pontos ser√£o perdidos.";
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "ApÛs a mudanÁa de sexo resete as habilidades, caso vocÍ tenha uma das classes citadas anteriormente.";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Ap√≥s a mudan√ßa de sexo resete as habilidades, caso voc√™ tenha uma das classes citadas anteriormente.";
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Ent„o, vocÍ quer mesmo mudar de sexo?";
-	if (select ("Sim, quero!:N„o, estou feliz com meu corpo.") == 2) close;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Ent„o vamos comeÁar...";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Ent√£o, voc√™ quer mesmo mudar de sexo?";
+	if (select ("Sim, quero!:N√£o, estou feliz com meu corpo.") == 2) close;
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Ent√£o vamos come√ßar...";
 	next;
 	sc_end SC_ALL;
 	nude;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 	mes "Agulha... Bisturi...";
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 	mes "Pronto, sua cirurgia foi um sucesso, espero que goste do resultado.";
 	next;
 	atcommand "@changesex";
@@ -196,33 +196,33 @@ function	script	Dr.Rey	{
 }
 
 function	script	Torpedo VIP	{
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 
 	if(#delaytorpedo > gettimetick(2)){ 
-		mes "O serviÁo estar· disponÌvel novamente em "+((#delaytorpedo-gettimetick(2))/60)+" minutos."; 
+		mes "O servi√ßo estar√° dispon√≠vel novamente em "+((#delaytorpedo-gettimetick(2))/60)+" minutos."; 
 		close; 
 	}
-	mes "Ol·, eu sou respons·vel pelos torpedos enviados para todos os jogadores, escolha abaixo qual opÁ„o de torpedo vocÍ deseja.";
-	if(select("- Torpedo livre:- N„o, obrigado...") == 2) close;
+	mes "Ol√°, eu sou respons√°vel pelos torpedos enviados para todos os jogadores, escolha abaixo qual op√ß√£o de torpedo voc√™ deseja.";
+	if(select("- Torpedo livre:- N√£o, obrigado...") == 2) close;
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "^FF0000ATEN«√O^000000: o mau uso desta ·rea acarretar· em puniÁ„o.";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "^FF0000ATEN√á√ÉO^000000: o mau uso desta √°rea acarretar√° em puni√ß√£o.";
 			mes "Escreva o torpedo que deseja enviar:";
 			input @procurarvip$;	
 			next;
-			setarray .palavras$[1],"viado","ragnarawn","ragnabr","lixo","lag","puta","pnc","noob","ragna","fdp","vagabunda","adm","[adm]","axl","m„e","[gm]","gm","pvp","mvp","mob","tambÈm","tambem","gg","ggserv";
+			setarray .palavras$[1],"viado","ragnarawn","ragnabr","lixo","lag","puta","pnc","noob","ragna","fdp","vagabunda","adm","[adm]","axl","m√£e","[gm]","gm","pvp","mvp","mob","tamb√©m","tambem","gg","ggserv";
 			for(set .@i,1; .@i < getarraysize(.palavras$); set .@i,.@i+1)
 			{
 			if(compare(@procurarvip$,.palavras$[.@i]))
 			{
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Desculpe, mas n„o È permitido palavrıes no anuncio.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Desculpe, mas n√£o √© permitido palavr√µes no anuncio.";
 			close;
 			}
 			}
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			if( @procurarvip$ == "null" ) {
-			mes "VocÍ deve digitar algo";
+			mes "Voc√™ deve digitar algo";
 			close;
 			}
 
@@ -233,8 +233,8 @@ function	script	Torpedo VIP	{
 
 function	script	Utilidades ViP	{
 
-mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-mes "Ol· "+strcharinfo(0)+"";
+mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+mes "Ol√° "+strcharinfo(0)+"";
 mes "O que deseja?";
 switch(select("- Comprar Utilidades:- Comprar Flechas")){
 	case 1:
@@ -256,48 +256,48 @@ switch(select("- Comprar Utilidades:- Comprar Flechas")){
 
 function	script	Encantador	{
 
-	set .@npcencantador$,"[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	set @PrecoEncantar,25000;	// PreÁo para encantar a arma
+	set .@npcencantador$,"[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	set @PrecoEncantar,25000;	// Pre√ßo para encantar a arma
 
 	mes .@npcencantador$;
-	mes "Ol· ^0000CD"+strcharinfo(0)+"^000000, bem vindo(a), eu posso Encantar a sua Arma com qualquer elemento por 30 minutos!";
+	mes "Ol√° ^0000CD"+strcharinfo(0)+"^000000, bem vindo(a), eu posso Encantar a sua Arma com qualquer elemento por 30 minutos!";
 	mes "Para encantar sua arma cobrarei "+@PrecoEncantar+"z.";
 	next;
-	if(select("Sim.:N„o.")==2){
+	if(select("Sim.:N√£o.")==2){
 		mes .@npcencantador$;
 		mes "Volte quando precisar.";
 		close;
 	}
-	if(zeny < @PrecoEncantar){
+	if(Zeny < @PrecoEncantar){
 		mes .@npcencantador$;
-		mes "VocÍ n„o tem o dinheiro suficiente.";
+		mes "Voc√™ n√£o tem o dinheiro suficiente.";
 		close;
 	}
 	mes .@npcencantador$;
-	mes "Qual elemento vocÍ quer?";
-	set zeny,zeny-@PrecoEncantar;
+	mes "Qual elemento voc√™ quer?";
+	set Zeny,Zeny-@PrecoEncantar;
 	next;
 	switch(select("Geada.:Chamas:Terremoto.:Ventania.:Sagrado:Maldito:Sair.")){
 	case 1:
-		sc_start SC_WATERWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Geada, DuraÁ„o: 5 Minutos, Level 5
+		sc_start SC_WATERWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Geada, Dura√ß√£o: 5 Minutos, Level 5
 		close;
 	case 2:
-		sc_start SC_FIREWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Chama, DuraÁ„o: 5 Minutos, Level 5
+		sc_start SC_FIREWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Chama, Dura√ß√£o: 5 Minutos, Level 5
 		close;
 	case 3:
-		sc_start SC_EARTHWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Terremoto, DuraÁ„o: 5 Minutos, Level 5
+		sc_start SC_EARTHWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Terremoto, Dura√ß√£o: 5 Minutos, Level 5
 		close;
 	case 4:
-		sc_start SC_WINDWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Ventania, DuraÁ„o: 5 Minutos, Level 5
+		sc_start SC_WINDWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Ventania, Dura√ß√£o: 5 Minutos, Level 5
 		close;
 	case 5:
-		sc_start SC_ASPERSIO,12000000,5;				// 400000 = 1 Minuto: Encantar com Sagrado, DuraÁ„o: 5 Minutos, Level 5
+		sc_start SC_ASPERSIO,12000000,5;				// 400000 = 1 Minuto: Encantar com Sagrado, Dura√ß√£o: 5 Minutos, Level 5
 		close;
 	case 6:
-		sc_start SC_SHADOWWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Maldito, DuraÁ„o: 5 Minutos, Level 5
+		sc_start SC_SHADOWWEAPON,12000000,5;			// 400000 = 1 Minuto: Encantar com Maldito, Dura√ß√£o: 5 Minutos, Level 5
 		close;
 	case 7:
-		set zeny,zeny+@PrecoEncantar;
+		set Zeny,Zeny+@PrecoEncantar;
 		close;
 	}
 }
@@ -305,20 +305,20 @@ function	script	Encantador	{
 function	script	Refinador Especial	{
 
 
-set .n$, "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+set .n$, "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 
 if (getgmlevel() < 1 ){
 mes .n$;
-mes "VocÍ n„o È um player vip, saia daqui!";
+mes "Voc√™ n√£o √© um player vip, saia daqui!";
 close;
 }
 
 
 
 mes .n$;
-mes "Ol· Senhor oque deseja refinar?";
+mes "Ol√° Senhor oque deseja refinar?";
 next;
-        setarray .@position$[1], "CabeÁa cima","Corpo","M„o esquerda","M„o direita","Capa","Botas","AccessÛrio 1","AccessÛrio 2","CabeÁa meio","CabeÁa baixo";
+        setarray .@position$[1], "Cabe√ßa cima","Corpo","M√£o esquerda","M√£o direita","Capa","Botas","Access√≥rio 1","Access√≥rio 2","Cabe√ßa meio","Cabe√ßa baixo";
         set .@menu$,"";
         for( set .@i,1; .@i <= 10; set .@i,.@i+1 )
         {
@@ -331,15 +331,15 @@ next;
 if(getequiprefinerycnt(.@part) >= 10)
 {
 mes .n$;
-mes "Eu n„o posso refinar este item.";
-mes "Ele ja foi refinado ao m·ximo permitido.";
+mes "Eu n√£o posso refinar este item.";
+mes "Ele ja foi refinado ao m√°ximo permitido.";
 close;
 }
 
 
 if(!getequipisenableref(.@part)) {
                 mes .n$;
-                mes "Eu acho que n„o posso";
+                mes "Eu acho que n√£o posso";
                 mes "refinar este item...";
                 close;
         }
@@ -378,8 +378,8 @@ switch(getequipweaponlv(.@part)){
 
 set .@refineitemid, getequipid(.@part);
 mes .n$;
-mes "Eu posso refinar seu item atÈ uma quantia segura... A escolha È sua!";
-set .@menu2$,select("Para uma limite seguro.","Eu irei decidir quantas vezes!","Eu mudei de idÈia");
+mes "Eu posso refinar seu item at√© uma quantia segura... A escolha √© sua!";
+set .@menu2$,select("Para uma limite seguro.","Eu irei decidir quantas vezes!","Eu mudei de id√©ia");
 switch(.@menu2$){
 
 case 01:
@@ -387,7 +387,7 @@ if(getequiprefinerycnt(.@part) >= .@safe)
 {
 next;
 mes .n$;
-mes "Este item j· foi refinado ao m·ximo do seguro.";
+mes "Este item j√° foi refinado ao m√°ximo do seguro.";
 close;
 }
 set .@refinecnt,.@safe - getequiprefinerycnt(.@part);
@@ -402,7 +402,7 @@ input .@refinecnt;
 set .@refinecheck,.@refinecnt+getequiprefinerycnt(.@part);
 if(.@refinecnt <1 || .@refinecheck >10){
 mes .n$;
-mes "N„o posso refinar esse item tantas vezes.";
+mes "N√£o posso refinar esse item tantas vezes.";
 close;
 
 }
@@ -410,9 +410,9 @@ if(.@refinecheck > .@safe)
 {
 set .@refinecheck,.@refinecheck-.@safe;
 mes .n$;
-mes "Eu irei tentar refinar o equipamento "+.@refinecheck+" do limite seguro... Seu equipamento pode ser destruÌdo, Est· bem?";
+mes "Eu irei tentar refinar o equipamento "+.@refinecheck+" do limite seguro... Seu equipamento pode ser destru√≠do, Est√° bem?";
 next;
-if(select("Sim:N„o")==2){
+if(select("Sim:N√£o")==2){
 mes .n$;
 mes "Bem.. que assi seja.";
 close;
@@ -428,8 +428,8 @@ close;
 set .@fullprice,.@price * .@refinecnt;
 next;
 mes .n$;
-mes "Isso ir· te custar "+.@refinecnt+" "+getitemname(.@material)+" e "+.@fullprice+" Zeny, Est· ok?";
-if(select("Sim:N„o")==2){
+mes "Isso ir√° te custar "+.@refinecnt+" "+getitemname(.@material)+" e "+.@fullprice+" Zeny, Est√° ok?";
+if(select("Sim:N√£o")==2){
 next;
 mes .n$;
 mes "Bem.. que assim seja!";
@@ -438,7 +438,7 @@ close;
 if(countitem(.@material) <.@refinecnt || Zeny < .@fullprice) {
 next;
 mes .n$;
-mes "» tudo que vocÍ tem? Desculpe, N„o posso trabalhar por um preÁo baixo ou pouco itens.";
+mes "√à tudo que voc√™ tem? Desculpe, N√£o posso trabalhar por um pre√ßo baixo ou pouco itens.";
 close;
 }
 set Zeny,Zeny-.@fullprice;
@@ -446,8 +446,8 @@ delitem .@material,.@refinecnt;
 while(.@refinecnt){
 if (getequipid(.@part) != .@refineitemid || (.@menu2 == 1 && getequippercentrefinery(.@part) < 100)) {
 mes .n$;
-mes "Acha que sou est˙pido!?";
-mes "VocÍ trocou de item..";
+mes "Acha que sou est√∫pido!?";
+mes "Voc√™ trocou de item..";
 mes "Saia daqui antes que eu te estoure com meu martelo!!!";
 close;
 }
@@ -461,7 +461,7 @@ mes .n$;
 mes "WAHHHH...Me desculpe...Eu avisei que poderia acontecer!!";
 set .@refinecnt,.@refinecnt-1;
 if(.@refinecnt==0)close;
-mes "Aqui est· os itens que n„o usei";
+mes "Aqui est√° os itens que n√£o usei";
 getitem .@material,.@refinecnt;
 set Zeny,Zeny+.@fullprice;
 close;
@@ -478,31 +478,31 @@ close;
 
 function	script	Build Manager	{
 // Menu do script
-// 1 = Todas as opÁıes
+// 1 = Todas as op√ß√µes
 // 2 = Resetar Status
 // 4 = Resetar Habilidades
 // 7 = All of Above [ 1+2+4 = 7 ]
 set .BMMode,7;
 
-// Slots disponÌveis para salvar builds
+// Slots dispon√≠veis para salvar builds
 set .MaxSlots,5;
 
-// Ativar renomeaÁ„o de slot
+// Ativar renomea√ß√£o de slot
 set .StatRename,1;
 				
 while(1){
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-mes "Hey garot„o,";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+mes "Hey garot√£o,";
 mes "Eu controlo todo o sistema de armazenamento de Builds do rYokai!";
-mes "Aqui vocÍ pode salvar builds para determinadas ocasiıes e utiliza-las da forma mais simples possÌvel :D";
-switch( select( ( .BMMode & 1 )?"^0000FFBuilds j· Salvas^000000":"",
+mes "Aqui voc√™ pode salvar builds para determinadas ocasi√µes e utiliza-las da forma mais simples poss√≠vel :D";
+switch( select( ( .BMMode & 1 )?"^0000FFBuilds j√° Salvas^000000":"",
 				( .BMMode & 1 )?"^0000FFSalvar Build^000000":"",	
 				( .BMMode & 2 )?"^0000FFResetar Status^000000":"",	
 				( .BMMode & 4 )?"^0000FFResetar Habilidades^000000":"")){
-	Case 1:
+	case 1:
 		next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-		mes "Escolha sua build de acordo com a sequÍncia n˙merica ( 1 - 5 )";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		mes "Escolha sua build de acordo com a sequ√™ncia n√∫merica ( 1 - 5 )";
 		message strcharinfo(0),"Coloque 0 para cancelar";
 		mes "^FF0000Slot[X]^000000-[^0000FFSTR|AGI|VIT|INT|DEX|LUK^000000]";
 		mes "^0000FF_____________________________^000000";
@@ -517,10 +517,10 @@ switch( select( ( .BMMode & 1 )?"^0000FFBuilds j· Salvas^000000":"",
 			}
 		next;
 		break;
-	Case 2:
+	case 2:
 		next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-		mes "Escolha o slot no qual a build que vocÍ est· salvando ficar·! ( 1 - 5)";		
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		mes "Escolha o slot no qual a build que voc√™ est√° salvando ficar√°! ( 1 - 5)";		
 		mes "^0000FF_____________________________^000000";
 		mes "^FF0000@^000000 STR - "+readparam(bStr)+" ^FF0000@^000000 AGI - "+readparam(bAgi)+" ^FF0000@^000000 VIT - "+readparam(bVit)+"";
 		mes "^FF0000@^000000 INT - "+readparam(bInt)+" ^FF0000@^000000 DEX - "+readparam(bDex)+" ^FF0000@^000000 LUK - "+readparam(bLuk)+"";
@@ -538,18 +538,18 @@ switch( select( ( .BMMode & 1 )?"^0000FFBuilds j· Salvas^000000":"",
 			}
 		next;
 		break;
-	Case 3:
+	case 3:
 		next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 		resetstatus;
-		mes "Seu status foi resetado com sucesso. VocÍ ganhou de volta seus ^FF0000pontos de status padrıes.^000000";
+		mes "Seu status foi resetado com sucesso. Voc√™ ganhou de volta seus ^FF0000pontos de status padr√µes.^000000";
 		next;
 		break;
-	Case 4:
+	case 4:
 		next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-		ResetSkill;
-		mes "Seu status foi resetado com sucesso. VocÍ ganhou de volta seus ^FF0000pontos de status padrıes.^000000";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		resetskill;
+		mes "Seu status foi resetado com sucesso. Voc√™ ganhou de volta seus ^FF0000pontos de status padr√µes.^000000";
 		next;
 		break;
 		}
@@ -591,7 +591,7 @@ function	script	Emperos	{
         set $@EmpeMAV,1288;                     //Id mob emperium2.
         set $@EmpeBMR,5;                       //Rank size (max. 120 recomended) [rank > 127 = ERROR].
         set .nm,99;                             //Minimum level to use the rooms.
-        set .Emp$,"[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";  //Npc name.
+        set .Emp$,"[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";  //Npc name.
 
         if (getgmlevel() >= 80) {
                 while (!.@c) {
@@ -607,17 +607,17 @@ function	script	Emperos	{
                                         callsub CS_Rec;
                                         if (getarraysize($EmpeBRec) == 0) {
                                                 mes .Emp$;
-                                                mes "N„o a registro para excluir.";
+                                                mes "N√£o a registro para excluir.";
                                                 next;
                                                 break;
                                         }
                                         mes .Emp$;
-                                        mes "Qual o registro que vocÍ deseja excluir?";
+                                        mes "Qual o registro que voc√™ deseja excluir?";
                                         next;
                                         switch(select("Enter record number.:Clear all records.:^8A0808Back.^000000")) {
                                         case 1:
                                                 mes .Emp$;
-                                                mes "Digite o n˙mero do registro para excluir.";
+                                                mes "Digite o n√∫mero do registro para excluir.";
                                                 mes " ";
                                                 mes " ";
                                                 mes " ";
@@ -662,7 +662,7 @@ function	script	Emperos	{
                                         while (!.@c) {
                                                 mes .Emp$;
                                                 mes "Status: "+($EmpeEstado == 0 ? "^ED2020Disabled^000000":"^01DF01Enabled^000000")+".";
-                                                mes "^8A0808A desativaÁ„o dessa opÁ„o, os jogadores dentro das salas s„o expulsos, os blocos s„o retirados e ser· negada a entrada nas salas.^000000";
+                                                mes "^8A0808A desativa√ß√£o dessa op√ß√£o, os jogadores dentro das salas s√£o expulsos, os blocos s√£o retirados e ser√° negada a entrada nas salas.^000000";
                                                 if (.@d) close;
                                                 next;
                                                 switch(select("Enable Emperium Breaker.:Disable Emperium Breaker.:^8A0808Back.^000000")) {
@@ -691,7 +691,7 @@ function	script	Emperos	{
                                         while (!.@c) {
                                                 mes .Emp$;
                                                 mes "Status: "+($EmpeWEstado == 0 ? "^01DF01Enabled^000000":"^ED2020Disabled^000000")+".";
-                                                mes "^8A0808Desativando esta opÁ„o sempre que WOE È ativado, o acesso ‡s salas ser· negada.^000000";
+                                                mes "^8A0808Desativando esta op√ß√£o sempre que WOE √© ativado, o acesso √†s salas ser√° negada.^000000";
                                                 next;
                                                 switch(select("Enabled in WOE.:Disabled in WOE.:^8A0808Back.^000000")) {
                                                 case 1:
@@ -717,7 +717,7 @@ function	script	Emperos	{
                                                 mes .Emp$;
                                                 mes "Status: "+($EmpeZEstado == 0 ? "^ED2020Disabled^000000":"^01DF01Enabled^000000")+".";
                                                 mes "Zeny cost: "+($EmpeZEstado != 0 ? "^A4A4A4"+$EmpeZEstado+"^000000 Z":"---");
-                                                mes "^8A0808Ativar essa opÁ„o toda vez que quiser entrar nas salas exigir· uma quantidade de Zeny.^000000";
+                                                mes "^8A0808Ativar essa op√ß√£o toda vez que quiser entrar nas salas exigir√° uma quantidade de Zeny.^000000";
                                                 next;
                                                 switch(select("Enable Zeny cost.:Disable Zeny cost.:^8A0808Back.^000000")) {
                                                 case 1:
@@ -771,12 +771,12 @@ function	script	Emperos	{
                 callsub OnCheck03;
                 if ($EmpeZEstado && (Zeny < $EmpeZEstado)) {
                         mes .Emp$;
-                        mes "VocÍ n„o tem Zeny suficiente.";
+                        mes "Voc√™ n√£o tem Zeny suficiente.";
                         close;
                 }
                 if (BaseLevel < .nm) {
                         mes .Emp$;
-                        mes "Necessita de pelo menos um nÌvel "+ .nm +" para entra na sala.";
+                        mes "Necessita de pelo menos um n√≠vel "+ .nm +" para entra na sala.";
                         close;
                 }
                 mes .Emp$;
@@ -806,7 +806,7 @@ function	script	Emperos	{
 
         case 2:
                 mes .Emp$;
-                mes "Aguarde o envio de informaÁıes.";
+                mes "Aguarde o envio de informa√ß√µes.";
                 close2;
                 callsub CS_Rec;
                 end;
@@ -820,7 +820,7 @@ function	script	Emperos	{
 OnCheck01:
         if (!$EmpeEstado) {
                 mes .Emp$;
-                mes "Desculpa, est· sala esta desabilitada";
+                mes "Desculpa, est√° sala esta desabilitada";
                 close;
         }
         return;
@@ -839,7 +839,7 @@ OnCheck02:
 OnCheck03:
         if ($EmpeWEstado == 1 && agitcheck() == 1) {
                 mes .Emp$;
-                mes "As Salas n„o est„o disponiveis, quando est· acontecendo a WOE.";
+                mes "As Salas n√£o est√£o disponiveis, quando est√° acontecendo a WOE.";
                 close;
         }
         return;
@@ -854,8 +854,8 @@ CS_Rec:
                         set .@Seg[.@b],(.@EmpeRec[.@b] / 1000);
                         set .@EmpeRec[.@b],.@EmpeRec[.@b] - (.@Seg[.@b] * 1000);
                         if (.@b == 1) { set .@c$,"0xFFFF00"; } else { set .@c$,"0xF2F5A9"; }
-                        if ($EmpeBName$[.@b] == "") { announce .@b+"∫ Lugar: Nenhum.",bc_self,0xD8D8D8; continue; }
-                        announce .@b+"∫ Lugar: "+$EmpeBName$[.@b]+" ~ "+.@Min[.@b]+" Minuto"+(.@Min[.@b] == 1 ? "":"s")+" ~ "+.@Seg[.@b]+" Segundo"+(.@Seg[.@b] == 1 ? "":"s")+" ~ "+.@EmpeRec[.@b]+" Milissegundos.",bc_self,.@c$;
+                        if ($EmpeBName$[.@b] == "") { announce .@b+"¬∫ Lugar: Nenhum.",bc_self,0xD8D8D8; continue; }
+                        announce .@b+"¬∫ Lugar: "+$EmpeBName$[.@b]+" ~ "+.@Min[.@b]+" Minuto"+(.@Min[.@b] == 1 ? "":"s")+" ~ "+.@Seg[.@b]+" Segundo"+(.@Seg[.@b] == 1 ? "":"s")+" ~ "+.@EmpeRec[.@b]+" Milissegundos.",bc_self,.@c$;
                 }
                 announce "~~~~~~~~~~~~~~ [ Top "+ $@EmpeBMR +" Emperium Breaker ] ~~~~~~~~~~~~~~",bc_self,0xF7F8E0;
                 return;
@@ -918,10 +918,10 @@ OnInit:
 
 pvp_n_5-5,62,105,5	script	Emperos#S1	405,{
 
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-        mes "*^ED2020N„o mude o seu equipamento.^000000";
-        mes "*^ED2020N„o mude seu stats de base.^000000";
-        mes "^610B0BSe vocÍ n„o cumprir essas regras apÛs o Emperium est· quebrado vai ser expulso da sala e vocÍ n„o vai ter o seu registro.^000000";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+        mes "*^ED2020N√£o mude o seu equipamento.^000000";
+        mes "*^ED2020N√£o mude seu stats de base.^000000";
+        mes "^610B0BSe voc√™ n√£o cumprir essas regras ap√≥s o Emperium est√° quebrado vai ser expulso da sala e voc√™ n√£o vai ter o seu registro.^000000";
         if (@EmpMSP) { set .@a,select("Sair da Sala."); set .@a,.@a+1; }
         else { set .@a,select("Iniciar. [ 3 Seconds ]:Sair da Sala."); }
         if (.@a == 2) {
@@ -931,7 +931,7 @@ pvp_n_5-5,62,105,5	script	Emperos#S1	405,{
                 end;
         }
         close2;
-        areaannounce "pvp_n_5-5",60,94,71,105,"Emperium ir· aparecer ...",0;
+        areaannounce "pvp_n_5-5",60,94,71,105,"Emperium ir√° aparecer ...",0;
         percentheal 0,-100;
         set MaxSp,1;
         set @EmpMSP,1;
@@ -977,7 +977,7 @@ OnEDie:
         set .@Seg,.MyTime / 1000;
         set .MyTime,.MyTime - (.@Seg * 1000);
 
-        areaannounce "pvp_n_5-5",60,94,71,105,"Seu Record È: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
+        areaannounce "pvp_n_5-5",60,94,71,105,"Seu Record √©: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
         sleep2 3000;
         areawarp "pvp_n_5-5",60,94,71,105,"prontera",169,206;
         end;
@@ -1000,10 +1000,10 @@ CS_Vars:
 
 pvp_n_5-5,96,139,5	script	Emperos#S2	405,{
 
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-        mes "*^ED2020N„o mude o seu equipamento.^000000";
-        mes "*^ED2020N„o mude seu stats de base.^000000";
-        mes "^610B0BSe vocÍ n„o cumprir essas regras apÛs o Emperium est· quebrado vai ser expulso da Sala e vocÍ n„o vai ter o seu registro.^000000";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+        mes "*^ED2020N√£o mude o seu equipamento.^000000";
+        mes "*^ED2020N√£o mude seu stats de base.^000000";
+        mes "^610B0BSe voc√™ n√£o cumprir essas regras ap√≥s o Emperium est√° quebrado vai ser expulso da Sala e voc√™ n√£o vai ter o seu registro.^000000";
         if (@EmpMSP) { set .@a,select("Sair da Sala"); set .@a,.@a+1; }
         else { set .@a,select("Iniciar. [ 3 Seconds ]:Sair da Sala."); }
         if (.@a == 2) {
@@ -1013,7 +1013,7 @@ pvp_n_5-5,96,139,5	script	Emperos#S2	405,{
                 end;
         }
         close2;
-        areaannounce "pvp_n_5-5",94,128,105,139,"Emperium ir· aparecer ...",0;
+        areaannounce "pvp_n_5-5",94,128,105,139,"Emperium ir√° aparecer ...",0;
         percentheal 0,-100;
         set MaxSp,1;
         set @EmpMSP,1;
@@ -1059,7 +1059,7 @@ OnEDie:
         set .@Seg,.MyTime / 1000;
         set .MyTime,.MyTime - (.@Seg * 1000);
 
-        areaannounce "pvp_n_5-5",94,128,105,139,"Seu Record È: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
+        areaannounce "pvp_n_5-5",94,128,105,139,"Seu Record √©: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
         sleep2 3000;
         areawarp "pvp_n_5-5",94,128,105,139,"prontera",169,206;
         end;
@@ -1082,10 +1082,10 @@ CS_Vars:
 
 pvp_n_5-5,130,105,5	script	Emperos#S3	405,{
 
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-        mes "*^ED2020N„o mude o seu equipamento.^000000";
-        mes "*^ED2020N„o mude seu stats de base.^000000";
-        mes "^610B0BSe vocÍ n„o cumprir essas regras apÛs o Emperium est· quebrado vai ser expulso da Sala e vocÍ n„o vai ter o seu registro.^000000";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+        mes "*^ED2020N√£o mude o seu equipamento.^000000";
+        mes "*^ED2020N√£o mude seu stats de base.^000000";
+        mes "^610B0BSe voc√™ n√£o cumprir essas regras ap√≥s o Emperium est√° quebrado vai ser expulso da Sala e voc√™ n√£o vai ter o seu registro.^000000";
         if (@EmpMSP) { set .@a,select("Sair da Sala."); set .@a,.@a+1; }
         else { set .@a,select("Iniciar. [ 3 Seconds ]:Sair da Sala."); }
         if (.@a == 2) {
@@ -1095,7 +1095,7 @@ pvp_n_5-5,130,105,5	script	Emperos#S3	405,{
                 end;
         }
         close2;
-        areaannounce "pvp_n_5-5",128,94,139,105,"Emperium ir· aparecer ...",0;
+        areaannounce "pvp_n_5-5",128,94,139,105,"Emperium ir√° aparecer ...",0;
         percentheal 0,-100;
         set MaxSp,1;
         set @EmpMSP,1;
@@ -1141,7 +1141,7 @@ OnEDie:
         set .@Seg,.MyTime / 1000;
         set .MyTime,.MyTime - (.@Seg * 1000);
 
-        areaannounce "pvp_n_5-5",128,94,139,105,"Seu Record È: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
+        areaannounce "pvp_n_5-5",128,94,139,105,"Seu Record √©: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
         sleep2 3000;
         areawarp "pvp_n_5-5",128,94,139,105,"prontera",169,206;
         end;
@@ -1164,10 +1164,10 @@ CS_Vars:
 
 pvp_n_5-5,96,71,5	script	Emperos#S4	405,{
 
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-        mes "*^ED2020N„o mude o seu equipamento.^000000";
-        mes "*^ED2020N„o mude seu stats de base.^000000";
-        mes "^610B0BSe vocÍ n„o cumprir essas regras apÛs o Emperium est· quebrado vai ser expulso da Sala e vocÍ n„o vai ter o seu registro.^000000";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+        mes "*^ED2020N√£o mude o seu equipamento.^000000";
+        mes "*^ED2020N√£o mude seu stats de base.^000000";
+        mes "^610B0BSe voc√™ n√£o cumprir essas regras ap√≥s o Emperium est√° quebrado vai ser expulso da Sala e voc√™ n√£o vai ter o seu registro.^000000";
         if (@EmpMSP) { set .@a,select("Sair da Sala."); set .@a,.@a+1; }
         else { set .@a,select("Iniciar. [ 3 Seconds ]:Sair da Sala."); }
         if (.@a == 2) {
@@ -1177,7 +1177,7 @@ pvp_n_5-5,96,71,5	script	Emperos#S4	405,{
                 end;
         }
         close2;
-        areaannounce "pvp_n_5-5",94,60,105,71,"Emperium ir· aparecer ...",0;
+        areaannounce "pvp_n_5-5",94,60,105,71,"Emperium ir√° aparecer ...",0;
         percentheal 0,-100;
         set MaxSp,1;
         set @EmpMSP,1;
@@ -1223,7 +1223,7 @@ OnEDie:
         set .@Seg,.MyTime / 1000;
         set .MyTime,.MyTime - (.@Seg * 1000);
 
-        areaannounce "pvp_n_5-5",94,60,105,71,"Seu Record È: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
+        areaannounce "pvp_n_5-5",94,60,105,71,"Seu Record √©: "+.@Min+" Minuto"+(.@Min == 1 ? "":"s")+", "+.@Seg+" Segundo"+(.@Seg == 1 ? "":"s")+" e "+.MyTime+" Milissegundos.",0;
         sleep2 3000;
         areawarp "pvp_n_5-5",94,60,105,71,"prontera",169,206;
         end;

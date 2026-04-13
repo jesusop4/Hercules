@@ -13,13 +13,13 @@
 // . Script:                                                  .
 // .   Sitema de Duelos                                       .
 // .----------------------------------------------------------.
-// . Por: SoulBlaker   Compátivel: eAthena Based              .
-// . Versão: 1.1                                              .
+// . Por: SoulBlaker   Compï¿½tivel: eAthena Based              .
+// . Versï¿½o: 1.1                                              .
 // .----------------------------------------------------------.
-// . Descrição:                                               .
-// .  Contém os npcs de recrutamentos e teleportadores.       .
+// . Descriï¿½ï¿½o:                                               .
+// .  Contï¿½m os npcs de recrutamentos e teleportadores.       .
 // .----------------------------------------------------------.
-// . Changelog da Versão:                                     .
+// . Changelog da Versï¿½o:                                     .
 // .  * 1.0 [SoulBlaker]                                      .
 // .	- Iniciado NPC.                                       .
 // .  * 1.1 [SoulBlaker]                                      .
@@ -34,9 +34,9 @@ x1_room,141,179,3	script	Recrutador#d_pvp01	50,{
 	if( select("- Como funciona?", "^FF0000- Cancelar.^000000") == 1 )
 	{
 		mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-		mes "Basta você entrar no Sala de Espera com seu adversário.";
-		mes "Você será teleportado para arena aonde vai acontecer o duelo,";
-		mes "quando estiver na arena, basta fazer ou não fazer aposta.";
+		mes "Basta vocï¿½ entrar no Sala de Espera com seu adversï¿½rio.";
+		mes "Vocï¿½ serï¿½ teleportado para arena aonde vai acontecer o duelo,";
+		mes "quando estiver na arena, basta fazer ou nï¿½o fazer aposta.";
 		close;
 	}
 	mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
@@ -49,7 +49,7 @@ OnStartArena:
 	set .@check$,getwaitingroomstate(4);
 	if( .@check$ == "-1" )
 	{
-		waitingroom .@npc+"ª Arena de Duelos PvP", 3, strnpcinfo(0)+"::OnWaitingStart", 2;
+		waitingroom .@npc+"ï¿½ Arena de Duelos PvP", 3, strnpcinfo(0)+"::OnWaitingStart", 2;
 		if( !getd("$dueling_arena_"+.@npc) )
 				enablewaitingroomevent strnpcinfo(0);
 	}
@@ -64,7 +64,7 @@ OnWaitingStart:
 		case 3: setarray .@config$[0], 3, "x1_arena_03", 50, 50; break;
 		case 4: setarray .@config$[0], 4, "x1_arena_04", 50, 50; break;
 		default:
-			debugmes "Arena de Duelo não encontrada.";
+			consolemes 0, "Arena de Duelo nï¿½o encontrada.";
 			end;
 	}
 	
@@ -79,25 +79,25 @@ x1_room,149,179,3	duplicate(Recrutador#d_pvp01)	Recrutador#d_pvp02	50
 x1_room,157,179,3	duplicate(Recrutador#d_pvp01)	Recrutador#d_pvp03	50
 x1_room,165,179,3	duplicate(Recrutador#d_pvp01)	Recrutadors#d_pvp04	50
 
-// Ír para Sala de Espera
+// ï¿½r para Sala de Espera
 prontera,143,190,5	script	Arenas de x1#d_pvp_1	629,{
 	set .@loop_1, 1;
 	while(.@loop_1)
 	{
 		mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-		mes "Bem-vindo, sou uma Funcionária da ^FF0000Central de Duelistas^000000.";
+		mes "Bem-vindo, sou uma Funcionï¿½ria da ^FF0000Central de Duelistas^000000.";
 		mes "Em que posso te ajudar?";
 		next;
-		switch( select("- Entrar na Sala de Espera.", "^0000FF- Informações.^000000", "^FF0000- Cancelar.^000000") )
+		switch( select("- Entrar na Sala de Espera.", "^0000FF- Informaï¿½ï¿½es.^000000", "^FF0000- Cancelar.^000000") )
 		{
 			case 1:
 				mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Tem certeza que deseja entrar na ^FF0000Central de Duelistas^000000?";
 				next;
-				if( select("- Sim, por favor.", "^FF0000- Não, obrigado.^000000") == 1 )
+				if( select("- Sim, por favor.", "^FF0000- Nï¿½o, obrigado.^000000") == 1 )
 				{
 					mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-					mes "Muito bem, vou te mandar para lá!";
+					mes "Muito bem, vou te mandar para lï¿½!";
 					close2;
 					warp "x1_room", 154, 150;
 					end;
@@ -105,14 +105,14 @@ prontera,143,190,5	script	Arenas de x1#d_pvp_1	629,{
 				break;
 			case 2:
 				mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-				mes "No momento a ^FF0000Central de Duelistas^000000 possuí quatro arenas.";
-				mes "Você pode convidar um amigo para duelar, basta vocês dois entrar na sala de espera,";
-				mes "visualizar uma arena que contenha 2 espaços livres, ingressar e automáticamente será levado para a arena.";
+				mes "No momento a ^FF0000Central de Duelistas^000000 possuï¿½ quatro arenas.";
+				mes "Vocï¿½ pode convidar um amigo para duelar, basta vocï¿½s dois entrar na sala de espera,";
+				mes "visualizar uma arena que contenha 2 espaï¿½os livres, ingressar e automï¿½ticamente serï¿½ levado para a arena.";
 				next;
 				mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-				mes "Na arena vocês podem fazer apostas, e concordarem com a aposta de ambos adversário.";
-				mes "Uma vez dentro da arena, não poderam saír.";
-				mes "Então se não desejar fazer apostas é aceitável de acordo com seu adversário!";
+				mes "Na arena vocï¿½s podem fazer apostas, e concordarem com a aposta de ambos adversï¿½rio.";
+				mes "Uma vez dentro da arena, nï¿½o poderam saï¿½r.";
+				mes "Entï¿½o se nï¿½o desejar fazer apostas ï¿½ aceitï¿½vel de acordo com seu adversï¿½rio!";
 				next;
 				break;
 			case 3:
@@ -121,7 +121,7 @@ prontera,143,190,5	script	Arenas de x1#d_pvp_1	629,{
 		}
 	}
 	mes "[^010849===^000000 ^01116B"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-	mes "Tudo bem, volte quando desejar duelar com algum adversário!";
+	mes "Tudo bem, volte quando desejar duelar com algum adversï¿½rio!";
 	close;
 }
 
@@ -130,7 +130,7 @@ x1_room,147,152,3	script	Duelista#d_pvp_2	50,{
 	mes "^FF0000[Duelista]^000000";
 	mes "Deseja retornar para prontera?";
 	next;
-	if( select("- Sim, por favor.", "- Não, obrigado.") == 2 )
+	if( select("- Sim, por favor.", "- Nï¿½o, obrigado.") == 2 )
 	{
 		mes "[Duelista]";
 		mes "Tudo bem, sinta-se livre para visualizar as arenas.";

@@ -326,7 +326,7 @@ payon,169,248,4	script	Costume_Enchanter	71,{
 			set @_ce_entry$, @_ce_entry$ + " ^888888(full)^000000";
 		else
 			set @_ce_entry$, @_ce_entry$ + " ^00AA00(slot " + @_ce_next + " free)^000000";
-		if (strlen(@_ce_smenu$) > 0) set @_ce_smenu$, @_ce_smenu$ + ":";
+		if (getstrlen(@_ce_smenu$) > 0) set @_ce_smenu$, @_ce_smenu$ + ":";
 		set @_ce_smenu$, @_ce_smenu$ + @_ce_entry$;
 		set @_ce_i, @_ce_i + 1;
 	}
@@ -369,7 +369,7 @@ L_ShowSlot:
 	set @_ce_i, 25010;
 	while (@_ce_i <= 25030) {
 		if (countitem(@_ce_i) > 0 && !callfunc("F_CE_HasStone", @_ce_pfx$, @_ce_i)) {
-			if (strlen(@_ce_smenu2$) > 0) set @_ce_smenu2$, @_ce_smenu2$ + ":";
+			if (getstrlen(@_ce_smenu2$) > 0) set @_ce_smenu2$, @_ce_smenu2$ + ":";
 			set @_ce_smenu2$, @_ce_smenu2$ + callfunc("F_CE_StoneName$", @_ce_i) + " (x" + countitem(@_ce_i) + ")";
 			set @_ce_smap[@_ce_smap_cnt], @_ce_i;
 			set @_ce_smap_cnt, @_ce_smap_cnt + 1;

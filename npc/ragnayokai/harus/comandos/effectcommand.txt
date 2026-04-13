@@ -1,32 +1,32 @@
 -	script	HiddenEffect	111,{
 		// Not sure if this is needed but it seems like only changing .Effect will not stop While from looping
 		if (.Effect) {
-				misceffect 1;
-				misceffect 7;
-				misceffect 12;
-				misceffect 15;
-				misceffect 16;
-				misceffect 28;
-				misceffect 30;
-				misceffect 34;
-				misceffect 43;
-				misceffect 65;
-				misceffect 67;
-				misceffect 75;
-				misceffect 77;
-				misceffect 85;
-				misceffect 97;
-				misceffect 98;
-				misceffect 102;
-				misceffect 104;
-				misceffect 119;
-				misceffect 121;
-				misceffect 128;
-				misceffect 130;
-				misceffect 134;
-				misceffect 153;
-				misceffect 170;
-				misceffect 226;
+				specialeffect 1, SELF;
+				specialeffect 7, SELF;
+				specialeffect 12, SELF;
+				specialeffect 15, SELF;
+				specialeffect 16, SELF;
+				specialeffect 28, SELF;
+				specialeffect 30, SELF;
+				specialeffect 34, SELF;
+				specialeffect 43, SELF;
+				specialeffect 65, SELF;
+				specialeffect 67, SELF;
+				specialeffect 75, SELF;
+				specialeffect 77, SELF;
+				specialeffect 85, SELF;
+				specialeffect 97, SELF;
+				specialeffect 98, SELF;
+				specialeffect 102, SELF;
+				specialeffect 104, SELF;
+				specialeffect 119, SELF;
+				specialeffect 121, SELF;
+				specialeffect 128, SELF;
+				specialeffect 130, SELF;
+				specialeffect 134, SELF;
+				specialeffect 153, SELF;
+				specialeffect 170, SELF;
+				specialeffect 226, SELF;
 				end;
 }
 

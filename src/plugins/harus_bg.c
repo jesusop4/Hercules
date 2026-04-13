@@ -192,7 +192,7 @@ HPExport void plugin_init(void) {
 	addScriptCommand("bg_queue2team",      "ii",   bg_queue2team);
 	addScriptCommand("bg_queue2team_single","iii",  bg_queue2team_single);
 	addScriptCommand("bg_queue2teams",     "iiiii",bg_queue2teams);
-	addScriptCommand("bg_balance_teams",   "",     bg_balance_teams);
+	addScriptCommand("bg_balance_teams",   "i*",  bg_balance_teams);
 	battle->config_read("conf/import/harus_battle.conf", true);
 	ShowStatus("Harus BG Plugin loaded.\n");
 }

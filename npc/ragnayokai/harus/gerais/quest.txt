@@ -26,11 +26,11 @@ function Add; function Chk; function Slot; function A_An;
 
 function Add {
 	if (getitemname(getarg(1))=="null") {
-		debugmes "Quest reward #"+getarg(1)+" invalid (skipped)."; return; }
+		consolemes 0, "Quest reward #"+getarg(1)+" invalid (skipped)."; return; }
 	for(set .@n,5; .@n<127; set .@n,.@n+2) {
 		if (!getarg(.@n,0)) break;
 		if (getitemname(getarg(.@n))=="null") {
-			debugmes "Quest requirement #"+getarg(.@n)+" invalid (skipped)."; return; } }
+			consolemes 0, "Quest requirement #"+getarg(.@n)+" invalid (skipped)."; return; } }
 	for(set .@i,2; .@i<.@n; set .@i,.@i+1)
 		set getd(".q_"+getarg(1)+"["+(.@i-2)+"]"), getarg(.@i);
 	npcshopadditem "qshop"+getarg(0),getarg(1),((.ShowZeny)?getarg(3):0);
@@ -71,11 +71,11 @@ OnBuyItem:
 			case 1:
 				if (@qe0) { 
 					mes "[Tio das Quests]";
-					mes "Estão faltando um ou mais itens para completar a quest.";
+					mes "Estï¿½o faltando um ou mais itens para completar a quest.";
 					close; }
 				if (!checkweight(.@q[0],.@q[1])) {
 					mes "[Tio das Quests]";
-					mes "^FF0000Você precisa de "+(((.@q[1]*getiteminfo(.@q[0],6))+Weight-MaxWeight)/10)+" a mais na capacidade de carga para completar a quest.^000000";
+					mes "^FF0000Vocï¿½ precisa de "+(((.@q[1]*getiteminfo(.@q[0],6))+Weight-MaxWeight)/10)+" a mais na capacidade de carga para completar a quest.^000000";
 					close; }
 				if (.@q[2]) set Zeny, Zeny-.@q[2];
 				if (.@q[3]) setd .Points$[0], getd(.Points$[0])-.@q[3];
@@ -83,7 +83,7 @@ OnBuyItem:
 					delitem .@q[.@i],.@q[.@i+1];
 				getitem .@q[0],.@q[1];
 				if (.Announce) announce "[Tio das Quests]: "+strcharinfo(0)+" acaba de completar a Quest ["+getitemname(.@q[0])+"].",0;
-				specialeffect2 699;
+				specialeffect 699;
 				close;
 			case 2:
 				set @qe3, getlook(3); set @qe4, getlook(4); set @qe5, getlook(5);

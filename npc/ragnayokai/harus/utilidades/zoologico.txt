@@ -1,26 +1,26 @@
-prontera,145,198,5	script	Zoológico	70,{
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-mes "Olá "+StrCharInfo(0)+", gostaria de visitar o Zoológico do servidor ragna^CC6600Yokai^000000?";
-mes "Você poderá conhecer muitos monstros legais ~~";
+prontera,145,198,5	script	ZoolÃ³gico	70,{
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+mes "OlÃ¡ "+StrCharInfo(0)+", gostaria de visitar o ZoolÃ³gico do servidor ragna^CC6600Yokai^000000?";
+mes "VocÃª poderÃ¡ conhecer muitos monstros legais ~~";
 next;
-if(select("- Sim:- Não") == 2) close;
+if(select("- Sim:- NÃ£o") == 2) close;
 next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-mes "Até mais";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+mes "AtÃ© mais";
 warp "sec_in02",133,162;
 close;
 }
 
 
-sec_in02,135,156,5	script	Zoológico#saida	70,{
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-mes "Deseja retornar à cidade de Prontera?";
+sec_in02,135,156,5	script	ZoolÃ³gico#saida	70,{
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+mes "Deseja retornar Ã  cidade de Prontera?";
 mes "Ficou cansadinho do passeio? :~";
 next;
-if(select("- Sim:- Não") == 2) close;
+if(select("- Sim:- NÃ£o") == 2) close;
 next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-mes "Até mais"+StrCharInfo(0)+"!";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+mes "AtÃ© mais"+StrCharInfo(0)+"!";
 warp "prontera",156,191;
 close;
 }
@@ -29,7 +29,7 @@ close;
 
 
 
-//Zoológico
+//ZoolÃ³gico
 sec_in02,149,183,5	script	Atroce#zoo	1785,{
 OnInit:
 initnpctimer;
@@ -129,7 +129,7 @@ initnpctimer;
 end;
 }
 
-sec_in02,180,155,5	script	Bafomé#zoo	1039,{
+sec_in02,180,155,5	script	BafomÃ©#zoo	1039,{
 OnInit:
 initnpctimer;
 npcspeed 300;
@@ -163,7 +163,7 @@ initnpctimer;
 end;
 }
 
-sec_in02,135,167,4	shop	Menina do Zoológico	725,558:1,12018:2
+sec_in02,135,167,4	shop	Menina do ZoolÃ³gico	725,558:1,12018:2
 
 
 

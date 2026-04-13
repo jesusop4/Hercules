@@ -52,8 +52,8 @@ OnBuildTeams:
 	case 5: set .Castle$,"arug_cas08"; set .GX,313; set .GY,154; set .CX,330; set .CY,154; set .DX,121; set .DY,318; set .AX,141; set .AY, 45; break;
 	}
 
-	set $@BG_Team1,bg_team_create(.Castle$,.GX,.GY,0,"Conquest::OnGuillaumeQuit","");
-	set $@BG_Team2,bg_team_create(.Castle$,.CX,.CY,1,"Conquest::OnCroixQuit","");
+	set $@BG_Team1,bg_team_create(.Castle$,.GX,.GY,"Conquest::OnGuillaumeQuit","");
+	set $@BG_Team2,bg_team_create(.Castle$,.CX,.CY,"Conquest::OnCroixQuit","");
 	end;
 
 OnReady:
@@ -368,27 +368,27 @@ OnBarricade3:
 	end;
 
 OnTimer60000:
-	mapannounce .Castle$,"Batalha de Conquest terminará em 5 minutos",1,0xFFA500;
+	mapannounce .Castle$,"Batalha de Conquest terminarï¿½ em 5 minutos",1,0xFFA500;
 	end;
 
 OnTimer300000:
-	mapannounce .Castle$,"Batalha de Conquest terminará em 1 minuto",1,0xFFA500;
+	mapannounce .Castle$,"Batalha de Conquest terminarï¿½ em 1 minuto",1,0xFFA500;
 	end;
 
 OnEmperium:
 	set .Score, .Score + 1;
 	if( .Atacker == $@BG_Team1 )
-		mapannounce .Castle$,"O exército de Green ganhou a batalha e conquistou o castelo!!",1,0x03c219;
+		mapannounce .Castle$,"O exï¿½rcito de Green ganhou a batalha e conquistou o castelo!!",1,0x03c219;
 	else
-		mapannounce .Castle$,"O exército de Red ganhou a batalha e conquistou o castelo!!",1,0x0391c1;
+		mapannounce .Castle$,"O exï¿½rcito de Red ganhou a batalha e conquistou o castelo!!",1,0x0391c1;
 	donpcevent "Conquest::OnMatchEnd";
 	end;
 
 OnTimer360000:
 	if( .Defender == $@BG_Team1 )
-		mapannounce .Castle$,"O exército de Green ganhou a batalha e protegeu o Castelo!!",1,0x03c219;
+		mapannounce .Castle$,"O exï¿½rcito de Green ganhou a batalha e protegeu o Castelo!!",1,0x03c219;
 	else
-		mapannounce .Castle$,"O exército de Red ganhou a batalha e protegeu o Castelo!!",1,0x0391c1;
+		mapannounce .Castle$,"O exï¿½rcito de Red ganhou a batalha e protegeu o Castelo!!",1,0x0391c1;
 	donpcevent "Conquest::OnMatchEnd";
 	end;
 
@@ -415,9 +415,9 @@ OnMatchEnd:
 		set .@Won,0;
 	}
 
-	bg_reward .Atacker,7773,.@Reward,0,8509,"BG_CON",10,6,.@Won;
-	bg_reward .Atacker,7828,.@Reward,0,8509,"BG_CON",1,6,.@Won;
-	bg_reward .Atacker,7829,.@Reward,0,8509,"BG_CON",1,6,.@Won;
+	bg_reward .Atacker,7773,.@Reward;
+	bg_reward .Atacker,7828,.@Reward;
+	bg_reward .Atacker,7829,.@Reward;
 
 	set .Score, 6 - .Score; // Switch for Defender
 
@@ -430,9 +430,9 @@ OnMatchEnd:
 		set .@Won,0;
 	}
 
-	bg_reward .Defender,7773,.@Reward,0,8509,"BG_CON",10,6,.@Won;
-	bg_reward .Defender,7828,.@Reward,0,8509,"BG_CON",1,6,.@Won;
-	bg_reward .Defender,7829,.@Reward,0,8509,"BG_CON",1,6,.@Won;
+	bg_reward .Defender,7773,.@Reward;
+	bg_reward .Defender,7828,.@Reward;
+	bg_reward .Defender,7829,.@Reward;
 	// =======================================================
 	set .Score, 0;
 	sleep 5000;

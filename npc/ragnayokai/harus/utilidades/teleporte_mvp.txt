@@ -78,11 +78,11 @@ quiz_02,301,242,0	script	Thanatos Despero	1705,{warp "tha_t07",0,0; end;}
 
 //----------------------
 prontera,126,191,5	script	MvP Search	651,{
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Olá ^016B14"+strcharinfo(0)+"^000000, seja bem-vindo ao serviço de teletransporte MvP Search!";
-	mes "Aqui você pode ir diretamente no mapa onde nasce o MvP ou Mini Boss!";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "OlÃ¡ ^016B14"+strcharinfo(0)+"^000000, seja bem-vindo ao serviÃ§o de teletransporte MvP Search!";
+	mes "Aqui vocÃª pode ir diretamente no mapa onde nasce o MvP ou Mini Boss!";
 	mes "Gostaria de ir?";
-	if(select("Sim:Não")==2)close;
+	if(select("Sim:NÃ£o")==2)close;
 	warp "quiz_02",304,257;
 	end;
 	}

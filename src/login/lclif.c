@@ -200,7 +200,7 @@ static enum parsefunc_rcode lclif_parse_CA_SSO_LOGIN_REQ(int fd, struct login_se
 	const struct PACKET_CA_SSO_LOGIN_REQ *packet = RP2PTR(fd);
 	int tokenlen = (int)RFIFOREST(fd) - (int)sizeof(*packet);
 
-	if (tokenlen > PASSWD_LEN || tokenlen < 1) {
+	if (tokenlen < 0) {
 		ShowError("PACKET_CA_SSO_LOGIN_REQ: Token length is not between allowed password length, kicking player ('%s')", packet->id);
 		sockt->eof(fd);
 		return PACKET_VALID;

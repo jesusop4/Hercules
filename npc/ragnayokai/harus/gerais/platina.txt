@@ -20,10 +20,10 @@
 //===========================================================================================
 prontera,137,202,5	script	Habilidades de Platina	412,{
 
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Olá, você deseja receber suas habilidades extras?";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "OlÃ¡, vocÃª deseja receber suas habilidades extras?";
 	next;
-	if(select("Sim","Não") == 2) { 
+	if(select("Sim","NÃ£o") == 2) { 
 	mes "[Habilidades de Platina]";
 	mes "Ok, sem problemas.";
 	close;
@@ -87,7 +87,7 @@ prontera,137,202,5	script	Habilidades de Platina	412,{
 		skill 1016,1,0; // Ki Explosion
 	}
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 	mes "Feito!";
 	close2;
 	cutin "", 255;

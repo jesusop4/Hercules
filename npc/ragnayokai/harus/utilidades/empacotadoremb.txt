@@ -1,6 +1,6 @@
 function	script	Empacotador de Emblemas	{
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Ol· "+StrCharInfo(0)+"!";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Ol√° "+strcharinfo(0)+"!";
 	mes "Eu posso empacotar os seus emblemas em pacotes de ^016B141.000x^000000 unidades, deseja dar uma olhada?";
 	next;
 	switch(select("- Emblemas de ^016B14Valor^000000:- Emblemas de ^016B14Guerra^000000:- Emblemas de ^016B14Bravura^000000:Nenhum"))
@@ -21,6 +21,6 @@ function	script	Empacotador de Emblemas	{
 	}
 }
 
-bat_room,1,1,3,7828	sshop	PacotaBravura	111,10227:1000
-bat_room,1,1,3,7829	sshop	PacotaValor	111,10225:1000
-bat_room,1,1,3,7773	sshop	PacotaGuerra	111,10226:1000
+bat_room,1,1,3,7828	shop	PacotaBravura	111,10227:1000
+bat_room,1,1,3,7829	shop	PacotaValor	111,10225:1000
+bat_room,1,1,3,7773	shop	PacotaGuerra	111,10226:1000

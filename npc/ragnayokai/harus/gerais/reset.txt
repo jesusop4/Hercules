@@ -1,17 +1,17 @@
 prontera,140,202,5	script	Resetadora	859,{
 
-//===== Configurações: =======================================
+//===== ConfiguraÃ§Ãµes: =======================================
 set .@atrib, 25000;	// Reset de Atributos
 set .@habil, 25000;	// Reset de Habilidades
 set .@ambos, 50000;	// Reset de Ambos
 //============================================================
 
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Olá, posso resetar seus pontos.";
-	mes "Qual você deseja resetar?";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "OlÃ¡, posso resetar seus pontos.";
+	mes "Qual vocÃª deseja resetar?";
 	next;
 	if (select ("Resetar Atributos ["+.@atrib+"z]:Resetar Habilidades ["+.@habil+"z]:Resetar Ambos ["+.@ambos+"z]:Cancelar") == 4) close;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 	if (@menu == 1) callsub F_Reset, .@atrib, 1, 0;
 	if (@menu == 2) callsub F_Reset, .@habil, 0, 1;
 	if (@menu == 3) callsub F_Reset, .@ambos, 1, 1;
@@ -21,7 +21,7 @@ set .@ambos, 50000;	// Reset de Ambos
 	F_Reset:
 		if (Zeny < getarg(0))
 		{
-			mes "Me desculpe, mas você não possui o Zeny necessário.";
+			mes "Me desculpe, mas vocÃª nÃ£o possui o Zeny necessÃ¡rio.";
 			close;
 		}
 		set Zeny, Zeny - getarg(0);

@@ -42,8 +42,8 @@ OnCroixDie:
 	end;
 
 OnBuildTeams:
-	set $@BG_Team1,bg_team_create("bat_b03",390,10,0,"Flavius_TD::OnGuillaumeQuit","Flavius_TD::OnGuillaumeDie");
-	set $@BG_Team2,bg_team_create("bat_b03",10,290,1,"Flavius_TD::OnCroixQuit","Flavius_TD::OnCroixDie");
+	set $@BG_Team1,bg_team_create("bat_b03",390,10,"Flavius_TD::OnGuillaumeQuit","Flavius_TD::OnGuillaumeDie");
+	set $@BG_Team2,bg_team_create("bat_b03",10,290,"Flavius_TD::OnCroixQuit","Flavius_TD::OnCroixDie");
 	end;
 
 OnReady:
@@ -74,36 +74,36 @@ OnValidateScore:
 
 	if( .Croix_Score <= 0 )
 	{ // Guillaume Won
-		bg_reward $@BG_Team1,7829,50,0,0,"BG_TDM",1,4,0;
-		bg_reward $@BG_Team1,7828,50,0,0,"BG_TDM",1,4,0;
-		bg_reward $@BG_Team1,7773,25,0,0,"BG_TDM",1,4,0;
+		bg_reward $@BG_Team1,7829,50;
+		bg_reward $@BG_Team1,7828,50;
+		bg_reward $@BG_Team1,7773,25;
 //
-		bg_reward $@BG_Team2,7829,25,0,0,"BG_TDM",1,4,2;
-		bg_reward $@BG_Team2,7828,25,0,0,"BG_TDM",1,4,2;
-		bg_reward $@BG_Team2,7773,12,0,0,"BG_TDM",1,4,2;
+		bg_reward $@BG_Team2,7829,25;
+		bg_reward $@BG_Team2,7828,25;
+		bg_reward $@BG_Team2,7773,12;
 		mapannounce "bat_b03","The Green army has won the Battle of Flavius TD!",1,0x0000FF;
 	}
 	else if( .Guillaume_Score <= 0 )
 	{ // Croix Won
-		bg_reward $@BG_Team1,7773,12,0,0,"BG_TDM",1,4,2;
-		bg_reward $@BG_Team1,7828,25,0,0,"BG_TDM",1,4,2;
-		bg_reward $@BG_Team1,7829,25,0,0,"BG_TDM",1,4,2;
+		bg_reward $@BG_Team1,7773,12;
+		bg_reward $@BG_Team1,7828,25;
+		bg_reward $@BG_Team1,7829,25;
 //
-		bg_reward $@BG_Team2,7773,25,0,0,"BG_TDM",1,4,0;
-		bg_reward $@BG_Team2,7828,50,0,0,"BG_TDM",1,4,0;
-		bg_reward $@BG_Team2,7829,50,0,0,"BG_TDM",1,4,0;
+		bg_reward $@BG_Team2,7773,25;
+		bg_reward $@BG_Team2,7828,50;
+		bg_reward $@BG_Team2,7829,50;
 		mapannounce "bat_b03","The Red army has won the Battle of Flavius TD!",1,0xFF0000;
 	}
 	else if( .@Croix == 0 )
 	{ // All Croix Players quit
 		set .@Rate, 50 - .Croix_Score;
-		bg_reward $@BG_Team1,7829,60 * .@Rate / 99,0,0,"BG_TDM",1,4,0;
+		bg_reward $@BG_Team1,7829,60 * .@Rate / 99;
 		mapannounce "bat_b03","The Green army has won the Battle of Flavius TD!",1,0x0000FF;
 	}
 	else if( .@Guillaume == 0 )
 	{ // All Guillaume Players quit
 		set .@Rate, 50 - .Guillaume_Score;
-		bg_reward $@BG_Team2,7829,60 * .@Rate / 99,0,0,"BG_TDM",1,4,0;
+		bg_reward $@BG_Team2,7829,60 * .@Rate / 99;
 		mapannounce "bat_b03","The Red army has won the Battle of Flavius TD!",1,0xFF0000;
 	}
 	else end;
@@ -121,30 +121,30 @@ OnTimer840000:
 OnTimer900000:
 	if( .Guillaume_Score > .Croix_Score )
 	{ // Guillaume Won
-		bg_reward $@BG_Team1,7829,63,0,0,"BG_TDM",1,4,0;
-		bg_reward $@BG_Team1,7828,63,0,0,"BG_TDM",1,4,0;
-		bg_reward $@BG_Team1,7773,63,0,0,"BG_TDM",1,4,0;
+		bg_reward $@BG_Team1,7829,63;
+		bg_reward $@BG_Team1,7828,63;
+		bg_reward $@BG_Team1,7773,63;
 		//
-		bg_reward $@BG_Team2,7829,23,0,0,"BG_TDM",1,4,2;
-		bg_reward $@BG_Team2,7828,23,0,0,"BG_TDM",1,4,2;
-		bg_reward $@BG_Team2,7773,23,0,0,"BG_TDM",1,4,2;
+		bg_reward $@BG_Team2,7829,23;
+		bg_reward $@BG_Team2,7828,23;
+		bg_reward $@BG_Team2,7773,23;
 		mapannounce "bat_b03","The Green army has won the Battle of Flavius TD!",1,0x0000FF;
 	}
 	else if( .Guillaume_Score < .Croix_Score )
 	{ // Croix Won
-		bg_reward $@BG_Team1,7829,23,0,0,"BG_TDM",1,4,2;
-		bg_reward $@BG_Team1,7828,23,0,0,"BG_TDM",1,4,2;
-		bg_reward $@BG_Team1,7773,23,0,0,"BG_TDM",1,4,2;
+		bg_reward $@BG_Team1,7829,23;
+		bg_reward $@BG_Team1,7828,23;
+		bg_reward $@BG_Team1,7773,23;
 	//
-		bg_reward $@BG_Team2,7829,63,0,0,"BG_TDM",1,4,0;
-		bg_reward $@BG_Team2,7828,63,0,0,"BG_TDM",1,4,0;
-		bg_reward $@BG_Team2,7773,63,0,0,"BG_TDM",1,4,0;
+		bg_reward $@BG_Team2,7829,63;
+		bg_reward $@BG_Team2,7828,63;
+		bg_reward $@BG_Team2,7773,63;
 		mapannounce "bat_b03","The Red army has won the Battle of Flavius TD!",1,0xFF0000;
 	}
 	else
 	{
-		bg_reward $@BG_Team1,7829,15,0,0,"BG_TDM",1,4,1;
-		bg_reward $@BG_Team2,7829,15,0,0,"BG_TDM",1,4,1;
+		bg_reward $@BG_Team1,7829,15;
+		bg_reward $@BG_Team2,7829,15;
 		mapannounce "bat_b03","The battle is over. This is a Tie...!",1,0x808000;
 	}
 	donpcevent "Flavius_TD::OnMatchEnd";
@@ -178,7 +178,7 @@ OnBGStop:
 	end;
 
 OnTimer24000:
-	misceffect 83;
+	specialeffect 83, SELF;
 	end;
 
 OnTimer25000:
@@ -200,7 +200,7 @@ OnBGStop:
 	end;
 
 OnTimer24000:
-	misceffect 83;
+	specialeffect 83, SELF;
 	end;
 
 OnTimer25000:

@@ -294,7 +294,6 @@ OnInit:
 	sellitem Grilled_Rice_Cake;
 	sellitem Fish_With_Blue_Back;
 	sellitem Pumpkin_Pie_;
-	sellitem Traditional_Cookie;
 }
 
 //== Alberta ===============================================

@@ -1,6 +1,6 @@
 function	script	funcTicket99	{
 
-if ( BaseLevel > 1 && JobLevel > 1 ) { mes "Desculpe, só atendo a apredizes Nível 1/1."; getitem 10114,1; close; }
+if ( BaseLevel > 1 && JobLevel > 1 ) { mes "Desculpe, sï¿½ atendo a apredizes Nï¿½vel 1/1."; getitem 10114,1; close; }
 
 // -- Configuration Option
 set .npcname$,"[ ^0000FF Upador ^000000 ]";
@@ -25,97 +25,97 @@ Main_Menu:
 	mes "Eu sou o Upador...";
 	mes "Estou aqui para te ajudar.";
 	mes " ^FF0000________________________________^000000";
-	mes "Você gostaria de ficar mais forte?";
+	mes "Vocï¿½ gostaria de ficar mais forte?";
 	mes " ^FF0000________________________________^000000";
 	next;
 	mes .npcname$;
-	mes "Você adimira aqueles que têm poder? Você gostaria de ser como eles? Se sim, qual classe você gostaria de se tornar?";
+	mes "Vocï¿½ adimira aqueles que tï¿½m poder? Vocï¿½ gostaria de ser como eles? Se sim, qual classe vocï¿½ gostaria de se tornar?";
 	next;
-	switch(select(( .InfoMenu == 0 )?"":"^4EEE94Informações^000000",
+	switch(select(( .InfoMenu == 0 )?"":"^4EEE94Informaï¿½ï¿½es^000000",
 				( .1stClassMenu == 0 )?"":"^0000FFPrimeiras Classes^000000",
 				( .2ndClassMenu == 0 )?"":"^0000FFSegundas Classes^000000",	
 				( .High1stClassMenu == 0 )?"":"^0000FFPrimeiras Classes Trancendentais^000000",	
 				( .Trans2ndClassMenu == 0 )?"":"^0000FFClasses Transcendentais^000000",	
 				( .Trans3rdClassMenu == 0 )?"":"^0000FFThird Job Classes^000000",		
 				( .ExpandedClassMenu == 0 )?"":"^0000FFClasses Expandidas^000000",	
-				( .BabyClassMenu == 0 )?"":"^0000FFClasses Bebês^000000",		
+				( .BabyClassMenu == 0 )?"":"^0000FFClasses Bebï¿½s^000000",		
 				( .Baby3rdClassMenu == 0 )?"":"^0000FFBaby Third Job Classes^000000",		
-				"^FF0000Desculpe, eu não gosto de nenhuma...^000000")) {
+				"^FF0000Desculpe, eu nï¿½o gosto de nenhuma...^000000")) {
 
-					Case 1: goto Classes_info;
-					Case 2:	goto FirstJob_Classes;
-					Case 3:	goto SecondJob_Classes;
-					Case 4:	goto HighFirstJob_Classes;
-					Case 5:	goto TransSecondJob_Classes;
-					Case 6:	goto TransThirdJob_Classes;
-					Case 7:	goto ExpandedJob_Classes;
-					Case 8:	goto BabyJob_Classes;
-					Case 9:	goto BabyThirdJob_Classes;
-					Case 10:	close;
+					case 1: goto Classes_info;
+					case 2:	goto FirstJob_Classes;
+					case 3:	goto SecondJob_Classes;
+					case 4:	goto HighFirstJob_Classes;
+					case 5:	goto TransSecondJob_Classes;
+					case 6:	goto TransThirdJob_Classes;
+					case 7:	goto ExpandedJob_Classes;
+					case 8:	goto BabyJob_Classes;
+					case 9:	goto BabyThirdJob_Classes;
+					case 10:	close;
 					case 255: 	getitem 10114,1; end;
 			}
 	
 FirstJob_Classes:
 	mes .npcname$;
-	mes "Então, eu vou lhe dar uma chance agora, me diga qual classe você deseja se tornar.";
+	mes "Entï¿½o, eu vou lhe dar uma chance agora, me diga qual classe vocï¿½ deseja se tornar.";
 	next;
 	switch(select("^8b1f21Espadachim^000000",
 				"^8b1f21Mago^000000",
 				"^8b1f21Arqueiro^000000",
-				"^8b1f21Noviço^000000",
+				"^8b1f21Noviï¿½o^000000",
 				"^8b1f21Mercador^000000",
 				"^8b1f21Gatuno^000000",
 				"^FF0000Voltar^000000")) {
 
 // --- callsub Job_Changing,<JOB>,<BaseLv>,<JobLv>,<Skill>,<Announce>;	
 
-			Case 1:	callsub Job_Changing,1,99,50,60,"All";
-			Case 2:	callsub Job_Changing,2,99,50,60,"All";
-			Case 3:	callsub Job_Changing,3,99,50,60,"All";
-			Case 4:	callsub Job_Changing,4,99,50,60,"All";
-			Case 5:	callsub Job_Changing,5,99,50,60,"All";
-			Case 6:	callsub Job_Changing,6,99,50,60,"All";
-			Case 7:	goto Main_Menu;
+			case 1:	callsub Job_Changing,1,99,50,60,"All";
+			case 2:	callsub Job_Changing,2,99,50,60,"All";
+			case 3:	callsub Job_Changing,3,99,50,60,"All";
+			case 4:	callsub Job_Changing,4,99,50,60,"All";
+			case 5:	callsub Job_Changing,5,99,50,60,"All";
+			case 6:	callsub Job_Changing,6,99,50,60,"All";
+			case 7:	goto Main_Menu;
 			case 255: 	getitem 10114,1; end;
 		}
 
 HighFirstJob_Classes:
 	mes .npcname$;
-	mes "Então, eu vou lhe dar uma chance agora, me diga qual classe você deseja se tornar.";
+	mes "Entï¿½o, eu vou lhe dar uma chance agora, me diga qual classe vocï¿½ deseja se tornar.";
 	next;
 	switch(select("^8b1f21Espadachim T.^000000",
 				"^8b1f21Mago T.^000000",
 				"^8b1f21Arqueiro T.^000000",
-				"^8b1f21Noviço T.^000000",
+				"^8b1f21Noviï¿½o T.^000000",
 				"^8b1f21Mercador T.^000000",
 				"^8b1f21Gatuno T.^000000",
 				"^FF0000Voltar^000000")) {
 
 // --- callsub Job_Changing,<JOB>,<BaseLv>,<JobLv>,<Skill>,<Announce>;	
 
-			Case 1:	callsub Job_Changing,4002,99,50,60,"All";
-			Case 2:	callsub Job_Changing,4003,99,50,60,"All";
-			Case 3:	callsub Job_Changing,4004,99,50,60,"All";
-			Case 4:	callsub Job_Changing,4005,99,50,60,"All";
-			Case 5:	callsub Job_Changing,4006,99,50,60,"All";
-			Case 6:	callsub Job_Changing,4007,99,50,60,"All";
-			Case 7:	goto Main_Menu;
+			case 1:	callsub Job_Changing,4002,99,50,60,"All";
+			case 2:	callsub Job_Changing,4003,99,50,60,"All";
+			case 3:	callsub Job_Changing,4004,99,50,60,"All";
+			case 4:	callsub Job_Changing,4005,99,50,60,"All";
+			case 5:	callsub Job_Changing,4006,99,50,60,"All";
+			case 6:	callsub Job_Changing,4007,99,50,60,"All";
+			case 7:	goto Main_Menu;
 			case 255: 	getitem 10114,1; end;
 		}
 		
 SecondJob_Classes:
 	mes .npcname$;
-	mes "Então, eu vou lhe dar uma chance agora, me diga qual classe você deseja se tornar.";
+	mes "Entï¿½o, eu vou lhe dar uma chance agora, me diga qual classe vocï¿½ deseja se tornar.";
 	next;
 	switch(select("^8b1f21Cavaleiro^000000",
 				"^8b1f21Sacerdote^000000",
 				"^8b1f21Bruxo^000000",
 				"^8b1f21Ferreiro^000000",
-				"^8b1f21Caçador^000000",
-				"^8b1f21Mercenário^000000",
-				"^8b1f21Templário^000000",
+				"^8b1f21Caï¿½ador^000000",
+				"^8b1f21Mercenï¿½rio^000000",
+				"^8b1f21Templï¿½rio^000000",
 				"^8b1f21Monge^000000",
-				"^8b1f21Sábio^000000",
+				"^8b1f21Sï¿½bio^000000",
 				"^8b1f21Arruaceiro^000000",
 				"^8b1f21Alchemist^000000",
 				( Sex == 1 )?"":"^8b1f21Odalisca^000000",		
@@ -124,26 +124,26 @@ SecondJob_Classes:
 
 // --- callsub Job_Changing,<JOB>,<BaseLv>,<JobLv>,<Skill>,<Announce>;	
 			
-			Case 1:	callsub Job_Changing,7,99,50,110,"All";
-			Case 2:	callsub Job_Changing,8,99,50,110,"All";
-			Case 3:	callsub Job_Changing,9,99,50,110,"All";
-			Case 4:	callsub Job_Changing,10,99,50,110,"All";
-			Case 5:	callsub Job_Changing,11,99,50,110,"All";
-			Case 6:	callsub Job_Changing,12,99,50,110,"All";
-			Case 7:	callsub Job_Changing,14,99,50,110,"All";
-			Case 8:	callsub Job_Changing,15,99,50,110,"All";
-			Case 9:	callsub Job_Changing,16,99,50,110,"All";
-			Case 10:	callsub Job_Changing,17,99,50,110,"All";
-			Case 11:	callsub Job_Changing,18,99,50,110,"All";
-			Case 12:	callsub Job_Changing,20,99,50,110,"All";
-			Case 13:	callsub Job_Changing,19,99,50,110,"All";
-			Case 14:	goto Main_Menu;
+			case 1:	callsub Job_Changing,7,99,50,110,"All";
+			case 2:	callsub Job_Changing,8,99,50,110,"All";
+			case 3:	callsub Job_Changing,9,99,50,110,"All";
+			case 4:	callsub Job_Changing,10,99,50,110,"All";
+			case 5:	callsub Job_Changing,11,99,50,110,"All";
+			case 6:	callsub Job_Changing,12,99,50,110,"All";
+			case 7:	callsub Job_Changing,14,99,50,110,"All";
+			case 8:	callsub Job_Changing,15,99,50,110,"All";
+			case 9:	callsub Job_Changing,16,99,50,110,"All";
+			case 10:	callsub Job_Changing,17,99,50,110,"All";
+			case 11:	callsub Job_Changing,18,99,50,110,"All";
+			case 12:	callsub Job_Changing,20,99,50,110,"All";
+			case 13:	callsub Job_Changing,19,99,50,110,"All";
+			case 14:	goto Main_Menu;
 			case 255: 	getitem 10114,1; end;
 		}
 
 TransSecondJob_Classes:
 	mes .npcname$;
-	mes "Então, eu vou lhe dar uma chance agora, me diga qual classe você deseja se tornar.";
+	mes "Entï¿½o, eu vou lhe dar uma chance agora, me diga qual classe vocï¿½ deseja se tornar.";
 	next;
 	switch(select("^8b1f21Lorde^000000",
 				"^8b1f21Sumo Sacerdote^000000",
@@ -162,20 +162,20 @@ TransSecondJob_Classes:
 
 // --- callsub Job_Changing,<JOB>,<BaseLv>,<JobLv>,<Skill>,<Announce>;	
 			
-			Case 1:	callsub Job_Changing,4008,99,70,130,"All";
-			Case 2:	callsub Job_Changing,4009,99,70,130,"All";
-			Case 3:	callsub Job_Changing,4010,99,70,130,"All";
-			Case 4:	callsub Job_Changing,4011,99,70,130,"All";
-			Case 5:	callsub Job_Changing,4012,99,70,130,"All";
-			Case 6:	callsub Job_Changing,4013,99,70,130,"All";
-			Case 7:	callsub Job_Changing,4015,99,70,130,"All";
-			Case 8:	callsub Job_Changing,4016,99,70,130,"All";
-			Case 9:	callsub Job_Changing,4017,99,70,130,"All";
-			Case 10:	callsub Job_Changing,4018,99,70,130,"All";
-			Case 11:	callsub Job_Changing,4019,99,70,130,"All";
-			Case 12:	callsub Job_Changing,4021,99,70,130,"All";
-			Case 13:	callsub Job_Changing,4020,99,70,130,"All";
-			Case 14:	goto Main_Menu;
+			case 1:	callsub Job_Changing,4008,99,70,130,"All";
+			case 2:	callsub Job_Changing,4009,99,70,130,"All";
+			case 3:	callsub Job_Changing,4010,99,70,130,"All";
+			case 4:	callsub Job_Changing,4011,99,70,130,"All";
+			case 5:	callsub Job_Changing,4012,99,70,130,"All";
+			case 6:	callsub Job_Changing,4013,99,70,130,"All";
+			case 7:	callsub Job_Changing,4015,99,70,130,"All";
+			case 8:	callsub Job_Changing,4016,99,70,130,"All";
+			case 9:	callsub Job_Changing,4017,99,70,130,"All";
+			case 10:	callsub Job_Changing,4018,99,70,130,"All";
+			case 11:	callsub Job_Changing,4019,99,70,130,"All";
+			case 12:	callsub Job_Changing,4021,99,70,130,"All";
+			case 13:	callsub Job_Changing,4020,99,70,130,"All";
+			case 14:	goto Main_Menu;
 			case 255: 	getitem 10114,1; end;
 		}
 
@@ -200,26 +200,26 @@ TransThirdJob_Classes:
 
 // --- callsub Job_Changing,<JOB>,<BaseLv>,<JobLv>,<Skill>,<Announce>;	
 			
-			Case 1:	callsub Job_Changing,4060,99,70,200,"All";
-			Case 2:	callsub Job_Changing,4061,99,70,200,"All";
-			Case 3:	callsub Job_Changing,4062,99,70,200,"All";
-			Case 4:	callsub Job_Changing,4063,99,70,200,"All";
-			Case 5:	callsub Job_Changing,4064,99,70,200,"All";
-			Case 6:	callsub Job_Changing,4065,99,70,200,"All";
-			Case 7:	callsub Job_Changing,4073,99,70,200,"All";
-			Case 8:	callsub Job_Changing,4074,99,70,200,"All";
-			Case 9:	callsub Job_Changing,4076,99,70,200,"All";
-			Case 10:	callsub Job_Changing,4075,70,70,200,"All";
-			Case 11:	callsub Job_Changing,4077,70,70,200,"All";
-			Case 12:	callsub Job_Changing,4078,70,70,200,"All";
-			Case 13:	callsub Job_Changing,4079,70,70,200,"All";
-			Case 14:	goto Main_Menu;
+			case 1:	callsub Job_Changing,4060,99,70,200,"All";
+			case 2:	callsub Job_Changing,4061,99,70,200,"All";
+			case 3:	callsub Job_Changing,4062,99,70,200,"All";
+			case 4:	callsub Job_Changing,4063,99,70,200,"All";
+			case 5:	callsub Job_Changing,4064,99,70,200,"All";
+			case 6:	callsub Job_Changing,4065,99,70,200,"All";
+			case 7:	callsub Job_Changing,4073,99,70,200,"All";
+			case 8:	callsub Job_Changing,4074,99,70,200,"All";
+			case 9:	callsub Job_Changing,4076,99,70,200,"All";
+			case 10:	callsub Job_Changing,4075,70,70,200,"All";
+			case 11:	callsub Job_Changing,4077,70,70,200,"All";
+			case 12:	callsub Job_Changing,4078,70,70,200,"All";
+			case 13:	callsub Job_Changing,4079,70,70,200,"All";
+			case 14:	goto Main_Menu;
 			case 255: 	getitem 10114,1; end;
 		}
 				
 ExpandedJob_Classes:
 	mes .npcname$;
-	mes "Então, eu vou lhe dar uma chance agora, me diga qual classe você deseja se tornar.";
+	mes "Entï¿½o, eu vou lhe dar uma chance agora, me diga qual classe vocï¿½ deseja se tornar.";
 	next;
 	switch(select("^8b1f21Super Aprendiz^000000",
 				"^8b1f21Justiceiro^000000",
@@ -231,65 +231,65 @@ ExpandedJob_Classes:
 
 // --- callsub Job_Changing,<JOB>,<BaseLv>,<JobLv>,<Skill>,<Announce>;	
 
-			Case 1:	callsub Job_Changing,23,99,99,110,"All";
-			Case 2:	callsub Job_Changing,24,99,50,600,"All";
-			Case 3:	callsub Job_Changing,25,99,50,60,"All";
-			Case 4:	callsub Job_Changing,4046,99,50,60,"All";
-			Case 5:	callsub Job_Changing,4047,99,50,110,"All";
-			Case 6:	callsub Job_Changing,4049,99,50,110,"All";
-			Case 7:	goto Main_Menu;
+			case 1:	callsub Job_Changing,23,99,99,110,"All";
+			case 2:	callsub Job_Changing,24,99,50,600,"All";
+			case 3:	callsub Job_Changing,25,99,50,60,"All";
+			case 4:	callsub Job_Changing,4046,99,50,60,"All";
+			case 5:	callsub Job_Changing,4047,99,50,110,"All";
+			case 6:	callsub Job_Changing,4049,99,50,110,"All";
+			case 7:	goto Main_Menu;
 			case 255: 	getitem 10114,1; end;
 		}
 
 BabyJob_Classes:
 	mes .npcname$;
-	mes "Então, eu vou lhe dar uma chance agora, me diga qual classe você deseja se tornar.";
+	mes "Entï¿½o, eu vou lhe dar uma chance agora, me diga qual classe vocï¿½ deseja se tornar.";
 	next;
-	switch(select("^8b1f21Espadachim Bebê^000000",
-				"^8b1f21Mago Bebê^000000",
-				"^8b1f21Arqueiro Bebê^000000",
-				"^8b1f21Noviço Bebê^000000",
-				"^8b1f21Mercador Bebê^000000",
-				"^8b1f21Gatuno Bebê^000000",
-				"^8b1f21Cavaleiro Bebê^000000",
-				"^8b1f21Sacerdote Bebê^000000",
-				"^8b1f21Bruxo Bebê^000000",
-				"^8b1f21Ferreiro Bebê^000000",
-				"^8b1f21Caçador Bebê^000000",
-				"^8b1f21Mercenário Bebê^000000",
-				"^8b1f21Templário Bebê^000000",
-				"^8b1f21Monge Bebê^000000",
-				"^8b1f21Sábio Bebê^000000",
-				"^8b1f21Arruaceiro Bebê^000000",
-				"^8b1f21Alquimista Bebê^000000",
-				( Sex == 1 )?"":"^8b1f21Odalisca Bebê^000000",		
-				( Sex == 0 )?"":"^8b1f21Bardo Bebê^000000",	
-				"^8b1f21Super Aprendiz Bebê^000000",
+	switch(select("^8b1f21Espadachim Bebï¿½^000000",
+				"^8b1f21Mago Bebï¿½^000000",
+				"^8b1f21Arqueiro Bebï¿½^000000",
+				"^8b1f21Noviï¿½o Bebï¿½^000000",
+				"^8b1f21Mercador Bebï¿½^000000",
+				"^8b1f21Gatuno Bebï¿½^000000",
+				"^8b1f21Cavaleiro Bebï¿½^000000",
+				"^8b1f21Sacerdote Bebï¿½^000000",
+				"^8b1f21Bruxo Bebï¿½^000000",
+				"^8b1f21Ferreiro Bebï¿½^000000",
+				"^8b1f21Caï¿½ador Bebï¿½^000000",
+				"^8b1f21Mercenï¿½rio Bebï¿½^000000",
+				"^8b1f21Templï¿½rio Bebï¿½^000000",
+				"^8b1f21Monge Bebï¿½^000000",
+				"^8b1f21Sï¿½bio Bebï¿½^000000",
+				"^8b1f21Arruaceiro Bebï¿½^000000",
+				"^8b1f21Alquimista Bebï¿½^000000",
+				( Sex == 1 )?"":"^8b1f21Odalisca Bebï¿½^000000",		
+				( Sex == 0 )?"":"^8b1f21Bardo Bebï¿½^000000",	
+				"^8b1f21Super Aprendiz Bebï¿½^000000",
 				"^FF0000Voltar^000000")) {
 
 // --- callsub Job_Changing,<JOB>,<BaseLv>,<JobLv>,<Skill>,<Announce>;	
 			
-			Case 1:	callsub Job_Changing,4024,99,50,60,"All";
-			Case 2:	callsub Job_Changing,4025,99,50,60,"All";
-			Case 3:	callsub Job_Changing,4026,99,50,60,"All";
-			Case 4:	callsub Job_Changing,4027,99,50,60,"All";
-			Case 5:	callsub Job_Changing,4028,99,50,60,"All";
-			Case 6:	callsub Job_Changing,4029,99,50,60,"All";
-			Case 7:	callsub Job_Changing,4030,99,50,110,"All";
-			Case 8:	callsub Job_Changing,4031,99,50,110,"All";
-			Case 9:	callsub Job_Changing,4032,99,50,110,"All";
-			Case 10:	callsub Job_Changing,4033,99,50,110,"All";
-			Case 11:	callsub Job_Changing,4034,99,50,110,"All";
-			Case 12:	callsub Job_Changing,4035,99,50,110,"All";
-			Case 13:	callsub Job_Changing,4037,99,50,110,"All";
-			Case 14:	callsub Job_Changing,4038,99,50,110,"All";
-			Case 15:	callsub Job_Changing,4039,99,50,110,"All";
-			Case 16:	callsub Job_Changing,4040,99,50,110,"All";
-			Case 17:	callsub Job_Changing,4041,99,50,110,"All";
-			Case 18:	callsub Job_Changing,4043,99,50,110,"All";
-			Case 19:	callsub Job_Changing,4042,99,50,110,"All";
-			Case 20:	callsub Job_Changing,4045,99,50,110,"All";
-			Case 21:	goto Main_Menu;
+			case 1:	callsub Job_Changing,4024,99,50,60,"All";
+			case 2:	callsub Job_Changing,4025,99,50,60,"All";
+			case 3:	callsub Job_Changing,4026,99,50,60,"All";
+			case 4:	callsub Job_Changing,4027,99,50,60,"All";
+			case 5:	callsub Job_Changing,4028,99,50,60,"All";
+			case 6:	callsub Job_Changing,4029,99,50,60,"All";
+			case 7:	callsub Job_Changing,4030,99,50,110,"All";
+			case 8:	callsub Job_Changing,4031,99,50,110,"All";
+			case 9:	callsub Job_Changing,4032,99,50,110,"All";
+			case 10:	callsub Job_Changing,4033,99,50,110,"All";
+			case 11:	callsub Job_Changing,4034,99,50,110,"All";
+			case 12:	callsub Job_Changing,4035,99,50,110,"All";
+			case 13:	callsub Job_Changing,4037,99,50,110,"All";
+			case 14:	callsub Job_Changing,4038,99,50,110,"All";
+			case 15:	callsub Job_Changing,4039,99,50,110,"All";
+			case 16:	callsub Job_Changing,4040,99,50,110,"All";
+			case 17:	callsub Job_Changing,4041,99,50,110,"All";
+			case 18:	callsub Job_Changing,4043,99,50,110,"All";
+			case 19:	callsub Job_Changing,4042,99,50,110,"All";
+			case 20:	callsub Job_Changing,4045,99,50,110,"All";
+			case 21:	goto Main_Menu;
 			case 255: 	getitem 10114,1; end;
 		}
 		
@@ -314,26 +314,26 @@ BabyThirdJob_Classes:
 
 // --- callsub Job_Changing,<JOB>,<BaseLv>,<JobLv>,<Skill>,<Announce>;	
 			
-			Case 1:	callsub Job_Changing,4096,99,70,200,"All";
-			Case 2:	callsub Job_Changing,4097,99,70,200,"All";
-			Case 3:	callsub Job_Changing,4098,99,70,200,"All";
-			Case 4:	callsub Job_Changing,4099,99,70,200,"All";
-			Case 5:	callsub Job_Changing,4100,99,70,200,"All";
-			Case 6:	callsub Job_Changing,4101,99,70,200,"All";
-			Case 7:	callsub Job_Changing,4102,99,70,200,"All";
-			Case 8:	callsub Job_Changing,4103,99,70,200,"All";
-			Case 9:	callsub Job_Changing,4105,99,70,200,"All";
-			Case 10:	callsub Job_Changing,4104,99,70,200,"All";
-			Case 11:	callsub Job_Changing,4106,99,70,200,"All";
-			Case 12:	callsub Job_Changing,4107,99,70,200,"All";
-			Case 13:	callsub Job_Changing,4108,99,70,200,"All";
-			Case 14:	goto Main_Menu;
+			case 1:	callsub Job_Changing,4096,99,70,200,"All";
+			case 2:	callsub Job_Changing,4097,99,70,200,"All";
+			case 3:	callsub Job_Changing,4098,99,70,200,"All";
+			case 4:	callsub Job_Changing,4099,99,70,200,"All";
+			case 5:	callsub Job_Changing,4100,99,70,200,"All";
+			case 6:	callsub Job_Changing,4101,99,70,200,"All";
+			case 7:	callsub Job_Changing,4102,99,70,200,"All";
+			case 8:	callsub Job_Changing,4103,99,70,200,"All";
+			case 9:	callsub Job_Changing,4105,99,70,200,"All";
+			case 10:	callsub Job_Changing,4104,99,70,200,"All";
+			case 11:	callsub Job_Changing,4106,99,70,200,"All";
+			case 12:	callsub Job_Changing,4107,99,70,200,"All";
+			case 13:	callsub Job_Changing,4108,99,70,200,"All";
+			case 14:	goto Main_Menu;
 			case 255: 	getitem 10114,1; end;
 		}
 
 Job_Changing:
 		mes .npcname$;
-		mes "Você é agora ^FF0000"+jobname(getarg(0))+"^000000.";
+		mes "Vocï¿½ ï¿½ agora ^FF0000"+jobname(getarg(0))+"^000000.";
 		if (compare(getarg(4),"All")){	announce "[ "+strcharinfo(0)+" ] optou por [ "+jobname(getarg(0))+" ] como sua classe no Ticket 99/70.",bc_all,0xe7e401;	}
 		if (compare(getarg(4),"Map")){	announce "[ "+strcharinfo(0)+" ] optou por [ "+jobname(getarg(0))+" ]como sua classe no Ticket 99/70.",bc_map,0xe7e401;	}
 		if (compare(getarg(4),"Area")){	announce "[ "+strcharinfo(0)+" ] optou por [ "+jobname(getarg(0))+" ]como sua classe no Ticket 99/70.",bc_area,0xe7e401;	}
@@ -341,8 +341,8 @@ Job_Changing:
 		jobchange getarg(0);
 		set BaseLevel,getarg(1);
         set JobLevel,getarg(2);
-		ResetSkill;
-		ResetStatus;
+		resetskill;
+		resetstatus;
         set SkillPoint,getarg(3);
 		if ( .Allskills == 1 ){
 		atcommand "@allskills";

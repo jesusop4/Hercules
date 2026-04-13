@@ -4,12 +4,12 @@
 prontera,137,167,6	script	Yokai Disguise 2.0::yokaidis	704,{
 	set @pos,0;
 
- 	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Ol· "+strcharinfo(0)+", eu posso disfarÁar o Visual dos seus itens.";
-	mes "Gostaria de esperimentar algum dos meus serviÁos?";
-	mes "Obs: Meu serviÁo custar· 150 Kafra Points caso n„o seja ViP!";
-	switch (select (((UT)?"- ⁄ltimo visual":"")+":- Novo visual:- Remover Visual:- Nada obrigad"+((!Sex) ? "a":"o ")+"")){ next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+ 	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Ol√° "+strcharinfo(0)+", eu posso disfar√ßar o Visual dos seus itens.";
+	mes "Gostaria de esperimentar algum dos meus servi√ßos?";
+	mes "Obs: Meu servi√ßo custar√° 150 Kafra Points caso n√£o seja ViP!";
+	switch (select (((UT)?"- √öltimo visual":"")+":- Novo visual:- Remover Visual:- Nada obrigad"+((!Sex) ? "a":"o ")+"")){ next;
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 		case 1:
 		callfunc ("Disgui_func",UT);
 		close;
@@ -77,35 +77,35 @@ function	script	Disgui_func	{
 
 
 			next;
- 			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+ 			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			if(#TRIUMPHPOINTS < 150 && getgmlevel() == 0)
 			{ 
-				mes "Desculpe mas vocÍ n„o tem os Kafra Points necess·rios"; 
+				mes "Desculpe mas voc√™ n√£o tem os Kafra Points necess√°rios"; 
 				close;
 			}
 			if(@pos == 0)
 			{ 
-				mes "Desculpe mas este item n„o existe ou vocÍ n„o pode experimentar este item."; 
+				mes "Desculpe mas este item n√£o existe ou voc√™ n√£o pode experimentar este item."; 
 				next; 
 				return;
 			}
 			else if(!getequipisequiped(EQI_HEAD_TOP) && @pos == 4) { 
-				mes "Desculpe mas vocÍ deve ter um item TOP equipado."; 
+				mes "Desculpe mas voc√™ deve ter um item TOP equipado."; 
 				close; 
 			}
 			else if(!getequipisequiped(EQI_HEAD_MID) && @pos == 5) { 
-				mes "Desculpe mas vocÍ deve ter um item MID equipado."; 
+				mes "Desculpe mas voc√™ deve ter um item MID equipado."; 
 				close; 
 			}
 			else if(!getequipisequiped(EQI_HEAD_LOW) && @pos == 3) {
-				mes "Desculpe mas vocÍ deve ter um item LOW equipado."; 
+				mes "Desculpe mas voc√™ deve ter um item LOW equipado."; 
 				close;
 			}
 			else if( @id == 23057 || @id == 23043 || @id == 23012 || @id == 23007 || @id == 18550 || @id == 5780 || @id == 18503 || @id == 19008 || @id == 5366 || @id == 19009 || @id == 5452 
 				|| @id == 5453 || @id == 5357 || @id == 5654 || @id == 5788 || @id == 5776 || @id == 5603 || @id == 5604 
 				|| @id == 5605 || @id == 5777 || @id == 5656 || @id == 5766 || @id == 5659 || @id == 5660 || @id == 5789 
 				|| @id == 5666 ) { 
-				mes "Item n„o permitido!"; 
+				mes "Item n√£o permitido!"; 
 				close; 
 			}
 				set @view,getiteminfo(getarg(0),11);

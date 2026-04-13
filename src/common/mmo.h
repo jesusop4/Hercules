@@ -65,7 +65,7 @@
 
 #ifndef PACKETVER
 	// #define PACKETVER 20190530
-	#define PACKETVER 20200401
+	#define PACKETVER 20220330
 #endif // PACKETVER
 
 //Uncomment the following line if your client is ragexeRE instead of ragexe (required because of conflicting packets in ragexe vs ragexeRE).

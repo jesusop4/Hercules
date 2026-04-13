@@ -1,48 +1,48 @@
 prontera,134,202,5	script	Aluguel Yokai	875,{
 	cutin "mal_homnya_s",2;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Ol�, aqui voc� pode alugar um carrinho, pecopeco ou falc�o depedendo de sua profiss�o.";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Olï¿½, aqui vocï¿½ pode alugar um carrinho, pecopeco ou falcï¿½o depedendo de sua profissï¿½o.";
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 	if (BaseClass == 5 || Class == 23 || Class == 4045) {
 		setoption 0x8, 0;
 		setoption 0x8;
 	} else if (BaseClass == 1) {
-		if (checkriding()) {
-			mes "Voc� j� est� montado!";
+		if (checkmount()) {
+			mes "Vocï¿½ jï¿½ estï¿½ montado!";
 			close2;
 			cutin "", 255;
 			end;
 		}
 		if (!getskilllv(63)) {
-			mes "Voc� precisa da habilidade de monta��o para isso.";
+			mes "Vocï¿½ precisa da habilidade de montaï¿½ï¿½o para isso.";
 			close2;
 			cutin "", 255;
 			end;
 		}
-		setriding;
+		setmount;
 	} else if (BaseClass == 3) {
 		if (checkfalcon()) {
-			mes "Voc� j� est� com um falc�o!";
+			mes "Vocï¿½ jï¿½ estï¿½ com um falcï¿½o!";
 			close2;
 			cutin "", 255;
 			end;
 		}
 		if (!getskilllv(127)) {
-			mes "Voc� precisa da habilidade de falco�eiro para isso.";
+			mes "Vocï¿½ precisa da habilidade de falcoï¿½eiro para isso.";
 			close2;
 			cutin "", 255;
 			end;
 		}
 		setfalcon;
 	} else {
-		mes "Desculpe, mas não posso ajudar você.";
-		mes "Esta opção não está disponível para sua profissão!";
+		mes "Desculpe, mas nÃ£o posso ajudar vocÃª.";
+		mes "Esta opÃ§Ã£o nÃ£o estÃ¡ disponÃ­vel para sua profissÃ£o!";
 		close2;
 		cutin "", 255;
 		end;
 	}
-	mes "Aqui está, faça bom proveito!";
+	mes "Aqui estÃ¡, faÃ§a bom proveito!";
 	close2;
 	cutin "", 255;
 	end;

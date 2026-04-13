@@ -1,8 +1,8 @@
-prontera,164,174,3	script	Sua Presença	567,{
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes ""+strcharinfo(0)+", bem-vind"+(Sex?"o":"a")+" ao sistema de presença.";
+prontera,164,174,3	script	Sua PresenÃ§a	567,{
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes ""+strcharinfo(0)+", bem-vind"+(Sex?"o":"a")+" ao sistema de presenÃ§a.";
 	mes "O que deseja fazer hoje?";
-	switch(select("Marcar frequência:Trocar meus pontos:Informações:Sair"))
+	switch(select("Marcar frequÃªncia:Trocar meus pontos:InformaÃ§Ãµes:Sair"))
 	{
 	case 1:
 		next;
@@ -12,23 +12,23 @@ prontera,164,174,3	script	Sua Presença	567,{
 		set @n4, rand(1,9);
 		set @numero, @n1*1000+@n2*100+@n3*10+@n4;
 
-		mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 		mes "Quais numeros aparecem aqui?";
 		mes "---->[ "+@n1+" "+@n2+" "+@n3+" "+@n4+" ]<----";
 			input @respnum;
 		next;
-		mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";		
+		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";		
 		if(@respnum == @numero){
-		mes "Você acertou as respostas!";
+		mes "VocÃª acertou as respostas!";
 		mes "Desculpe o inconveniente.";
 		}
 		if(@respnum != @numero){
-		mes "Você NÃO acertou as respostas!";
+		mes "VocÃª NÃƒO acertou as respostas!";
 		close;
 		}
 		next;
 
-		mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 	
 		if(!#counting)
 		{
@@ -41,10 +41,10 @@ prontera,164,174,3	script	Sua Presença	567,{
 		}
 		if(#online_time >= gettimetick(2))
 		{	
-			mes "Você ainda deve aguardar "+((#online_time-gettimetick(2))/60)+" minuto(s).";
+			mes "VocÃª ainda deve aguardar "+((#online_time-gettimetick(2))/60)+" minuto(s).";
 			close;
 		}
-		mes "Receba agora seu ponto de presença.";
+		mes "Receba agora seu ponto de presenÃ§a.";
 		set #point_presence,#point_presence + $point;
 		set #counting,0;
 		close;
@@ -56,14 +56,14 @@ prontera,164,174,3	script	Sua Presença	567,{
 
 	case 3:
 		next;
-		mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-		mes "Aqui você poderá ganhar pontos por tempo online no servidor.";
+		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		mes "Aqui vocÃª poderÃ¡ ganhar pontos por tempo online no servidor.";
 		next;
-		mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-		mes "A cada "+$time/60+" minutos, você ganhará "+$point+" ponto(s).";
+		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		mes "A cada "+$time/60+" minutos, vocÃª ganharÃ¡ "+$point+" ponto(s).";
 		next;
-		mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-		mes "Você pode trocar os pontos acumulados por itens.";
+		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+		mes "VocÃª pode trocar os pontos acumulados por itens.";
 		mes "Aproveite!";
 		close;
 
@@ -74,7 +74,7 @@ prontera,164,174,3	script	Sua Presença	567,{
 OnWhisperGlobal:
 	if(!#counting)
 	{
-		dispbottom "Você ainda não marcou sua presença.";
+		dispbottom "VocÃª ainda nÃ£o marcou sua presenÃ§a.";
 		end;
 	}
 	dispbottom "Faltam ainda "+((#online_time-gettimetick(2))/60)+" minuto(s).";
@@ -104,6 +104,6 @@ OnInit:
 end;
 }
 
--	cashshop(#point_presence)	presenceshop	-1,12210:3,10236:3,10237:6
+-	cashshop	presenceshop	-1,12210:3,10236:3,10237:6
 
-force_5-1,71,167,3	duplicate(Sua Presença)	Sua Presença#m	50
+force_5-1,71,167,3	duplicate(Sua PresenÃ§a)	Sua PresenÃ§a#m	50

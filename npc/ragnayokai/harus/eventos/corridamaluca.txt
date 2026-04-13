@@ -2,34 +2,34 @@
 //= Corrida Maluca
 //===== Por: =================================================
 //= Mara
-//===== Versão Atual: ========================================
+//===== Versï¿½o Atual: ========================================
 //= 1.0
-//===== Compatível Com: ======================================
+//===== Compatï¿½vel Com: ======================================
 //= Cronus SVN
-//===== Descrição: ===========================================
+//===== Descriï¿½ï¿½o: ===========================================
 //= Percurso da Corrida Maluca com Armadilhas
-//===== Comentários Adicionais: ==============================
+//===== Comentï¿½rios Adicionais: ==============================
 //= 1.0 Iniciado [Mara]
-//= 1.1 Correções e adaptações [Axl]
+//= 1.1 Correï¿½ï¿½es e adaptaï¿½ï¿½es [Axl]
 //============================================================
 que_qaru01,138,134,3	script	Corrida Maluca	715,{
 	mes "["+strnpcinfo(1)+"]";
-	mes "Olá, me diga, o que quer?";
+	mes "Olï¿½, me diga, o que quer?";
 	next;
 	switch (select ("Entrar"+(getgmlevel() > 79 ? ":Ligar Evento:Desativar Evento Atual":""))) {
 		mes "["+strnpcinfo(1)+"]";
 
 		case 1:
 			if ( $corridaon == 0 ) {
-				mes "A Corrida ainda não começou!";
+				mes "A Corrida ainda nï¿½o comeï¿½ou!";
 				close;
 			}
-			if (CheckRiding()) {
-				mes "Você não pode entrar com PecoPeco!";
+			if (checkmount()) {
+				mes "Vocï¿½ nï¿½o pode entrar com PecoPeco!";
 				close;
 			}
-			if (CheckCart()) {
-				mes "Você não pode entrar com Carrinho!";
+			if (checkcart()) {
+				mes "Vocï¿½ nï¿½o pode entrar com Carrinho!";
 				close;
 			}
 			sc_end -1;
@@ -58,35 +58,35 @@ que_qaru01,138,134,3	script	Corrida Maluca	715,{
 	OnClock2005: callsub OnCorrida;
 	
 OnCorrida:
-		announce "[Corrida Maluca]:  Evento aberto, restam apenas 3 minutos. Participe já! use --> @eventos <--", bc_all;
+		announce "[Corrida Maluca]:  Evento aberto, restam apenas 3 minutos. Participe jï¿½! use --> @eventos <--", bc_all;
 		set $corridaon,1;
 		set $corridacheck,1;
 		atcommand "@killmonster2 turbo_n_1";
 		if (.CWin < 3) set .CWin,0;	
 		// monstros
-		monster "turbo_n_1",19,90,"Não vai subir ninguém",1512,2;
-		monster "turbo_n_1",19,90,"Não vai subir ninguém",1026,2;
-		monster "turbo_n_1",19,90,"Não vai subir ninguém",1188,2;
+		monster "turbo_n_1",19,90,"Nï¿½o vai subir ninguï¿½m",1512,2;
+		monster "turbo_n_1",19,90,"Nï¿½o vai subir ninguï¿½m",1026,2;
+		monster "turbo_n_1",19,90,"Nï¿½o vai subir ninguï¿½m",1188,2;
 
-		monster "turbo_n_1",56,72,"Não vai subir ninguém",1512,2;
-		monster "turbo_n_1",56,72,"Não vai subir ninguém",1026,2;
-		monster "turbo_n_1",56,72,"Não vai subir ninguém",1188,2;
+		monster "turbo_n_1",56,72,"Nï¿½o vai subir ninguï¿½m",1512,2;
+		monster "turbo_n_1",56,72,"Nï¿½o vai subir ninguï¿½m",1026,2;
+		monster "turbo_n_1",56,72,"Nï¿½o vai subir ninguï¿½m",1188,2;
 
-		monster "turbo_n_1",29,53,"Não vai subir ninguém",1512,2;
-		monster "turbo_n_1",29,53,"Não vai subir ninguém",1026,2;
-		monster "turbo_n_1",29,53,"Não vai subir ninguém",1188,2;
+		monster "turbo_n_1",29,53,"Nï¿½o vai subir ninguï¿½m",1512,2;
+		monster "turbo_n_1",29,53,"Nï¿½o vai subir ninguï¿½m",1026,2;
+		monster "turbo_n_1",29,53,"Nï¿½o vai subir ninguï¿½m",1188,2;
 
-		monster "turbo_n_1",41,25,"Não vai subir ninguém",1512,2;
-		monster "turbo_n_1",41,25,"Não vai subir ninguém",1026,2;
-		monster "turbo_n_1",41,25,"Não vai subir ninguém",1188,2;
+		monster "turbo_n_1",41,25,"Nï¿½o vai subir ninguï¿½m",1512,2;
+		monster "turbo_n_1",41,25,"Nï¿½o vai subir ninguï¿½m",1026,2;
+		monster "turbo_n_1",41,25,"Nï¿½o vai subir ninguï¿½m",1188,2;
 
-		monster "turbo_n_1",73,50,"Não vai subir ninguém",1512,2;
-		monster "turbo_n_1",73,50,"Não vai subir ninguém",1026,2;
-		monster "turbo_n_1",73,50,"Não vai subir ninguém",1188,2;
+		monster "turbo_n_1",73,50,"Nï¿½o vai subir ninguï¿½m",1512,2;
+		monster "turbo_n_1",73,50,"Nï¿½o vai subir ninguï¿½m",1026,2;
+		monster "turbo_n_1",73,50,"Nï¿½o vai subir ninguï¿½m",1188,2;
 
-		monster "turbo_n_1",79,19,"Não vai subir ninguém",1512,2;
-		monster "turbo_n_1",79,19,"Não vai subir ninguém",1026,2;
-		monster "turbo_n_1",79,19,"Não vai subir ninguém",1188,2;
+		monster "turbo_n_1",79,19,"Nï¿½o vai subir ninguï¿½m",1512,2;
+		monster "turbo_n_1",79,19,"Nï¿½o vai subir ninguï¿½m",1026,2;
+		monster "turbo_n_1",79,19,"Nï¿½o vai subir ninguï¿½m",1188,2;
 
 		monster "turbo_n_1",278,284,"ATIRADOR DO BOPE",1016,1;
 		monster "turbo_n_1",278,264,"ATIRADOR DO BOPE",1016,1;
@@ -112,10 +112,10 @@ OnCorrida:
 		initnpctimer;
 		end;
 	OnTimer60000:
-		announce "[Corrida Maluca]: Evento aberto, restam apenas 2 minutos. Participe já! use --> @eventos <--", bc_all;
+		announce "[Corrida Maluca]: Evento aberto, restam apenas 2 minutos. Participe jï¿½! use --> @eventos <--", bc_all;
 		end;
 	OnTimer120000:
-		announce "[Corrida Maluca]: Evento aberto, restam apenas 1 minuto. Participe já! use --> @eventos <--", bc_all;
+		announce "[Corrida Maluca]: Evento aberto, restam apenas 1 minuto. Participe jï¿½! use --> @eventos <--", bc_all;
 		end;
 	OnTimer180000:
 		announce "[Corrida Maluca]: Entrada fechada!", bc_all;
@@ -162,16 +162,16 @@ turbo_n_1,370,57,0	script	FinishCheck	-1,0,30,{
 		set .CWin , .CWin  + 1;
 		//if (getgroupid() > 60) end;
 		if (.CWin == 1 ) {
-			set #PTEVENTO, #PTEVENTO + 10; dispbottom "[rYokai Eventos] - Agora você tem "+#PTEVENTO+"x Pontos de Evento.";
+			set #PTEVENTO, #PTEVENTO + 10; dispbottom "[rYokai Eventos] - Agora vocï¿½ tem "+#PTEVENTO+"x Pontos de Evento.";
 			callsub OnLastLap, "venceu a", 1; 
 		}
 		else if (.CWin == 2) { 
-			set #PTEVENTO, #PTEVENTO + 5; dispbottom "[rYokai Eventos] - Agora você tem "+#PTEVENTO+"x Pontos de Evento.";
-			callsub OnLastLap, "chegou em 2º na", 2; 
+			set #PTEVENTO, #PTEVENTO + 5; dispbottom "[rYokai Eventos] - Agora vocï¿½ tem "+#PTEVENTO+"x Pontos de Evento.";
+			callsub OnLastLap, "chegou em 2ï¿½ na", 2; 
 		}
 		else if (.CWin == 3) { 
-			set #PTEVENTO, #PTEVENTO + 3; dispbottom "[rYokai Eventos] - Agora você tem "+#PTEVENTO+"x Pontos de Evento.";
-			callsub OnLastLap, "chegou em 3º na", 3; 
+			set #PTEVENTO, #PTEVENTO + 3; dispbottom "[rYokai Eventos] - Agora vocï¿½ tem "+#PTEVENTO+"x Pontos de Evento.";
+			callsub OnLastLap, "chegou em 3ï¿½ na", 3; 
 		}
 
 		OnLastLap:
@@ -343,26 +343,26 @@ OnTouch:
 		cutin "kafra_03",2;
 		mes "^4d4dffO Turbo Track foi";
 		mes "trazido para Al de Baran";
-		mes " e para você pela";
-		mes "^800000Corporação Kafra^4DD4DF.^000000";
+		mes " e para vocï¿½ pela";
+		mes "^800000Corporaï¿½ï¿½o Kafra^4DD4DF.^000000";
 		next;
-		mes "^4d4dffNós desejamos boa sorte para todos";
+		mes "^4d4dffNï¿½s desejamos boa sorte para todos";
 		mes "os participantes da Turbo Track de hoje";
-		mes "e agradeço de todo coração a todos por usar os Serviços Kafra.^000000";
+		mes "e agradeï¿½o de todo coraï¿½ï¿½o a todos por usar os Serviï¿½os Kafra.^000000";
 		next;
-		mes "^800000A Corporação Kafra^4d4dff tem promovido os serviços de Armazém,";
-		mes "Ponto de Retorno e Teleportes^4d4dff para nossos clientes há anos. Apenas escute esses reais clientes...^000000";
+		mes "^800000A Corporaï¿½ï¿½o Kafra^4d4dff tem promovido os serviï¿½os de Armazï¿½m,";
+		mes "Ponto de Retorno e Teleportes^4d4dff para nossos clientes hï¿½ anos. Apenas escute esses reais clientes...^000000";
 		next;
 		mes "^4d4dff[Karkatan]";
-		mes "Minha terra sofria de serviços pobres para os clientes... até a Kafra chegar!";
+		mes "Minha terra sofria de serviï¿½os pobres para os clientes... atï¿½ a Kafra chegar!";
 		mes " ";
 		mes "[Curador Guiss]";
-		mes "Oh, A Kafra é simplesmente a melhor!^000000";
+		mes "Oh, A Kafra ï¿½ simplesmente a melhor!^000000";
 		next;
 		mes "^ff0000Turbo Track";
 		mes "^ff0000Armadilhas no Percurso do Deserto!";
-		mes "^4d4dffPatrocinado pela ^800000Corporação Kafra^4d4dff";
-		mes "''Nós estamos sempre do seu lado.''^000000";
+		mes "^4d4dffPatrocinado pela ^800000Corporaï¿½ï¿½o Kafra^4d4dff";
+		mes "''Nï¿½s estamos sempre do seu lado.''^000000";
 		close2;
 		cutin "kafra_03",255;
 		end;

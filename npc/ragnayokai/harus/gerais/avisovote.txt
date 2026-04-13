@@ -2,24 +2,24 @@ prontera,150,184,5	script	Votos por ViP!	626,{
 
 	query_sql "SELECT `votos` FROM `login` WHERE `account_id` = '"+getcharid(3)+"'",.@votos;
 
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Olá, você possui ^016B14["+.@votos+"]^000000 Vote!Points";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "OlÃ¡, vocÃª possui ^016B14["+.@votos+"]^000000 Vote!Points";
 	mes "Deseja trocar por dias ViP?";
 	mes "";
 	mes "============================";
 	mes "^016B14 A cada 2 pontos = 1 dia ViP^000000";
 	mes "============================";
-	if (select("- Sim [^016B141 dia ViP^000000]:- Não") == 1) {
+	if (select("- Sim [^016B141 dia ViP^000000]:- NÃ£o") == 1) {
 	next;	
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 
 	if(.@votos < 2) {
-	mes "Você não possui Pontos suficientes...";
+	mes "VocÃª nÃ£o possui Pontos suficientes...";
 	close;
 
 	}
 	
-	mes "Parabéns seus dias como usuário ViP foram adicionados. Você será relogado em 5 segundos...";
+	mes "ParabÃ©ns seus dias como usuÃ¡rio ViP foram adicionados. VocÃª serÃ¡ relogado em 5 segundos...";
 
 	// ADICIONA O VIP
 	query_sql "UPDATE `login` SET `level`='1',`diasvip`=`diasvip`+1 WHERE `account_id`='"+ getcharid(3) +"'";
@@ -29,9 +29,9 @@ prontera,150,184,5	script	Votos por ViP!	626,{
 	query_sql "UPDATE `login` SET `votos` = `votos` - 2 WHERE `account_id` = '"+getcharid(3)+"'";
 
 	dispbottom "[RagnaYokai]";
-	dispbottom "Você acaba de receber 1 dia VIP, agora você tem "+.@diasvip+" dias VIP";	
+	dispbottom "VocÃª acaba de receber 1 dia VIP, agora vocÃª tem "+.@diasvip+" dias VIP";	
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 	sleep2 1000;
 	mes "5";
 	sleep2 1000;
@@ -50,7 +50,7 @@ prontera,150,184,5	script	Votos por ViP!	626,{
 
 	}
 	next; 
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";                                           
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";                                           
 	mes "Tem certeza? Vai perder muitas vantagens. Ative o item novamente quando quiser ser ViP.";	 
 	close; 
 }

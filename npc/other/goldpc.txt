@@ -37,70 +37,15 @@
 //=========================================================================
 
 prontera,0,0,0	script	Gold Point Manager::GoldPC_NPC	4_F_02,{
-	mes("[Gold Point Manager]");
-	mesf("You currently have ^3355FF%d^000000 GoldPC Points.", #GOLDPC_POINTS);
-	mes("Which kind of product you want?");
-	next();
-	
-	.@menu$ = "Check my current balance";
-	for (.@i = 0; .@i < getarraysize(.gifts); .@i += 2)
-		.@menu$ = sprintf("%s:%d points gift", .@menu$, .gifts[.@i + 1]);
-
-	.@menu = select(.@menu$);
-
-	if (.@menu == 1) {
-		mes("[Gold Point Manager]");
-		mesf("You currently have ^3355FF%d^000000 GoldPC Points.", #GOLDPC_POINTS);
-		close();
-	}
-
-	.@menu -= 2;
-
-	.@itemId = .gifts[.@menu * 2];
-	.@price = .gifts[.@menu * 2 + 1];
-
-	mes("[Gold Point Manager]");
-	mesf("So you want our ^3355FF%d^000000 Points gift?", .@price);
-	next();
-	if (select("Yes", "No") == 2)
-		close();
-
-	if (#GOLDPC_POINTS < .@price) {
-		mes("[Gold Point Manager]");
-		mes("You don't seem to have enough points for this gift.");
-		mes("Please save more points and talk to me again.");
-		close();
-	}
-
-	if (!checkweight(.@itemId, 1)) {
-		mes("[Gold Point Manager]");
-		mes("You are carrying too many items.");
-		mes("Please free up some space and talk to me again.");
-		close();
-	}
-
-	#GOLDPC_POINTS -= .@price;
-	getitem(.@itemId, 1);
-	mes("[Gold Point Manager]");
-	mes("This is your gift.");
-	mes("Thank you for your patronage and I hope you enjoy the gift!");
-	close();
+	callshop("GoldPC_Shop", 1);
+	end;
 
 OnInit:
-	/* @TODO: Update note mentions those 4 items, but we don't have them yet.
-	// Format: <itemId>, <price>
-	setarray(.gifts,
-		"ID22781", 2,
-		"ID22782", 10,
-		"ID22783", 100,
-		"ID22784", 300
-	);
-	*/
-
-	// Format: <itemId>, <price>
-	setarray(.gifts,
-		Red_Potion, 250,
-		Green_Potion, 300
-	);
 	end;
+}
+
+// Hidden shop NPC (not placed on map, called by GoldPC_NPC)
+-	shop	GoldPC_Shop	-1,{
+	Red_Potion:250,
+	Green_Potion:300
 }

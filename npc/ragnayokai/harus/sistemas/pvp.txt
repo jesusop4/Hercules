@@ -11,44 +11,44 @@
 //|	    \:\__\        \::/  /       \::/  /       \:\__\        \:\__\           |
 //|	     \/__/         \/__/         \/__/         \/__/         \/__/           |
 //| ================================================================================ |
-//|   Script Desenvolvido Por Mooka | eAthena | Por Favor, N„o Retire Os CrÈditos.   |
+//|   Script Desenvolvido Por Mooka | eAthena | Por Favor, N√£o Retire Os Cr√©ditos.   |
 //| ================================================================================ |
-//| 		ObservaÁ„o! O MapFlag Est· No Final Do Script !			     |
+//| 		Observa√ß√£o! O MapFlag Est√° No Final Do Script !			     |
 //| ================================================================================ |
-//|[v1.3.0]: Nova FunÁ„o de M˙ltiplas linguagens.			(Mooka)	     |
+//|[v1.3.0]: Nova Fun√ß√£o de M√∫ltiplas linguagens.			(Mooka)	     |
 //| ------									     |
 //| v1.2.9 : Nova Tabela! (PM_Lang)					(Mooka)	     |
-//| v1.2.8 : AlteraÁ„o na funÁ„o !exit.					(Mooka)	     |
-//| v1.2.7 : Adicionado bal„o de Chat no npc.				(Mooka)	     |
-//| v1.2.6 : Nova opÁ„o! Ganhando experiÍncia no PvP!			(Mooka)	     |
+//| v1.2.8 : Altera√ß√£o na fun√ß√£o !exit.					(Mooka)	     |
+//| v1.2.7 : Adicionado bal√£o de Chat no npc.				(Mooka)	     |
+//| v1.2.6 : Nova op√ß√£o! Ganhando experi√™ncia no PvP!			(Mooka)	     |
 //| v1.2.5 : Adicionado !map#list.					(Mooka)	     |
-//| v1.2.4 : Mapflags s„o definidos automaticamente.			(Mooka)	     |
+//| v1.2.4 : Mapflags s√£o definidos automaticamente.			(Mooka)	     |
 //| v1.2.3 : Novo campo na tabela 'pvpm_map'. (noguild)			(Mooka)	     |
-//| v1.2.2 : AlteraÁ„o na funÁ„o "Changeleader".			(Mooka)	     |
-//| v1.2.1 : Implementada opÁ„o para WoE. (Contagem de pontos na WoE)	(Mooka)	     |
+//| v1.2.2 : Altera√ß√£o na fun√ß√£o "Changeleader".			(Mooka)	     |
+//| v1.2.1 : Implementada op√ß√£o para WoE. (Contagem de pontos na WoE)	(Mooka)	     |
 //| v1.2.0 : Novo comando remoto. (!map)				(Mooka)	     |
 //| ------									     |
 //| v1.1.9 : Comandos !pvp\!gvg\!baby mergidos no novo comando !warp. 	(Mooka)	     |
 //| v1.1.8 : Reformulado Sistema das Arenas.				(Mooka)	     |
 //| v1.1.7 : Nova tabela no PvP Master. (pvpm_map)			(Mooka)	     |
-//| v1.1.6 : Ranking n„o mostra mais valores com 0.			(Mooka)	     |
+//| v1.1.6 : Ranking n√£o mostra mais valores com 0.			(Mooka)	     |
 //| v1.1.5 : Novos comandos remotos. (!ban;!truncate)			(Mooka)	     |
-//| v1.1.4 : Adicionado opÁ„o de Ranking Ratio aos Menus e CMD Remotos.	(Mooka)	     |
+//| v1.1.4 : Adicionado op√ß√£o de Ranking Ratio aos Menus e CMD Remotos.	(Mooka)	     |
 //| v1.1.3 : Otimizado IF's dos comandos remotos.			(Mooka)	     |
-//| v1.1.2 : Desenvolvida nova opÁ„o de Ranking. (Ratio)		(Mooka)	     |
-//| v1.1.1 : AlteraÁ„o na tabela pvpm_data. (Adicionado campo 'ratio')	(Mooka)	     |
+//| v1.1.2 : Desenvolvida nova op√ß√£o de Ranking. (Ratio)		(Mooka)	     |
+//| v1.1.1 : Altera√ß√£o na tabela pvpm_data. (Adicionado campo 'ratio')	(Mooka)	     |
 //| v1.1.0 : Novo comando remoto. (!help)				(Mooka)	     |
 //| ------									     |
-//| v1.0.9 : Adicionado duplicaÁıes do npc em todas as cidades.		(Mooka)	     |
-//| v1.0.8 : Adicionada opÁ„o para retirar buffs.			(Mooka)	     |
-//| v1.0.7 : CorreÁ„o na funÁ„o Ranking2.				(Mooka)	     |
-//| v1.0.6 : CorreÁ„o no comando !exit.					(Mooka)	     |
-//| v1.0.5 : CorreÁ„o no bug de enviar o som "end" causando erro.	(Mooka)	     |
+//| v1.0.9 : Adicionado duplica√ß√µes do npc em todas as cidades.		(Mooka)	     |
+//| v1.0.8 : Adicionada op√ß√£o para retirar buffs.			(Mooka)	     |
+//| v1.0.7 : Corre√ß√£o na fun√ß√£o Ranking2.				(Mooka)	     |
+//| v1.0.6 : Corre√ß√£o no comando !exit.					(Mooka)	     |
+//| v1.0.5 : Corre√ß√£o no bug de enviar o som "end" causando erro.	(Mooka)	     |
 //| v1.0.4 : Implementado Sons do Unreal Tournament.			(Mooka)	     |
 //| v1.0.3 : Adicionado novo tipo de contagem de Pontos com announce.	(Mooka)	     |
-//| v1.0.2 : Adicionada opÁ„o para servidores PK.			(Mooka)	     |
+//| v1.0.2 : Adicionada op√ß√£o para servidores PK.			(Mooka)	     |
 //| v1.0.1 : Adicionado PvP Baby.					(Mooka)	     |
-//| v1.0.0 : Desenvolvida Vers„o.					(Mooka)	     |
+//| v1.0.0 : Desenvolvida Vers√£o.					(Mooka)	     |
 //| ================================================================================ |
 //| Table update (v1.3.0+):							     |
 //| DROP TABLE IF EXISTS `pvpm_lang`;						     |
@@ -100,64 +100,64 @@
 -	script	init_PM	-1,{							  // |
 //|                        						  	     |
 //| -------------------------------------------------------------------------------- |
-//| |!Aviso importante sobre as configuraÁıes!					   | |
-//| |O Sistema de Arena ter· problemas caso passe de 10 mapas na lista.		   | |
-//| |… possÌvel alterar este limite editando o script, caso queira fale comigo.    | |
+//| |!Aviso importante sobre as configura√ß√µes!					   | |
+//| |O Sistema de Arena ter√° problemas caso passe de 10 mapas na lista.		   | |
+//| |√â poss√≠vel alterar este limite editando o script, caso queira fale comigo.    | |
 //| -------------------------------------------------------------------------------- |
 //|                        						  	     |
 OnInit:                        						  	  // |
-//| ConfiguraÁıes:                                                        	     |
+//| Configura√ß√µes:                                                        	     |
 //|                        						  	     |
 //|=> Nome do npc na janela.							     |
 set $@pvpm_name$,"[^010849===^000000 ^016B14PvP Master^000000 ^010849===^000000]";				    	  // |
 //| 										     |
 //|=> Deseja usar o Ranking Ratio como principal? [ 1 = Sim ]			     |
-//|---> Nota: Ranking Ratio: PontuaÁ„o = Kills - Mortes				     |
+//|---> Nota: Ranking Ratio: Pontua√ß√£o = Kills - Mortes				     |
 set $@mainRanking,1;								  // |
 //| 										     |
-//|=> AtÈ onde o Ranking ir· mostrar. [ M·ximo 127 ]				     |
+//|=> At√© onde o Ranking ir√° mostrar. [ M√°ximo 127 ]				     |
 set $@showsRankUntil,25;							  // |
 //| 										     |
-//|=> Modo PK. Est· configurado para alterar automaticamente, mude se necess·rio.    |
+//|=> Modo PK. Est√° configurado para alterar automaticamente, mude se necess√°rio.    |
 set $@PK_Mode,getbattleflag("pk_mode");						  // |
 //| 										     |
 //|=> Deseja que ao player entrar no pvp perca os buff? [ 1 = Sim]		     |
 set $@breakBuffs,0;								  // |
 //| 										     |
-//|=> Quando o player matar o outro, deve ganhar experiÍncia?			     |
+//|=> Quando o player matar o outro, deve ganhar experi√™ncia?			     |
 //|---> Nota 1:	Servidores de rates alta, configure o "quest_exp_rate". (exp.conf)   |
 //|---> Nota 2:	$@lostEXP: Quantidade de EXP perdida ao morrer. ( 0 = Desativado )   |
-//|---> Nota 3:	ConfiguraÁ„o do comando:					     |
+//|---> Nota 3:	Configura√ß√£o do comando:					     |
 //|-->  0 : Desativado.								     |
-//|-->  1 : Ativado usando fÛrmula de EXP. ($@getEXP*KilledLVL/KillerLVL)	     |
-//|-->  2 : Ativado, o player sempre ir· ganhar a quantia definida no $@getEXP.      |
+//|-->  1 : Ativado usando f√≥rmula de EXP. ($@getEXP*KilledLVL/KillerLVL)	     |
+//|-->  2 : Ativado, o player sempre ir√° ganhar a quantia definida no $@getEXP.      |
 set $@getEXPoption,0;								  // |
 set $@getEXP,115; // 0,1% no level 50.						     |
 set $@lostEXP,0;								  // |
 //|										     |
 //|=> Deseja ativar a contagem de pontos nos mapas da WoE?			     |
-//|---> Nota 1: N„o s„o enviandos sons/broadcast nos mapas da WoE.		     |
-//|---> Nota 2: OpÁıes de contagem.						     |
+//|---> Nota 1: N√£o s√£o enviandos sons/broadcast nos mapas da WoE.		     |
+//|---> Nota 2: Op√ß√µes de contagem.						     |
 //|--> 0: Desativado.								     |
 //|--> 1: Ativar contagem somente do PvP.					     |
 //|--> 2: Ativar contagem somente do GvG.					     |
 //|--> 3: Ativar ambos.								     |
 set $@CountPointsInWoE,0;							  // |
 //| 										     |
-//|=> ConfiguraÁ„o do Som e announce!						     |
+//|=> Configura√ß√£o do Som e announce!						     |
 //|---> Nota 1: Os sons devem ser colocados na pasta data/wav em formato .wav	     |
-//|---> Nota 2: Se desativar o som do UT, desativar· o broadcast dele tambÈm.(2)     |
-//|--> 0 : Desativar Todas OpÁıes.						     |
+//|---> Nota 2: Se desativar o som do UT, desativar√° o broadcast dele tamb√©m.(2)     |
+//|--> 0 : Desativar Todas Op√ß√µes.						     |
 //|--> 1 : Ativar somente broadcast Global.					     |
 //|--> 2 : Ativar somente sons/broadcast do Unreal Tournament.			     |
 //|--> 3 : Ativar Ambos.							     |
 set $@sound,3;									  // |
 //| 										     |
 //|=> Lista com o nomes dos Sons Unreal Tournament.				     |
-//|---> Nota 1: $@SoundList$[Pontos em que ir· tocar o som(Max. 127)],"Nome do Som"; |
-//|---> Nota 2: A partir do ultimo, ser· somado 10 e repetir· o som, o set	     |
-//|---> 	com "end" indica que o ultimo som ser· repetido dali em diante.	     |
-//|---> Nota 3: O nome do arquivo È o mesmo que ser· exibido no announce.	     |
+//|---> Nota 1: $@SoundList$[Pontos em que ir√° tocar o som(Max. 127)],"Nome do Som"; |
+//|---> Nota 2: A partir do ultimo, ser√° somado 10 e repetir√° o som, o set	     |
+//|---> 	com "end" indica que o ultimo som ser√° repetido dali em diante.	     |
+//|---> Nota 3: O nome do arquivo √© o mesmo que ser√° exibido no announce.	     |
 set $@SoundList$[1],"First Blood";						  // |
 set $@SoundList$[2],"Double Kill";						  // |
 set $@SoundList$[3],"Triple Kill";						  // |
@@ -179,12 +179,12 @@ query_sql("select name from pvpm_data where leader=1 and type=2 limit 1",$@Guild
 	query_sql("select lang from pvpm_lang where lang=0 and lang=1",.@checkDefaultLang);
 	if(!.@checkDefaultLang && .@checkDefaultLang[1])
 	{
-	debugmes "[PvP Master Ultimate] NO DEFAULT LANGUAGE(LANG0)! LANG1 WAS SET AS DEFAULT!";
+	consolemes 0, "[PvP Master Ultimate] NO DEFAULT LANGUAGE(LANG0)! LANG1 WAS SET AS DEFAULT!";
 	query_sql("update pvpm_lang set lang=lang-1");
 	}
 
 	query_sql("select count(lang) from pvpm_lang where id=0",.@c);
-	if(!.@c) debugmes "[PvP Master Ultimate] NO LANGUAGE DATA!";
+	if(!.@c) consolemes 0, "[PvP Master Ultimate] NO LANGUAGE DATA!";
 	for(set .@i,0;.@i<.@c;set .@i,.@i+1)
 	{
 	deletearray .@str$,82;
@@ -202,17 +202,17 @@ OnReloadListMap:
 	for(set .@j,0;.@j<=(getarraysize($@mapPM$)-1);set .@j,.@j+1)
 	{
 	set $@menu$[.@j],"^000000- Arena "+(.@j+1)+" "+$@TypeArena$[$@MapTypePM[.@j]];
-	setmapflag $@mapPM$[.@j],mf_noreturn;
-	setmapflag $@mapPM$[.@j],mf_nosave;
-	setmapflag $@mapPM$[.@j],mf_noteleport;
-	setmapflag $@mapPM$[.@j],mf_nowarpto;
-	setmapflag $@mapPM$[.@j],mf_nowarp;
-	setmapflag $@mapPM$[.@j],mf_nomemo;
-	setmapflag $@mapPM$[.@j],mf_nopenalty;
-	setmapflag $@mapPM$[.@j],mf_nobranch;
-	if(!$@MapTypePM[.@j] && !$@mfPM[.@j]) setmapflag $@mapPM$[.@j],mf_pvp; else
-	if(!$@MapTypePM[.@j]) setmapflag $@mapPM$[.@j],mf_pvp_noguild;
-	if($@MapTypePM[.@j]==2) setmapflag $@mapPM$[.@j],mf_gvg;
+	setmapflag $@mapPM$[.@j],MF_NORETURN;
+	setmapflag $@mapPM$[.@j],MF_NOSAVE;
+	setmapflag $@mapPM$[.@j],MF_NOTELEPORT;
+	setmapflag $@mapPM$[.@j],MF_NOWARPTO;
+	setmapflag $@mapPM$[.@j],MF_NOWARP;
+	setmapflag $@mapPM$[.@j],MF_NOMEMO;
+	setmapflag $@mapPM$[.@j],MF_NOPENALTY;
+	setmapflag $@mapPM$[.@j],MF_NOBRANCH;
+	if(!$@MapTypePM[.@j] && !$@mfPM[.@j]) setmapflag $@mapPM$[.@j],MF_PVP; else
+	if(!$@MapTypePM[.@j]) setmapflag $@mapPM$[.@j],MF_PVP_NOGUILD;
+	if($@MapTypePM[.@j]==2) setmapflag $@mapPM$[.@j],MF_GVG;
 	}
 }
 
@@ -292,7 +292,7 @@ OnReloadListMap:
 OnInit:
 	waitingroom "",0;
 OnTimer5000:
-	setarray .@RoomDisplay$,"PvP "+$@PM_Lang0$[4]+" ["+$@Player_Lider$+"]","GvG "+$@PM_Lang0$[4]+" ["+$@Guild_Lider$+"]","H· "+getmapusers("guild_vs3")+" jogadores na Arena!";
+	setarray .@RoomDisplay$,"PvP "+$@PM_Lang0$[4]+" ["+$@Player_Lider$+"]","GvG "+$@PM_Lang0$[4]+" ["+$@Guild_Lider$+"]","H√° "+getmapusers("guild_vs3")+" jogadores na Arena!";
 	delwaitingroom;
 	waitingroom .@RoomDisplay$[rand(0,2)],0;
 	initnpctimer;
@@ -477,7 +477,7 @@ OnWhisperGlobal:
 			dispbottom callfunc("getMesPM",39);
 			dispbottom callfunc("getMesPM",42);
 			dispbottom "- !ranking#pvp;!ranking#pvp#die;!ranking#gvg;!ranking#gvg#die;!ranking#ratio";
-			dispbottom "- !ranking2#pvp;!ranking2#pvp#die;!ranking2#gvg;!ranking2#gvg#die;!ranking2#ratio; (Mostra somente sua posiÁ„o)";
+			dispbottom "- !ranking2#pvp;!ranking2#pvp#die;!ranking2#gvg;!ranking2#gvg#die;!ranking2#ratio; (Mostra somente sua posi√ß√£o)";
 			dispbottom callfunc("getMesPM",43);;
 			end;
 			}
@@ -569,7 +569,7 @@ function	script	pvpm_func	{
 			for(set @i,0;@i != $@showsRankUntil;set @i,@i+1)
 			{
 			if(@name$[@i]=="") return;
-			dispbottom (@i+1)+"∫ | "+@name$[@i]+" | "+@points[@i];
+			dispbottom (@i+1)+"¬∫ | "+@name$[@i]+" | "+@points[@i];
 			} return;
 		}
 
@@ -582,7 +582,7 @@ function	script	pvpm_func	{
 			{
 				if (@id[@i] == getcharid(getarg(2)))
 				{
-				dispbottom "- "+strcharinfo(getarg(2))+" | "+(@i+1)+"∫ | "+@points[@i];
+				dispbottom "- "+strcharinfo(getarg(2))+" | "+(@i+1)+"¬∫ | "+@points[@i];
 				return;
 				}
 			}
@@ -790,7 +790,7 @@ prontera,163,184,3	script	Rankings#1	857,{
 Begin:
 query_sql "SELECT  `char`.`name` ,  `char_bg`.`score` FROM  `char` LEFT JOIN  `char_bg` ON  `char`.`char_id` =  `char_bg`.`char_id` ORDER BY  `char_bg`.`score` DESC LIMIT 1",.@bglider$,.@pontusbg;
 query_sql("SELECT  `char`.`name` ,  `global_reg_value`.`value` FROM  `char` LEFT JOIN  `global_reg_value` ON  `char`.`char_id` =  `global_reg_value`.`char_id` WHERE  `global_reg_value`.`str` =  'MVPRank'ORDER BY  `global_reg_value`.`value` DESC LIMIT 0, 1",.@mvplider$,.@pontus);
-mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 mes "^016B14-> PvP Lider: ^250075"+$@Player_Lider$+"^008B8B .";
 mes "^016B14-> GvG Lider: ^250075"+$@Guild_Lider$+"^000000 .";
 mes "^016B14-> BG Lider: ^250075"+.@bglider$+"^000000 .";
@@ -803,7 +803,7 @@ switch(select("- Ranking PvP/GvG:- Ranking BG/KvM:- Ranking MvP:- Sair"))
 
 case 1: 
 
-switch(select("- PvP:- PvP ( Mortes ):- GvG:- GvG ( Mortes ):- Minha ColocaÁ„o"))
+switch(select("- PvP:- PvP ( Mortes ):- GvG:- GvG ( Mortes ):- Minha Coloca√ß√£o"))
 
 {
 
@@ -825,7 +825,7 @@ callfunc "pvpm_func","Ranking1","dies",2,"GvG ( Mortes )"; break;
 
 case 5:
 
-switch(select("- Minha ColocaÁ„o Do PvP","- Minha ColocaÁ„o Do PvP ( Mortes )","- Minha ColocaÁ„o Do GvG","- Minha ColocaÁ„o Do GvG ( Mortes )","- Inicio"))
+switch(select("- Minha Coloca√ß√£o Do PvP","- Minha Coloca√ß√£o Do PvP ( Mortes )","- Minha Coloca√ß√£o Do GvG","- Minha Coloca√ß√£o Do GvG ( Mortes )","- Inicio"))
 
 {
 
@@ -861,7 +861,7 @@ case 2:
 	query_sql "SELECT  `char`.`name` ,  `char_bg`.`score` FROM  `char` LEFT JOIN  `char_bg` ON  `char`.`char_id` =  `char_bg`.`char_id` ORDER BY  `char_bg`.`score` DESC LIMIT 20",.@bglider$,.@pontusbg;
 	mes "- Ranking BG Solo - ~Nome / Elo~";
 	for (set @c, 0; @c < 20; set @c, @c + 1) {
-	mes "^FF0000"+(@c+1)+"∫^000000 ^01116B"+.@bglider$[@c]+"^000000 [^028F20"+.@pontusbg[@c]+"^000000]";
+	mes "^FF0000"+(@c+1)+"¬∫^000000 ^01116B"+.@bglider$[@c]+"^000000 [^028F20"+.@pontusbg[@c]+"^000000]";
 	}
 	mes "~Fim da lista~";
 	close;
@@ -872,7 +872,7 @@ case 3:
 	mes "- Ranking MvP - ~Nome / Abates~";
 	query_sql("SELECT  `char`.`name` ,  `global_reg_value`.`value` FROM  `char` LEFT JOIN  `global_reg_value` ON  `char`.`char_id` =  `global_reg_value`.`char_id` WHERE  `global_reg_value`.`str` =  'MVPRank'ORDER BY  `global_reg_value`.`value` DESC LIMIT 0, 20",.@mvplider$,.@pontosmvp);
 	for (set @c, 0; @c < 20; set @c, @c + 1) {
-	mes "^FF0000"+(@c+1)+"∫^000000 ^01116B"+.@mvplider$[@c]+"^000000 [^028F20"+.@pontosmvp[@c]+"^000000]";
+	mes "^FF0000"+(@c+1)+"¬∫^000000 ^01116B"+.@mvplider$[@c]+"^000000 [^028F20"+.@pontosmvp[@c]+"^000000]";
 	}
 	mes "~Fim da lista~";
 	close;
@@ -890,5 +890,5 @@ function	script	getMesPM	{ return getd("$@PM_Lang"+PM_Lang+"$["+getarg(0)+"]"); 
 prontera,161,184,4	duplicate(PM_source)	PvP Master#PRT	635
 //================== WOE =====================
 
-//Necess·rio para ativar o sistema de contagem dos pontos na woe.
+//Necess√°rio para ativar o sistema de contagem dos pontos na woe.
 //caso queira desativar algum mapa, retire-o daqui.

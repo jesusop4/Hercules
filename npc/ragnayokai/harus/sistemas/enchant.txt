@@ -1,29 +1,29 @@
 prontera,171,202,4	duplicate(Suhnbi#cash)	Refinador Enriquecido#1	813
 
 //Misterpeso
-prontera,177,202,4	duplicate(Mister Peso#GymPass)	Mister Peso#1p	899
+prontera,177,202,4	duplicate(Ripped Cabus#GymPass)	Mister Peso#1p	899
 
 prontera,174,202,4	script	Encantador	84,{
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 	mes "Eu sou um engenheiro que se especializou em Encantamento Armaduras.";
 	next;
-	mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-	mes "Encantar pode parecer simples, mas é muito mais complicado do que parece.";
-	mes "Se está interessado em meu serviço, conte-me.";
+	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "Encantar pode parecer simples, mas Ã© muito mais complicado do que parece.";
+	mes "Se estÃ¡ interessado em meu serviÃ§o, conte-me.";
 	next;
-	switch( select( "^4169E1Encantar Arma^000000:Encantar Armadura:^0000FFEncantar Chapéu^000000:^FFA500Encantar Manto/Sapato^000000:^FF0000Encantar Escudo^000000:^4169EEEncantar Acessório^000000:Informações:Cancelar" ) )
+	switch( select( "^4169E1Encantar Arma^000000:Encantar Armadura:^0000FFEncantar ChapÃ©u^000000:^FFA500Encantar Manto/Sapato^000000:^FF0000Encantar Escudo^000000:^4169EEEncantar AcessÃ³rio^000000:InformaÃ§Ãµes:Cancelar" ) )
 	{
 		case 1:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "^FFA500Para encantar sua Arma^000000:";
 			mes "a) Precisa de 50 Emblemas de Bravura, Valor e Guerra..";
 			mes "b) 500.000 Zeny";
-			mes "c) Tipos de Encantamento são Elemental ou Racial";
-			mes "d) ^FF0000Arma irá perder refinamentos e cartas^000000.";
+			mes "c) Tipos de Encantamento sÃ£o Elemental ou Racial";
+			mes "d) ^FF0000Arma irÃ¡ perder refinamentos e cartas^000000.";
 			mes "e) Arma deve ter 3 slots ou menos";
 			next;
 
-			setarray .@Position$[3], "Mão Esquerda","Mão Direita";
+			setarray .@Position$[3], "MÃ£o Esquerda","MÃ£o Direita";
 			set .@Menu$,"";
 			for( set .@i, 3; .@i <= 4; set .@i, .@i + 1 )
 			{
@@ -35,82 +35,82 @@ prontera,174,202,4	script	Encantador	84,{
 			set .@Part,select(.@Menu$ + "Cancelar") + 2;
 			if( .@Part >= 5 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu entendo meu chapa.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro ~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro ~";
 				close;
 			}
 			if( !getequipisequiped(.@Part) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Você não está usando nada lá...";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "VocÃª nÃ£o estÃ¡ usando nada lÃ¡...";
 				close;
 			}
 			if( getequipweaponlv(.@Part) == 0 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Este encantamento funciona somente em Armas,não Escudos.";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Este encantamento funciona somente em Armas,nÃ£o Escudos.";
 				close;
 			}
 			set .@Slot0, getequipcardid(.@Part,0);
 			if( .@Slot0 == 255 || .@Slot0 == 254 || .@Slot0 < 0 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Sinto muito, eu não posso trabalhar em artigos assinados.";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Sinto muito, eu nÃ£o posso trabalhar em artigos assinados.";
 				close;
 			}
 			set .@Item, getequipid(.@Part);
 			if( getitemslots(.@Item) >= 4 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Sinto muito, eu não posso trabalhar em armas de 4 slots.";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Sinto muito, eu nÃ£o posso trabalhar em armas de 4 slots.";
 				close;
 			}
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Você quer encantar a sua " + getitemname(.@Item) + "?";
-			mes "O custo deste trabalho é ^0000FF50 Bravura, 50 Valor e 50 Guerra Emblemas ^000000.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "VocÃª quer encantar a sua " + getitemname(.@Item) + "?";
+			mes "O custo deste trabalho Ã© ^0000FF50 Bravura, 50 Valor e 50 Guerra Emblemas ^000000.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Se você tem os emblemas, podemos ir em frente com a Tentativa de encantar";
-			mes "Mas antes disso, devo avisá-lo do risco.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Se vocÃª tem os emblemas, podemos ir em frente com a Tentativa de encantar";
+			mes "Mas antes disso, devo avisÃ¡-lo do risco.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Uma vez que a arma recebe o encantamento ^FF0000ela irá perder refinamento e cartas^000000.";
-			mes "Você ainda quer encantar?";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Uma vez que a arma recebe o encantamento ^FF0000ela irÃ¡ perder refinamento e cartas^000000.";
+			mes "VocÃª ainda quer encantar?";
 			next;
 			if( select("^FF0000Enchant it Elemental^000000:^0000FFEnchant it Racial^000000:^FFA500Let me choose (Poder de Escolha)^000000:Cancelar") == 4 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 
 			set .@Type, @menu; // 1 : Elemental | 2 : Racial
 			if( countitem(7828) < 50 || countitem(7829) < 50 || countitem(7773) < 50 || Zeny < 500000 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Eu gostaria de ir em frente com esta Tentativa de encantamento, mas está faltando algumas coisas.";
-				mes "Tem certeza de que você tem os emblemas?";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Eu gostaria de ir em frente com esta Tentativa de encantamento, mas estÃ¡ faltando algumas coisas.";
+				mes "Tem certeza de que vocÃª tem os emblemas?";
 				close;
 			}
 
 			set .@Slot0, getequipcardid(.@Part,0);
 			if( !getequipisequiped(.@Part) || !getequipweaponlv(.@Part) || .@Slot0 == 255 || .@Slot0 == 254 || .@Slot0 < 0 || .@Item != getequipid(.@Part) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Este não é o equipamento que estávamos falando...";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Este nÃ£o Ã© o equipamento que estÃ¡vamos falando...";
 				mes "Vaza playboy !!";
 				close;
 			}
 
 			if( .@Type == 3 && countitem(677) < 1 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Oh .. ok ... e onde está a Poder de Escolha?";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Oh .. ok ... e onde estÃ¡ a Poder de Escolha?";
 				close;
 			}
 
@@ -137,34 +137,34 @@ prontera,174,202,4	script	Encantador	84,{
 			delitem 7773,50;
 			set Zeny, Zeny - 500000;
 
-			successenchant .@Part,.@Enchant;
+successenchant .@Part, .@Enchant;
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Ótimo, sua arma recebeu ^0000FF" + getitemname(.@Enchant) + "^000000 encantamento.";
-			mes "Parece muito bem feito. Parabéns!";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Ã“timo, sua arma recebeu ^0000FF" + getitemname(.@Enchant) + "^000000 encantamento.";
+			mes "Parece muito bem feito. ParabÃ©ns!";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "Te verei novamente, amigo!";
 			close;
 		case 2:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Você quer encantar sua armadura?";
-			mes "Lembre-se este item perderá encantamentos prévios.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "VocÃª quer encantar sua armadura?";
+			mes "Lembre-se este item perderÃ¡ encantamentos prÃ©vios.";
 			next;
 			if ( select("Tentar encantar","Cancelar") == 2 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 			
 			if( !getequipisequiped(2) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Você não está usando nenhum tipo de armadura...";
-				mes "Eu não posso encantar seu corpo!";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "VocÃª nÃ£o estÃ¡ usando nenhum tipo de armadura...";
+				mes "Eu nÃ£o posso encantar seu corpo!";
 				close;
 			}
 			
@@ -180,57 +180,57 @@ prontera,174,202,4	script	Encantador	84,{
 
 			if( .@i >= getarraysize(.@Armor) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Sinto muito, mas eu não posso trabalhar nesta armadura.";
-				mes "Se precisar de informações, é só pedir-me...";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Sinto muito, mas eu nÃ£o posso trabalhar nesta armadura.";
+				mes "Se precisar de informaÃ§Ãµes, Ã© sÃ³ pedir-me...";
 				close;
 			}
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Você quer encantar a sua " + getitemname(.@Item) + "?";
-			mes "O custo de meu trabalho é 400.000 zeny.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "VocÃª quer encantar a sua " + getitemname(.@Item) + "?";
+			mes "O custo de meu trabalho Ã© 400.000 zeny.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Se você tem a minha taxa de serviço zeny e a armadura, então podemos ir em frente com a Tentativa de encantar.";
-			mes "Mas antes disso, devo avisá-lo do risco.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Se vocÃª tem a minha taxa de serviÃ§o zeny e a armadura, entÃ£o podemos ir em frente com a Tentativa de encantar.";
+			mes "Mas antes disso, devo avisÃ¡-lo do risco.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "^FF0000Sua armadura vai perder qualquer Refinamento e Cartas^000000.";
-			mes "Além disso, se a tentativa de Encantar falhar, o ^FF0000Armadura^000000 vai ser destruído^000000.";
-			mes "Você ainda quer tentar Encantar?";
+			mes "AlÃ©m disso, se a tentativa de Encantar falhar, o ^FF0000Armadura^000000 vai ser destruÃ­do^000000.";
+			mes "VocÃª ainda quer tentar Encantar?";
 			next;
 			if ( select("Tentar encantar","Cancelar") == 2 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 
 			if( getequipisequiped(2) == 0 || getequipid(2) != .@Item || Zeny < 400000 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Eu gostaria de ir em frente com esta Tentativa de encantar, mas está faltando algumas coisas.";
-				mes "Tem certeza de que você tem o equipamento e o zeny?";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Eu gostaria de ir em frente com esta Tentativa de encantar, mas estÃ¡ faltando algumas coisas.";
+				mes "Tem certeza de que vocÃª tem o equipamento e o zeny?";
 				close;
 			}
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Certo, então, deixa que o trabalho vai começar!";
-			mes "É melhor você rezar para um resultado bem sucedido.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Certo, entÃ£o, deixa que o trabalho vai comeÃ§ar!";
+			mes "Ã‰ melhor vocÃª rezar para um resultado bem sucedido.";
 			mes "Deixe-me tirar sua armadura ...";
 			next;
 			set .@Enchant, 0;
 
 			if( countitem(677) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Wooo !! Você já possui uma Poder de Escolha.";
-				mes "Olha, eu posso deixar você escolher um +3 Encantamento seguro de uma de minhas lojas de armaduras.";
-				mes "Se você me der sua armadura atual e a moeda.";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Wooo !! VocÃª jÃ¡ possui uma Poder de Escolha.";
+				mes "Olha, eu posso deixar vocÃª escolher um +3 Encantamento seguro de uma de minhas lojas de armaduras.";
+				mes "Se vocÃª me der sua armadura atual e a moeda.";
 				next;
-				if( select("Ok ... deixe-me escolher: Não, obrigado, apenas continue") == 1 )
+				if( select("Ok ... deixe-me escolher: NÃ£o, obrigado, apenas continue") == 1 )
 				{
 					set .@Menu$,"";
 					for( set .@i, 0; .@i < 6; set .@i, .@i + 1 )
@@ -250,14 +250,14 @@ prontera,174,202,4	script	Encantador	84,{
 				{ // 14% Break chance
 					failedenchant 2;
 
-					mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+					mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 					mes "Wah! ... Eu sinto muito, ele falhou.";
 					mes "No entanto, eu sou completamente inocente.";
-					mes "Esta é a sua sorte, e ela está destinado por Deus, está bem?";
-					mes "Não fique tão decepcionado, e tente na próxima vez.";
+					mes "Esta Ã© a sua sorte, e ela estÃ¡ destinado por Deus, estÃ¡ bem?";
+					mes "NÃ£o fique tÃ£o decepcionado, e tente na prÃ³xima vez.";
 					next;
-					mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-					mes "Desejo-lhe boa sorte na próxima vez!";
+					mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+					mes "Desejo-lhe boa sorte na prÃ³xima vez!";
 					close;
 				}
 				else if( .@Rate < 32 )
@@ -270,36 +270,36 @@ prontera,174,202,4	script	Encantador	84,{
 
 			successenchant 2,.@Enchant;
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Ótimo, parece que foi bem sucedido.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Ã“timo, parece que foi bem sucedido.";
 			mes "Sua armadura recebeu ^0000FF" + getitemname(.@Enchant) + "^000000 encantamento.";
-			mes "Parece muito bem feito. Parabéns!";
+			mes "Parece muito bem feito. ParabÃ©ns!";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "Te verei novamente, amigo!";
 			close;
 		case 3:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "^FFA500Para encantar seu chapéu^000000:";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "^FFA500Para encantar seu chapÃ©u^000000:";
 			mes "a) Preciso de 100 Emblemas de Bravura, Valor e Guerra.";
 			mes "b) 500.000 Zeny";
-			mes "c) Se ele já está encantado, que vai exigir ^0000FF1 Terra Bronze Coin ^000000.";
-			mes "d) Stats é +1 e aleatória.";
+			mes "c) Se ele jÃ¡ estÃ¡ encantado, que vai exigir ^0000FF1 Terra Bronze Coin ^000000.";
+			mes "d) Stats Ã© +1 e aleatÃ³ria.";
 			mes "e) ^FF0000Elmo vai perder refinamentos e cartas^000000.";
 			next;
 			if ( select("Tentar encantar","Cancelar") == 2 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 			if( !getequipisequiped(1) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Você não está usando capacete...";
-				mes "Eu não posso encantar a sua cabeça!";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "VocÃª nÃ£o estÃ¡ usando capacete...";
+				mes "Eu nÃ£o posso encantar a sua cabeÃ§a!";
 				close;
 			}
 			
@@ -309,46 +309,46 @@ prontera,174,202,4	script	Encantador	84,{
 			
 			if( .@Slot0 == 255 || .@Slot0 == 254 || .@Slot0 < 0 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Sinto muito, eu não posso trabalhar em artigos assinados.";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Sinto muito, eu nÃ£o posso trabalhar em artigos assinados.";
 				close;
 			}
 			
 			if( .@Slot3 != 0 )
 			{
 				set .@NeedCP, 1;
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Este capacete já está encantado. Você vai precisar também de me pagar 1 ^0000FFTerra's Bronze Coin^000000.";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Este capacete jÃ¡ estÃ¡ encantado. VocÃª vai precisar tambÃ©m de me pagar 1 ^0000FFTerra's Bronze Coin^000000.";
 				next;
 			}
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Você quer encantar a sua " + getitemname(getequipid(1)) + "?";
-			mes "O custo deste trabalho é ^0000FF100 Bravura, 100 Valor e 100 Guerra Emblemas ^000000.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "VocÃª quer encantar a sua " + getitemname(getequipid(1)) + "?";
+			mes "O custo deste trabalho Ã© ^0000FF100 Bravura, 100 Valor e 100 Guerra Emblemas ^000000.";
 			if( .@NeedCP ) mes "E 1 ^0000FFTerra's Bronze Coin^000000";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Se você tem os emblemas, podemos ir em frente com a Tentativa de encantar.";
-			mes "Mas antes disso, eu devo avisá-lo do risco";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Se vocÃª tem os emblemas, podemos ir em frente com a Tentativa de encantar.";
+			mes "Mas antes disso, eu devo avisÃ¡-lo do risco";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Uma vez que o capacete recebe o encantamento, ele não pode mais ser encantado e ^FF0000ele vai perder refinamentos e cartas ^000000.";
-			mes "Você ainda quer Encantar?";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Uma vez que o capacete recebe o encantamento, ele nÃ£o pode mais ser encantado e ^FF0000ele vai perder refinamentos e cartas ^000000.";
+			mes "VocÃª ainda quer Encantar?";
 			next;
 			if ( select("Tentar encantar","Cancelar") == 2 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 
 			if( countitem(7828) < 100 || countitem(7829) < 100 || countitem(7773) < 100 || Zeny < 500000 || (.@NeedCP && countitem(8905) < 1) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Eu gostaria de ir em frente com esta Tentativa de encantar, mas está faltando algumas coisas.";
-				mes "Tem certeza de que você tem os emblemas e Zeny?";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Eu gostaria de ir em frente com esta Tentativa de encantar, mas estÃ¡ faltando algumas coisas.";
+				mes "Tem certeza de que vocÃª tem os emblemas e Zeny?";
 				if( .@NeedCP ) mes "E lembre-se, de uma Terra Bronze Coin.";
 				close;
 			}
@@ -358,8 +358,8 @@ prontera,174,202,4	script	Encantador	84,{
 
 			if( !getequipisequiped(1) || .@Slot0 == 255 || .@Slot0 == 254 || .@Slot0 < 0 || (.@NeedCP == 0 && .@Slot3 != 0) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Este não é o elmo que nós estávamos falando...";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Este nÃ£o Ã© o elmo que nÃ³s estÃ¡vamos falando...";
 				mes "Vaza playboy!!";
 				close;
 			}
@@ -368,12 +368,12 @@ prontera,174,202,4	script	Encantador	84,{
 
 			if( countitem(677) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Wooo !! Você já possui uma Poder de Escolha.";
-				mes "Olha, eu posso deixar você escolher um +1 Encantamento seguro de um dos meus elmos da loja.";
-				mes "Se você me der o seu elmo atual e a moeda.";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Wooo !! VocÃª jÃ¡ possui uma Poder de Escolha.";
+				mes "Olha, eu posso deixar vocÃª escolher um +1 Encantamento seguro de um dos meus elmos da loja.";
+				mes "Se vocÃª me der o seu elmo atual e a moeda.";
 				next;
-				if( select("Ok ... deixe-me escolher: Não, obrigado, apenas continue") == 1 )
+				if( select("Ok ... deixe-me escolher: NÃ£o, obrigado, apenas continue") == 1 )
 				{
 					set .@Menu$,"";
 					for( set .@i, 0; .@i < 6; set .@i, .@i + 1 )
@@ -392,90 +392,90 @@ prontera,174,202,4	script	Encantador	84,{
 			if( .@NeedCP ) delitem 8905,1;
 			successenchant 1,.@Enchant;
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Ótimo, seu elmo recebeu ^0000FF" + getitemname(.@Enchant) + "^000000 encantamento.";
-			mes "Parece muito bem feito. Parabéns!";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Ã“timo, seu elmo recebeu ^0000FF" + getitemname(.@Enchant) + "^000000 encantamento.";
+			mes "Parece muito bem feito. ParabÃ©ns!";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "Te vejo novamente, Amigo!";
 			close;
 		case 4:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "^FFA500Para encantar Manto ou Calçado.^000000:";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "^FFA500Para encantar Manto ou CalÃ§ado.^000000:";
 			mes "a) 30 Emblemas Bravura, Valor e Guerra.";
 			mes "b) 200.000 Zeny";
-			mes "c) Tipos de Encantamento são bônus de HP ou SP";
+			mes "c) Tipos de Encantamento sÃ£o bÃ´nus de HP ou SP";
 			mes "d) ^FF0000Equipamento vai perder refinamentos e cartas^000000.";
 			next;
 			if ( select("Tentar encantar meu Manto:Tentar encantar meu Sapato:Cancelar") == 3 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 			
 			set .@Equip, 4 + @menu; // Selected option
 			if( !getequipisequiped(.@Equip) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Você não está usando nada lá...";
-				mes "Eu não posso encantar o seu corpo!";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "VocÃª nÃ£o estÃ¡ usando nada lÃ¡...";
+				mes "Eu nÃ£o posso encantar o seu corpo!";
 				close;
 			}
 
 			set .@Slot0, getequipcardid(.@Equip,0);
 			if( .@Slot0 == 255 || .@Slot0 == 254 || .@Slot0 < 0 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Sinto muito, eu não posso trabalhar em artigos assinados.";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Sinto muito, eu nÃ£o posso trabalhar em artigos assinados.";
 				close;
 			}
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Você quer encantar a sua " + getitemname(getequipid(.@Equip)) + "?";
-			mes "O custo deste trabalho é ^0000FF30 Bravura, 30 Valor e 30 Guerra Emblemas ^000000.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "VocÃª quer encantar a sua " + getitemname(getequipid(.@Equip)) + "?";
+			mes "O custo deste trabalho Ã© ^0000FF30 Bravura, 30 Valor e 30 Guerra Emblemas ^000000.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Se você tem os emblemas, podemos ir em frente com a Tentativa de encantar.";
-			mes "Mas antes disso, devo avisá-lo do risco.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Se vocÃª tem os emblemas, podemos ir em frente com a Tentativa de encantar.";
+			mes "Mas antes disso, devo avisÃ¡-lo do risco.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "Uma vez que o equipamento recebe o encantamento ^FF0000ele vai perder refinamentos e cartas ^000000.";
-			mes "Você ainda quer encantar?";
+			mes "VocÃª ainda quer encantar?";
 			next;
 			if ( select("^FFFF00Encantar com HP^000000:^0000FFEncantar com SP^000000:^FFA500Deixe-me escolher (Poder de Escolha)^000000:Cancelar") == 4 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 
 			set .@Type, @menu - 1; // 0 : HP | 1 : SP
 			if( countitem(7828) < 30 || countitem(7829) < 30 || countitem(7773) < 30 || Zeny < 200000 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Eu gostaria de ir em frente com esta Tentativa de encantamento, mas está faltando algumas coisas.";
-				mes "Você tem certeza que possuí emblemas e zenys?";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Eu gostaria de ir em frente com esta Tentativa de encantamento, mas estÃ¡ faltando algumas coisas.";
+				mes "VocÃª tem certeza que possuÃ­ emblemas e zenys?";
 				close;
 			}
 
 			set .@Slot0, getequipcardid(.@Equip,0);
 			if( !getequipisequiped(.@Equip) || .@Slot0 == 255 || .@Slot0 == 254 || .@Slot0 < 0 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Este não é o equipamento que nós estávamos falando...";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Este nÃ£o Ã© o equipamento que nÃ³s estÃ¡vamos falando...";
 				mes "Vaza playboy!!";
 				close;
 			}
 
 			if( .@Type == 2 && countitem(677) < 1 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Oh.. ok... e onde está a Poder de Escolha?";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Oh.. ok... e onde estÃ¡ a Poder de Escolha?";
 				close;
 			}
 
@@ -506,96 +506,96 @@ prontera,174,202,4	script	Encantador	84,{
 
 			successenchant .@Equip,.@Enchant;
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Ótimo, seu equipamento recebeu ^0000FF" + getitemname(.@Enchant) + "^000000 encantamento.";
-			mes "Parece muito bem feito. Parabéns!";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Ã“timo, seu equipamento recebeu ^0000FF" + getitemname(.@Enchant) + "^000000 encantamento.";
+			mes "Parece muito bem feito. ParabÃ©ns!";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "Te vejo novamente, Amigo!";
 			close;
 		case 5:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "^FFA500Para encantar um escudo você precisa:^000000:";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "^FFA500Para encantar um escudo vocÃª precisa:^000000:";
 			mes "a) Precisa de 30 Emblemas Bravura, Valor e Guerra.";
 			mes "b) 200.000 Zeny";
-			mes "c) Tipos de encantamento são elemental ou racial";
-			mes "d) ^FF0000Escudo perderá refinamentos e cartas^000000.";
+			mes "c) Tipos de encantamento sÃ£o elemental ou racial";
+			mes "d) ^FF0000Escudo perderÃ¡ refinamentos e cartas^000000.";
 			next;
 			if ( select("Tentar encantar:Cancelar") == 2 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 
 			if( !getequipisequiped(3) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Você não está usando nada lá...";
-				mes "Eu não posso encantar a sua mão!";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "VocÃª nÃ£o estÃ¡ usando nada lÃ¡...";
+				mes "Eu nÃ£o posso encantar a sua mÃ£o!";
 				close;
 			}
 			
 			if( getequipweaponlv(3) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Esse encantamento é para escudos,não armas...";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Esse encantamento Ã© para escudos,nÃ£o armas...";
 				close;
 			}
 
 			set .@Slot0, getequipcardid(3,0);
 			if( .@Slot0 == 255 || .@Slot0 == 254 || .@Slot0 < 0 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Sinto muito, eu não posso trabalhar em artigos assinados.";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Sinto muito, eu nÃ£o posso trabalhar em artigos assinados.";
 				close;
 			}
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Você quer encantar a sua " + getitemname(getequipid(3)) + "?";
-			mes "O custo deste trabalho é ^0000FF30 Bravura, 30 Valor e 30 Guerra Emblemas ^000000.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "VocÃª quer encantar a sua " + getitemname(getequipid(3)) + "?";
+			mes "O custo deste trabalho Ã© ^0000FF30 Bravura, 30 Valor e 30 Guerra Emblemas ^000000.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Se você tem os emblemas, podemos ir em frente com a Tentativa de encantar.";
-			mes "Mas antes disso, devo avisá-lo do risco.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Se vocÃª tem os emblemas, podemos ir em frente com a Tentativa de encantar.";
+			mes "Mas antes disso, devo avisÃ¡-lo do risco.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "Uma vez que o equip recebe o encantamento ^FF0000ele vai perder refinamentos e cartas ^000000.";
-			mes "Você ainda quer encantar?";
+			mes "VocÃª ainda quer encantar?";
 			next;
-			if ( select("^FFFF00Encantar com Elemento^000000:^0000FFEncantar com Raça^000000:^FFA500Deixe-me escolher (Poder de Escolha)^000000:Cancelar") == 4 )
+			if ( select("^FFFF00Encantar com Elemento^000000:^0000FFEncantar com RaÃ§a^000000:^FFA500Deixe-me escolher (Poder de Escolha)^000000:Cancelar") == 4 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 
 			set .@Type, @menu; // 1 : Elemental | 2 : Racial
 			if( countitem(7828) < 30 || countitem(7829) < 30 || countitem(7773) < 30 || Zeny < 200000 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Eu gostaria de ir em frente com esta Tentativa de encantamento, mas está faltando algumas coisas.";
-				mes "Tem certeza de que você tem os emblemas?";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Eu gostaria de ir em frente com esta Tentativa de encantamento, mas estÃ¡ faltando algumas coisas.";
+				mes "Tem certeza de que vocÃª tem os emblemas?";
 				close;
 			}
 
 			set .@Slot0, getequipcardid(3,0);
 			if( !getequipisequiped(3) || getequipweaponlv(3) || .@Slot0 == 255 || .@Slot0 == 254 || .@Slot0 < 0 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Este não é o equipamento que nós estávamos falando...";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Este nÃ£o Ã© o equipamento que nÃ³s estÃ¡vamos falando...";
 				mes "Vaza playboy!!";
 				close;
 			}
 
 			if( .@Type == 3 && countitem(677) < 1 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Oh .. ok ... e onde está a Poder de Escolha?";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Oh .. ok ... e onde estÃ¡ a Poder de Escolha?";
 				close;
 			}
 
@@ -624,20 +624,20 @@ prontera,174,202,4	script	Encantador	84,{
 
 			successenchant 3,.@Enchant;
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Ótimo, seu equip recebeu ^0000FF" + getitemname(.@Enchant) + "^000000 encantamento.";
-			mes "Parece muito bem feito. Parabéns!";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Ã“timo, seu equip recebeu ^0000FF" + getitemname(.@Enchant) + "^000000 encantamento.";
+			mes "Parece muito bem feito. ParabÃ©ns!";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "Te vejo novamente, Amigo!";
 			close;
 		case 6:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "^FFA500Para encantar seu acessório^000000:";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "^FFA500Para encantar seu acessÃ³rio^000000:";
 			mes "a) Precisa de 750 Emblemas de Bravura e Valor e 500 de Guerra.";
 			mes "b) 1.000.000 Zeny";
-			mes "c) Tipo do encantamento é um bônus em Peso máximo.";
-			mes "d) ^FF0000Acessório perderá cartas^000000.";
+			mes "c) Tipo do encantamento Ã© um bÃ´nus em Peso mÃ¡ximo.";
+			mes "d) ^FF0000AcessÃ³rio perderÃ¡ cartas^000000.";
 			next;
 
 			setarray .@Position$[7], "Accessory 1","Accessory 2";
@@ -652,63 +652,63 @@ prontera,174,202,4	script	Encantador	84,{
 			set .@Part,select(.@Menu$ + "Cancelar") + 6;
 			if( .@Part >= 9 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 			if( !getequipisequiped(.@Part) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Você não está usando nada lá...";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "VocÃª nÃ£o estÃ¡ usando nada lÃ¡...";
 				close;
 			}
 
 			set .@Slot0, getequipcardid(.@Part,0);
 			if( .@Slot0 == 255 || .@Slot0 == 254 || .@Slot0 < 0 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Sinto muito, eu não posso trabalhar em artigos assinados.";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Sinto muito, eu nÃ£o posso trabalhar em artigos assinados.";
 				close;
 			}
 
 			set .@Item, getequipid(.@Part);
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Você quer encantar a sua " + getitemname(.@Item) + "?";
-			mes "O custo deste trabalho é ^0000FF750 Bravura, 750 Valor e 500 Guerra Emblemas^000000.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "VocÃª quer encantar a sua " + getitemname(.@Item) + "?";
+			mes "O custo deste trabalho Ã© ^0000FF750 Bravura, 750 Valor e 500 Guerra Emblemas^000000.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Se você tem os emblemas, podemos ir em frente com a Tentativa de encantar.";
-			mes "Mas antes disso, devo avisá-lo do risco.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Se vocÃª tem os emblemas, podemos ir em frente com a Tentativa de encantar.";
+			mes "Mas antes disso, devo avisÃ¡-lo do risco.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Uma vez que o Acessório receber o encantamento ^FF0000ele perderá cartas^000000.";
-			mes "Você ainda quer encantar?";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Uma vez que o AcessÃ³rio receber o encantamento ^FF0000ele perderÃ¡ cartas^000000.";
+			mes "VocÃª ainda quer encantar?";
 			next;
 			if ( select("^0000FFEncantar^000000:Cancelar") == 2 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 				mes "Precisa de algum tempo para pensar sobre isso, hein?";
 				mes "Tudo bem, eu posso entender.";
-				mes "Basta lembrar que a vida não tem graça se você está sempre a jogar pelo seguro~";
+				mes "Basta lembrar que a vida nÃ£o tem graÃ§a se vocÃª estÃ¡ sempre a jogar pelo seguro~";
 				close;
 			}
 
 			if( countitem(7828) < 750 || countitem(7829) < 750 || countitem(7773) < 500 || Zeny < 1000000 )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Eu gostaria de ir em frente com esta Tentativa de encantamento, mas está faltando algumas coisas.";
-				mes "Tem certeza de que você tem os emblemas?";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Eu gostaria de ir em frente com esta Tentativa de encantamento, mas estÃ¡ faltando algumas coisas.";
+				mes "Tem certeza de que vocÃª tem os emblemas?";
 				close;
 			}
 
 			set .@Slot0, getequipcardid(.@Part,0);
 			if( !getequipisequiped(.@Part) || .@Slot0 == 255 || .@Slot0 == 254 || .@Slot0 < 0 || .@Item != getequipid(.@Part) )
 			{
-				mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-				mes "Este não é o equipamento que nós estávamos falando...";
+				mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+				mes "Este nÃ£o Ã© o equipamento que nÃ³s estÃ¡vamos falando...";
 				mes "Vaza playboy!!";
 				close;
 			}
@@ -719,33 +719,33 @@ prontera,174,202,4	script	Encantador	84,{
 			set Zeny, Zeny - 1000000;
 			successenchant .@Part,4963;
 
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Ótimo, sua arma recebeu ^0000FF" + getitemname(4963) + "^000000 encantamento.";
-			mes "Parece muito bem feito. Parabéns!";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Ã“timo, sua arma recebeu ^0000FF" + getitemname(4963) + "^000000 encantamento.";
+			mes "Parece muito bem feito. ParabÃ©ns!";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "Te vejo novamente, Amigo!";
 			close;
 		case 7:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Bem, eu realmente não tenho refinado minha arte de encantamento.";
-			mes "É tão complicado que eu estaria mentindo se eu dissesse que eu sei todos os fatores que afetaram o processo.";
-			mes "Ainda assim, eu faço notar algumas tendências ...";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Bem, eu realmente nÃ£o tenho refinado minha arte de encantamento.";
+			mes "Ã‰ tÃ£o complicado que eu estaria mentindo se eu dissesse que eu sei todos os fatores que afetaram o processo.";
+			mes "Ainda assim, eu faÃ§o notar algumas tendÃªncias ...";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Quando uma armadura se encantar, ele irá mostrar um slot esconderijo especial com uma jóia nele.";
-			mes "Isto irá conceder, uma estatística adicional para a armadura, e com valores diferentes.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Quando uma armadura se encantar, ele irÃ¡ mostrar um slot esconderijo especial com uma jÃ³ia nele.";
+			mes "Isto irÃ¡ conceder, uma estatÃ­stica adicional para a armadura, e com valores diferentes.";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Você deve saber que a Armadura perderá seus refinamentos, cartas e encantamentos anteriores.";
-			mes "E talvez a armadura também, se eu falhar ...";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "VocÃª deve saber que a Armadura perderÃ¡ seus refinamentos, cartas e encantamentos anteriores.";
+			mes "E talvez a armadura tambÃ©m, se eu falhar ...";
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Você quer saber que armadura pode ser encantada?";
-			mes "Diga-me o que você quer explorar...";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "VocÃª quer saber que armadura pode ser encantada?";
+			mes "Diga-me o que vocÃª quer explorar...";
 			next;
 			deletearray .@Armor[0],127;
-			switch( select( "Armaduras não slotadas","Armaduras slotadas","Armaduras de Elite" ) )
+			switch( select( "Armaduras nÃ£o slotadas","Armaduras slotadas","Armaduras de Elite" ) )
 			{
 				case 1: setarray .@Armor[0],2358,2307,2309,2314,2316,2321,2325,2327,2330,2332,2334,2335,2341,2344,2346,2348,2350,2337,2386; break;
 				case 2: setarray .@Armor[0],2311,2318,2319,2320,2308,2310,2315,2317,2322,2324,2326,2331,2333,2336,2342,2345,2347,2349,2351; break;
@@ -757,14 +757,14 @@ prontera,174,202,4	script	Encantador	84,{
 				mes "" + getitemname(.@Armor[.@i]) + "";
 			
 			next;
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
-			mes "Fale-me de novo se você quiser encantar a sua armadura ou se precisar de mais informações.";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "Fale-me de novo se vocÃª quiser encantar a sua armadura ou se precisar de mais informaÃ§Ãµes.";
 			close;
 		case 8:
-			mes "[^010849===^000000 ^016B14"+StrNpcInfo(1)+"^000000 ^010849===^000000]";
+			mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 			mes "Acalme-se, aventureiro.";
-			mes "Se você quiser tentar encantar suas armaduras, volte e me avise.";
-			mes "Até mais~";
+			mes "Se vocÃª quiser tentar encantar suas armaduras, volte e me avise.";
+			mes "AtÃ© mais~";
 			close;
 	}
 }

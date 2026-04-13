@@ -4,7 +4,7 @@
         {
             "label": "Build Release (All)",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "command": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
             "args": [
                 "Hercules.sln",
                 "/p:Configuration=Release",
@@ -24,7 +24,7 @@
         {
             "label": "Build Debug (All)",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "command": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
             "args": [
                 "Hercules.sln",
                 "/p:Configuration=Debug",
@@ -44,7 +44,7 @@
         {
             "label": "Build map-server (Release)",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "command": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
             "args": [
                 "vcproj\\map-server.vcxproj",
                 "/p:Configuration=Release",
@@ -64,7 +64,7 @@
         {
             "label": "Build login-server (Release)",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "command": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
             "args": [
                 "vcproj\\login-server.vcxproj",
                 "/p:Configuration=Release",
@@ -84,7 +84,7 @@
         {
             "label": "Build char-server (Release)",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "command": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
             "args": [
                 "vcproj\\char-server.vcxproj",
                 "/p:Configuration=Release",
@@ -104,7 +104,7 @@
         {
             "label": "Clean (All)",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "command": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
             "args": [
                 "Hercules.sln",
                 "/p:Configuration=Release",
@@ -123,7 +123,7 @@
         {
             "label": "Rebuild Release (All)",
             "type": "shell",
-            "command": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\MSBuild.exe",
+            "command": "C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
             "args": [
                 "Hercules.sln",
                 "/p:Configuration=Release",

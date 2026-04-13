@@ -8,6 +8,7 @@
 #include "common/nullpo.h"
 #include "common/showmsg.h"
 #include "common/strlib.h"
+#include "config/core.h"
 
 #include "map/atcommand.h"
 #include "map/battle.h"
@@ -20,10 +21,12 @@
 #include "map/pc.h"
 #include "map/script.h"
 #include "map/storage.h"
+#include "map/pet.h"
 
 #include "plugins/HPMHooking.h"
 #include "common/HPMDataCheck.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -380,6 +383,480 @@ static void hook_parse_unknown_mapflag_pre(const char **name, const char **w3, c
 		hookStop();
 }
 
+/* ================================================================
+ * getcharisdead / autolootgrp / autolootapply
+ * ================================================================ */
+
+/* Check whether a named character is currently dead.
+ * getcharisdead("char_name") -> 1 if dead, 0 otherwise */
+static BUILDIN(getcharisdead)
+{
+	const char *name = script_getstr(st, 2);
+	struct map_session_data *tsd = map->nick2sd(name, false);
+	if (tsd == NULL) {
+		script_pushint(st, 0);
+		return true;
+	}
+	script_pushint(st, pc_isdead(tsd) ? 1 : 0);
+	return true;
+}
+
+/* ---- autolootgrp helpers ---- */
+#define ALG_MAX_GROUPS  10
+#define ALG_MAX_ITEMS   10
+
+static int64 alg_int_uid(const char *varname)
+{
+	return reference_uid(script->add_str(varname), 0);
+}
+
+static int alg_read_int(struct map_session_data *sd, const char *varname)
+{
+	return pc->readregistry(sd, alg_int_uid(varname));
+}
+
+static void alg_write_int(struct map_session_data *sd, const char *varname, int val)
+{
+	pc->setregistry(sd, alg_int_uid(varname), val);
+}
+
+static const char *alg_read_str(struct map_session_data *sd, const char *varname)
+{
+	char *v = pc->readregistry_str(sd, alg_int_uid(varname));
+	return v ? v : "";
+}
+
+static void alg_write_str(struct map_session_data *sd, const char *varname, const char *val)
+{
+	pc->setregistry_str(sd, alg_int_uid(varname), val);
+}
+
+/* Parse space-separated item list from LOOT_GP{n}$ into array.
+ * Returns item count. */
+static int alg_parse_items(const char *str, int *items, int maxitems)
+{
+	int count = 0;
+	if (!str || !str[0])
+		return 0;
+	char buf[512];
+	safestrncpy(buf, str, sizeof(buf));
+	char *tok = strtok(buf, " ");
+	while (tok && count < maxitems) {
+		int id = atoi(tok);
+		if (id > 0)
+			items[count++] = id;
+		tok = strtok(NULL, " ");
+	}
+	return count;
+}
+
+/* Serialize item array back to space-separated string. */
+static void alg_build_str(const int *items, int count, char *out, int outsz)
+{
+	out[0] = '\0';
+	for (int i = 0; i < count; i++) {
+		char tmp[16];
+		snprintf(tmp, sizeof(tmp), "%d", items[i]);
+		if (i > 0) strncat(out, " ", outsz - strlen(out) - 1);
+		strncat(out, tmp, outsz - strlen(out) - 1);
+	}
+}
+
+static void alg_group_varname(char *buf, size_t sz, const char *prefix, int grp)
+{
+	/* grp is 1-based; char vars are LOOT_NM0$ ... LOOT_NM9$ */
+	snprintf(buf, sz, "%s%d$", prefix, grp - 1);
+}
+
+/* ---- autolootgrp script commands ---- */
+
+/* autolootgrpload() — no-op: data lives in permanent char vars */
+static BUILDIN(autolootgrpload) { return true; }
+
+/* autolootgrpsave() — no-op: writes happen immediately via setregistry */
+static BUILDIN(autolootgrpsave) { return true; }
+
+/* autolootgrpactive() -> int */
+static BUILDIN(autolootgrpactive)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) { script_pushint(st, 0); return true; }
+	script_pushint(st, alg_read_int(sd, "LOOT_ACT"));
+	return true;
+}
+
+/* autolootgrpsetactive(grp) */
+static BUILDIN(autolootgrpsetactive)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) return true;
+	int grp = script_getnum(st, 2);
+	alg_write_int(sd, "LOOT_ACT", grp);
+	return true;
+}
+
+/* autolootgrpname(grp) -> string$ */
+static BUILDIN(autolootgrpname)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) { script_pushconststr(st, ""); return true; }
+	int grp = script_getnum(st, 2);
+	if (grp < 1 || grp > ALG_MAX_GROUPS) { script_pushconststr(st, ""); return true; }
+	char vname[20];
+	alg_group_varname(vname, sizeof(vname), "LOOT_NM", grp);
+	script_pushstrcopy(st, alg_read_str(sd, vname));
+	return true;
+}
+
+/* autolootgrpsetname(grp, name$) */
+static BUILDIN(autolootgrpsetname)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) return true;
+	int grp = script_getnum(st, 2);
+	const char *name = script_getstr(st, 3);
+	if (grp < 1 || grp > ALG_MAX_GROUPS) return true;
+	char vname[20];
+	alg_group_varname(vname, sizeof(vname), "LOOT_NM", grp);
+	alg_write_str(sd, vname, name);
+	return true;
+}
+
+/* autolootgrpcount(grp) -> int */
+static BUILDIN(autolootgrpcount)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) { script_pushint(st, 0); return true; }
+	int grp = script_getnum(st, 2);
+	if (grp < 1 || grp > ALG_MAX_GROUPS) { script_pushint(st, 0); return true; }
+	char vname[20];
+	alg_group_varname(vname, sizeof(vname), "LOOT_GP", grp);
+	int items[ALG_MAX_ITEMS];
+	int cnt = alg_parse_items(alg_read_str(sd, vname), items, ALG_MAX_ITEMS);
+	script_pushint(st, cnt);
+	return true;
+}
+
+/* autolootgrpget(grp, idx) -> int item_id */
+static BUILDIN(autolootgrpget)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) { script_pushint(st, 0); return true; }
+	int grp = script_getnum(st, 2);
+	int idx = script_getnum(st, 3);
+	if (grp < 1 || grp > ALG_MAX_GROUPS || idx < 0 || idx >= ALG_MAX_ITEMS) {
+		script_pushint(st, 0); return true;
+	}
+	char vname[20];
+	alg_group_varname(vname, sizeof(vname), "LOOT_GP", grp);
+	int items[ALG_MAX_ITEMS] = {0};
+	alg_parse_items(alg_read_str(sd, vname), items, ALG_MAX_ITEMS);
+	script_pushint(st, items[idx]);
+	return true;
+}
+
+/* autolootgrpset(grp, idx, item_id) */
+static BUILDIN(autolootgrpset)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) return true;
+	int grp    = script_getnum(st, 2);
+	int idx    = script_getnum(st, 3);
+	int item_id = script_getnum(st, 4);
+	if (grp < 1 || grp > ALG_MAX_GROUPS || idx < 0 || idx >= ALG_MAX_ITEMS) return true;
+	char vname[20];
+	alg_group_varname(vname, sizeof(vname), "LOOT_GP", grp);
+	int items[ALG_MAX_ITEMS] = {0};
+	int cnt = alg_parse_items(alg_read_str(sd, vname), items, ALG_MAX_ITEMS);
+	if (idx >= cnt) cnt = idx + 1;
+	items[idx] = item_id;
+	char out[256];
+	alg_build_str(items, cnt, out, sizeof(out));
+	alg_write_str(sd, vname, out);
+	return true;
+}
+
+/* autolootgrpremove(grp, idx) */
+static BUILDIN(autolootgrpremove)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) return true;
+	int grp = script_getnum(st, 2);
+	int idx = script_getnum(st, 3);
+	if (grp < 1 || grp > ALG_MAX_GROUPS || idx < 0) return true;
+	char vname[20];
+	alg_group_varname(vname, sizeof(vname), "LOOT_GP", grp);
+	int items[ALG_MAX_ITEMS] = {0};
+	int cnt = alg_parse_items(alg_read_str(sd, vname), items, ALG_MAX_ITEMS);
+	if (idx >= cnt) return true;
+	/* Shift remaining items left */
+	for (int i = idx; i < cnt - 1; i++)
+		items[i] = items[i + 1];
+	cnt--;
+	char out[256];
+	alg_build_str(items, cnt, out, sizeof(out));
+	alg_write_str(sd, vname, out);
+	return true;
+}
+
+/* autolootgrpclear(grp) — wipes name and all items for a group */
+static BUILDIN(autolootgrpclear)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) return true;
+	int grp = script_getnum(st, 2);
+	if (grp < 1 || grp > ALG_MAX_GROUPS) return true;
+	char vname[20];
+	alg_group_varname(vname, sizeof(vname), "LOOT_NM", grp);
+	alg_write_str(sd, vname, "");
+	alg_group_varname(vname, sizeof(vname), "LOOT_GP", grp);
+	alg_write_str(sd, vname, "");
+	return true;
+}
+
+/* autolootapply(on, rate)
+ * on   : 1 = enable autoloot, 0 = disable
+ * rate : 0-100 (percentage of drop rate threshold)
+ * Also loads items from the active group into autolootid. */
+static BUILDIN(autolootapply)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) return true;
+	int on   = script_getnum(st, 2);
+	int rate = script_getnum(st, 3); /* 0-100 */
+
+	/* Internal unit is 0-10000 (1/100 of a percent) */
+	sd->state.autoloot = (on && rate > 0) ? (unsigned int)(rate * 100) : 0u;
+
+	/* Reload autolootid from active group */
+	memset(sd->state.autolootid, 0, sizeof(sd->state.autolootid));
+	sd->state.autolooting = 0;
+
+	if (on) {
+		int active_grp = alg_read_int(sd, "LOOT_ACT"); /* 1-based, 0 = none */
+		if (active_grp >= 1 && active_grp <= ALG_MAX_GROUPS) {
+			char vname[20];
+			alg_group_varname(vname, sizeof(vname), "LOOT_GP", active_grp);
+			int items[ALG_MAX_ITEMS] = {0};
+			int cnt = alg_parse_items(alg_read_str(sd, vname), items, ALG_MAX_ITEMS);
+			for (int i = 0; i < cnt && i < AUTOLOOTITEM_SIZE; i++) {
+				if (items[i] > 0) {
+					sd->state.autolootid[i] = items[i];
+					sd->state.autolooting = 1;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+/* ---- successenchant(slot, card_id)
+ * Clears refine + all cards on the equipped item at script slot,
+ * then writes card_id into card slot 3 (enchant slot).
+ * slot: 1-based equip slot matching getequipid() convention */
+static BUILDIN(successenchant)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) return true;
+	int slotnum = script_getnum(st, 2);
+	int card_id  = script_getnum(st, 3);
+	int slot = slotnum - 1;
+	if (slot < 0 || slot >= (int)ARRAYLENGTH(script->equip)) return true;
+	int idx = pc->checkequip(sd, (int)script->equip[slot]);
+	if (idx < 0) return true;
+	/* Force unequip so bonuses are removed */
+	pc->unequipitem(sd, idx, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
+	/* Clear refine and all card slots */
+	sd->status.inventory[idx].refine = 0;
+	memset(sd->status.inventory[idx].card, 0, sizeof(sd->status.inventory[idx].card));
+	/* Write enchantment into card slot 3 */
+	sd->status.inventory[idx].card[3] = (short)card_id;
+	/* Refresh client inventory display */
+	clif->inventoryList(sd);
+	return true;
+}
+
+/* ---- failedenchant(slot)
+ * Destroys (removes) the equipped item at script slot on enchant failure.
+ * slot: 1-based equip slot matching getequipid() convention */
+static BUILDIN(failedenchant)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) return true;
+	int slotnum = script_getnum(st, 2);
+	int slot = slotnum - 1;
+	if (slot < 0 || slot >= (int)ARRAYLENGTH(script->equip)) return true;
+	int idx = pc->checkequip(sd, (int)script->equip[slot]);
+	if (idx < 0) return true;
+	/* Unequip the item first so bonuses are removed */
+	pc->unequipitem(sd, idx, PCUNEQUIPITEM_RECALC | PCUNEQUIPITEM_FORCE);
+	/* Delete exactly one piece of the item from inventory */
+	pc->delitem(sd, idx, 1, 0, DELITEM_NORMAL, LOG_TYPE_SCRIPT);
+	return true;
+}
+
+/* ---- getsecurity() -> int
+ * Returns 1 if item transfer is blocked for this character, 0 otherwise. */
+static BUILDIN(getsecurity)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) { script_pushint(st, 0); return true; }
+	script_pushint(st, alg_read_int(sd, "SECURITY_LOCK"));
+	return true;
+}
+
+/* ---- setsecurity(flag)
+ * Sets (1) or clears (0) the item transfer block for this character. */
+static BUILDIN(setsecurity)
+{
+	struct map_session_data *sd = script->rid2sd(st);
+	if (sd == NULL) return true;
+	int val = script_getnum(st, 2);
+	alg_write_int(sd, "SECURITY_LOCK", val ? 1 : 0);
+	return true;
+}
+
+/* ---- Custom cashshop currency hook ----
+ * Maps cashshop NPC names to the account variable used as currency.
+ * When a player buys from one of these shops the plugin deducts points
+ * from the matching account variable instead of #CASHPOINTS/#KAFRAPOINTS. */
+static const char *custom_shop_var(const char *shopname)
+{
+	static const struct { const char *name; const char *var; } tbl[] = {
+		{"pacotakp",    "#TRIUMPHPOINTS"},
+		{"v1kp",        "#TRIUMPHPOINTS"},
+		{"v1kp2",       "#TRIUMPHPOINTS"},
+		{"v1kp3",       "#TRIUMPHPOINTS"},
+		{"v1kp4",       "#TRIUMPHPOINTS"},
+		{"v1kp5",       "#TRIUMPHPOINTS"},
+		{"v1kp6",       "#TRIUMPHPOINTS"},
+		{"mvpshop",     "#mvp_points"},
+		{"presenceshop","#point_presence"},
+		{"stuffnormal", "#TRIUMPHPOINTS"},
+		{"stuffbg",     "#TRIUMPHPOINTS"},
+		{NULL, NULL}
+	};
+	for (int i = 0; tbl[i].name; i++) {
+		if (strcmp(shopname, tbl[i].name) == 0)
+			return tbl[i].var;
+	}
+	return NULL;
+}
+
+/* Pre-hook for npc_cashshop_buy (single item). */
+static int hook_cashshop_buy_pre(struct map_session_data **sd_ptr, int *nameid_ptr, int *amount_ptr, int *points_ptr)
+{
+	struct map_session_data *sd = *sd_ptr;
+	if (!sd) return 0;
+	struct npc_data *nd = map->id2nd(sd->npc_shopid);
+	if (!nd || nd->subtype != CASHSHOP) return 0;
+	const char *varname = custom_shop_var(nd->exname);
+	if (!varname) return 0;
+
+	int nameid = *nameid_ptr;
+	int amount  = *amount_ptr;
+	struct npc_item_list *shop = nd->u.shop.shop_item;
+	unsigned short shop_size   = nd->u.shop.count;
+	int i;
+	ARR_FIND(0, shop_size, i, shop[i].nameid == nameid);
+	if (i == shop_size || shop[i].value <= 0) {
+		hookStop(); return ERROR_TYPE_ITEM_ID;
+	}
+	if ((long long)shop[i].value * amount > INT_MAX) {
+		hookStop(); return ERROR_TYPE_ITEM_ID;
+	}
+	int price = shop[i].value * amount;
+	int64 uid = reference_uid(script->add_str(varname), 0);
+	int balance = pc->readregistry(sd, uid);
+	if (balance < price) {
+		hookStop(); return ERROR_TYPE_MONEY;
+	}
+	struct item_data *id = itemdb->exists(nameid);
+	if (!id) { hookStop(); return ERROR_TYPE_ITEM_ID; }
+	switch (pc->checkadditem(sd, nameid, amount)) {
+		case ADDITEM_NEW:
+			if (pc->inventoryblank(sd) == 0) {
+				hookStop(); return ERROR_TYPE_INVENTORY_WEIGHT;
+			}
+			break;
+		case ADDITEM_OVERAMOUNT:
+			hookStop(); return ERROR_TYPE_INVENTORY_WEIGHT;
+	}
+	if ((long long)id->weight * amount + sd->weight > sd->max_weight) {
+		hookStop(); return ERROR_TYPE_INVENTORY_WEIGHT;
+	}
+	/* Deduct from custom variable */
+	pc->setregistry(sd, uid, balance - price);
+	/* Give item */
+	if (!pet->create_egg(sd, nameid)) {
+		struct item item_tmp;
+		memset(&item_tmp, 0, sizeof(item_tmp));
+		item_tmp.nameid    = nameid;
+		item_tmp.identify  = 1;
+		pc->additem(sd, &item_tmp, amount, LOG_TYPE_NPC);
+	}
+	hookStop();
+	return ERROR_TYPE_NONE;
+}
+
+/* Pre-hook for npc_cashshop_buylist (multiple items). */
+static int hook_cashshop_buylist_pre(struct map_session_data **sd_ptr, int *points_ptr, struct itemlist **item_list_ptr)
+{
+	struct map_session_data *sd = *sd_ptr;
+	if (!sd) return 0;
+	struct npc_data *nd = map->id2nd(sd->npc_shopid);
+	if (!nd || nd->subtype != CASHSHOP) return 0;
+	const char *varname = custom_shop_var(nd->exname);
+	if (!varname) return 0;
+
+	struct itemlist *item_list = *item_list_ptr;
+	struct npc_item_list *shop = nd->u.shop.shop_item;
+	unsigned short shop_size   = nd->u.shop.count;
+
+	/* Validate and calculate total price */
+	int total = 0, new_ = 0;
+	long long w = 0;
+	for (int li = 0; li < VECTOR_LENGTH(*item_list); li++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, li);
+		int ji;
+		ARR_FIND(0, shop_size, ji, shop[ji].nameid == entry->id);
+		if (ji == shop_size || shop[ji].value <= 0) {
+			hookStop(); return ERROR_TYPE_ITEM_ID;
+		}
+		total += shop[ji].value * entry->amount;
+		switch (pc->checkadditem(sd, entry->id, entry->amount)) {
+			case ADDITEM_NEW: new_++; break;
+			case ADDITEM_OVERAMOUNT:
+				hookStop(); return ERROR_TYPE_INVENTORY_WEIGHT;
+		}
+		struct item_data *id = itemdb->exists(entry->id);
+		if (id) w += (long long)id->weight * entry->amount;
+	}
+	if (w + sd->weight > sd->max_weight || pc->inventoryblank(sd) < new_) {
+		hookStop(); return ERROR_TYPE_INVENTORY_WEIGHT;
+	}
+	int64 uid    = reference_uid(script->add_str(varname), 0);
+	int balance  = pc->readregistry(sd, uid);
+	if (balance < total) {
+		hookStop(); return ERROR_TYPE_MONEY;
+	}
+	/* Deduct */
+	pc->setregistry(sd, uid, balance - total);
+	/* Give items */
+	for (int li = 0; li < VECTOR_LENGTH(*item_list); li++) {
+		struct itemlist_entry *entry = &VECTOR_INDEX(*item_list, li);
+		if (!pet->create_egg(sd, entry->id)) {
+			struct item item_tmp;
+			memset(&item_tmp, 0, sizeof(item_tmp));
+			item_tmp.nameid   = entry->id;
+			item_tmp.identify = 1;
+			pc->additem(sd, &item_tmp, entry->amount, LOG_TYPE_NPC);
+		}
+	}
+	hookStop();
+	return ERROR_TYPE_NONE;
+}
+
 /* ---- Lifecycle ---- */
 HPExport void server_preinit(void) {
 	int i; for(i=0;i<(int)HCFG_COUNT;i++) addBattleConf(hcfg[i].name,hcfg_parse,hcfg_return,false);
@@ -414,10 +891,29 @@ HPExport void plugin_init(void) {
 	addScriptCommand("class2ancientwoe", "",    class2ancientwoe);
 	addScriptCommand("restock",          "ii",  restock_cmd);
 	addScriptCommand("setancient",       "si",  setancient);
+	addScriptCommand("getcharisdead",    "s",   getcharisdead);
+	addScriptCommand("autolootgrpload",  "",    autolootgrpload);
+	addScriptCommand("autolootgrpsave",  "",    autolootgrpsave);
+	addScriptCommand("autolootgrpactive","",    autolootgrpactive);
+	addScriptCommand("autolootgrpsetactive","i",autolootgrpsetactive);
+	addScriptCommand("autolootgrpname",  "i",   autolootgrpname);
+	addScriptCommand("autolootgrpsetname","is", autolootgrpsetname);
+	addScriptCommand("autolootgrpcount", "i",   autolootgrpcount);
+	addScriptCommand("autolootgrpget",   "ii",  autolootgrpget);
+	addScriptCommand("autolootgrpset",   "iii", autolootgrpset);
+	addScriptCommand("autolootgrpremove","ii",  autolootgrpremove);
+	addScriptCommand("autolootgrpclear", "i",   autolootgrpclear);
+	addScriptCommand("autolootapply",    "ii",  autolootapply);
+	addScriptCommand("successenchant",   "ii",  successenchant);
+	addScriptCommand("failedenchant",    "i",   failedenchant);
+	addScriptCommand("getsecurity",      "",    getsecurity);
+	addScriptCommand("setsecurity",      "i",   setsecurity);
 	/* Hooks */
 	addHookPost(mob, dead,                  hook_mob_dead_post);
 	addHookPost(pc,  useitem,               hook_pc_useitem_post);
 	addHookPre(npc,  parse_unknown_mapflag, hook_parse_unknown_mapflag_pre);
+	addHookPre(npc,  cashshop_buy,          hook_cashshop_buy_pre);
+	addHookPre(npc,  cashshop_buylist,      hook_cashshop_buylist_pre);
 	battle->config_read("conf/import/harus_battle.conf", true);
 	ShowStatus("Harus Misc Plugin loaded.\n");
 }
