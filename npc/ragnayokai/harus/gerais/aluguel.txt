@@ -4,32 +4,43 @@ prontera,134,202,5	script	Aluguel Yokai	875,{
 	mes "Olï¿½, aqui vocï¿½ pode alugar um carrinho, pecopeco ou falcï¿½o depedendo de sua profissï¿½o.";
 	next;
 	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-	if (BaseClass == 5 || Class == 23 || Class == 4045) {
-		setoption 0x8, 0;
-		setoption 0x8;
-	} else if (BaseClass == 1) {
-		if (checkmount()) {
-			mes "Vocï¿½ jï¿½ estï¿½ montado!";
+	if (BaseClass == Job_Merchant) {
+		if (getskilllv(MC_PUSHCART) == 0) {
+			mes "Você precisa da habilidade Push Cart para isso.";
 			close2;
 			cutin "", 255;
 			end;
 		}
-		if (!getskilllv(63)) {
-			mes "Vocï¿½ precisa da habilidade de montaï¿½ï¿½o para isso.";
+		if (checkcart()) {
+			mes "Você já está com um carrinho!";
+			close2;
+			cutin "", 255;
+			end;
+		}
+		setcart;
+	} else if (BaseClass == Job_Swordman) {
+		if (checkmount()) {
+			mes "Você já está montado!";
+			close2;
+			cutin "", 255;
+			end;
+		}
+		if (!getskilllv(KN_RIDING)) {
+			mes "Você precisa da habilidade de montação para isso.";
 			close2;
 			cutin "", 255;
 			end;
 		}
 		setmount;
-	} else if (BaseClass == 3) {
+	} else if (BaseClass == Job_Archer) {
 		if (checkfalcon()) {
-			mes "Vocï¿½ jï¿½ estï¿½ com um falcï¿½o!";
+			mes "Você já está com um falcão!";
 			close2;
 			cutin "", 255;
 			end;
 		}
-		if (!getskilllv(127)) {
-			mes "Vocï¿½ precisa da habilidade de falcoï¿½eiro para isso.";
+		if (!getskilllv(HT_FALCON)) {
+			mes "Você precisa da habilidade de falcoeiro para isso.";
 			close2;
 			cutin "", 255;
 			end;

@@ -37,15 +37,9 @@
 //=========================================================================
 
 prontera,0,0,0	script	Gold Point Manager::GoldPC_NPC	4_F_02,{
-	callshop("GoldPC_Shop", 1);
 	end;
 
 OnInit:
+	disablenpc(strnpcinfo(NPC_NAME));
 	end;
-}
-
-// Hidden shop NPC (not placed on map, called by GoldPC_NPC)
--	shop	GoldPC_Shop	-1,{
-	Red_Potion:250,
-	Green_Potion:300
 }

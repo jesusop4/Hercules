@@ -32,7 +32,8 @@ close;
 OnInit:
 	sleep 1000;
 	set .map$,"prontera";
-	setcell .map$,0,0,284,365,cell_noboards,1;
+	setcell .map$,0,0,284,365,cell_novending,1;
+	setcell .map$,0,0,284,365,cell_nochat,0;
 
 	setarray .x_line,149,153,158,162;
 	setarray .y_line,159,156,153,150,147,144,141,138,135,132,129,126,123,120,117,114,111,108,105,102,99,96,93,90,87;
@@ -44,7 +45,8 @@ OnInit:
 		for(set .@y,0; .@y < .y_line_size; set .@y,.@y + 1)
 			if(checkcell(.map$,.x_line[.@x],.y_line[.@y],cell_chkpass)){
 				movenpc "#vend_slot"+.count,.x_line[.@x],.y_line[.@y];
-				setcell .map$,.x_line[.@x],.y_line[.@y],.x_line[.@x],.y_line[.@y],cell_noboards,0;
+				setcell .map$,.x_line[.@x],.y_line[.@y],.x_line[.@x],.y_line[.@y],cell_novending,0;
+				setcell .map$,.x_line[.@x],.y_line[.@y],.x_line[.@x],.y_line[.@y],cell_nochat,0;
 				set .count,.count+1;
 			}
 	donpcevent "::OnSetup";
@@ -197,6 +199,39 @@ prontera,1,1,4	duplicate(vend_slot)	#vend_slot106	858,0,0
 prontera,1,1,4	duplicate(vend_slot)	#vend_slot107	858,0,0
 prontera,1,1,4	duplicate(vend_slot)	#vend_slot108	858,0,0
 
+-	script	VendCurrencySelector	-1,{
+OnSelect:
+	if(!getskilllv("MC_VENDING"))
+		end;
+
+	set .@cash_id,getbattleflag("vending_cash_id");
+	if(.@cash_id <= 0) set .@cash_id,getbattleflag("item_cash");
+
+	mes "[^010849===^000000 ^016B14Comércio^000000 ^010849===^000000]";
+	mes "Escolha a moeda para esta loja:";
+	switch(select("- Zeny:- Cash:- Emblema de Guerra")){
+	case 1:
+		setvendcoin 0;
+		dispbottom "Moeda da loja: Zeny.";
+		break;
+	case 2:
+		if(.@cash_id > 0){
+			setvendcoin .@cash_id;
+			dispbottom "Moeda da loja: Cash.";
+		}else{
+			mes "Moeda Cash não configurada em vending_cash_id/item_cash.";
+			close;
+		}
+		break;
+	case 3:
+		setvendcoin 7773;
+		dispbottom "Moeda da loja: Emblema de Guerra.";
+		break;
+	}
+	mes "Agora use a habilidade Comércio novamente para abrir sua loja.";
+	close;
+}
+
 -	script	NoChatVendPront	-1,{
 OnInit:
 setcell "prontera",1,1,312,392,cell_nochat,0;
@@ -254,5 +289,15 @@ setcell "prontera",146,174,146,152,cell_nochat,1;
 setcell "prontera",147,174,145,152,cell_nochat,1;
 setcell "prontera",164,176,164,152,cell_nochat,1;
 setcell "prontera",165,174,165,152,cell_nochat,1;
+
+// Reabre os corredores de chat/venda do sistema ChatVenda
+setcell "prontera",149,87,149,159,cell_nochat,0;
+setcell "prontera",153,87,153,159,cell_nochat,0;
+setcell "prontera",158,87,158,159,cell_nochat,0;
+setcell "prontera",162,87,162,159,cell_nochat,0;
+setcell "prontera",149,87,149,159,cell_novending,0;
+setcell "prontera",153,87,153,159,cell_novending,0;
+setcell "prontera",158,87,158,159,cell_novending,0;
+setcell "prontera",162,87,162,159,cell_novending,0;
 end;
 } 

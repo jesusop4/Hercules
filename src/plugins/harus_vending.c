@@ -21,6 +21,7 @@
 #include "map/pc.h"
 #include "map/script.h"
 #include "map/searchstore.h"
+#include "map/skill.h"
 #include "map/vending.h"
 
 #include "plugins/HPMHooking.h"
@@ -47,8 +48,10 @@ static int cfg_skill_zeny2item    = 0;
 static int cfg_vending_cash_id    = 0;
 static int cfg_vending_zeny_id    = 0;
 static int cfg_show_broadcast_info= 0;
+static int cfg_show_item_vending  = 0;
 static int cfg_ex_vending_info    = 0;
 static int cfg_ex_vending_report  = 0;
+static int cfg_ex_buying_bound    = 0;
 
 static struct { const char *name; int *val; } hcfg[] = {
 	{ "extended_vending",   &cfg_extended_vending },
@@ -56,8 +59,13 @@ static struct { const char *name; int *val; } hcfg[] = {
 	{ "vending_cash_id",    &cfg_vending_cash_id },
 	{ "vending_zeny_id",    &cfg_vending_zeny_id },
 	{ "show_broadcast_info",&cfg_show_broadcast_info },
+	{ "show_item_vending",  &cfg_show_item_vending },
 	{ "ex_vending_info",    &cfg_ex_vending_info },
 	{ "ex_vending_report",  &cfg_ex_vending_report },
+	{ "ex_buying_bound",    &cfg_ex_buying_bound },
+	/* Easycore aliases */
+	{ "item_cash",          &cfg_vending_cash_id },
+	{ "item_zeny",          &cfg_vending_zeny_id },
 };
 #define HCFG_COUNT (sizeof(hcfg)/sizeof(hcfg[0]))
 
@@ -109,13 +117,30 @@ BUILDIN(setvendcoin) { struct map_session_data *sd=script->rid2sd(st); if(sd) vp
 BUILDIN(getvendcoin) { struct map_session_data *sd=script->rid2sd(st); script_pushint(st,sd?vpd(sd)->vend_coin:0); return true; }
 
 /* ---- Hooks ---- */
+static int hook_skill_check_condition_castbegin_pre(struct map_session_data **sd_ptr, uint16 *skill_id, uint16 *skill_lv)
+{
+	struct map_session_data *sd;
+
+	if (!cfg_extended_vending || !sd_ptr || !*sd_ptr || !skill_id)
+		return 0;
+
+	sd = *sd_ptr;
+	if (*skill_id != MC_VENDING)
+		return 0;
+
+	/* Open currency selector when player uses the vending skill. */
+	npc->event(sd, "VendCurrencySelector::OnSelect", 0);
+	hookStop();
+	return 1;
+}
+
 static void hook_vending_open_pre(struct map_session_data **sd_ptr, const char **message,
 	const uint8 **data, int *count)
 {
 	struct map_session_data *sd;
 	struct vend_pdata *d;
 	static char new_msg[MESSAGE_SIZE];
-	if (!cfg_extended_vending||!cfg_show_broadcast_info) return;
+	if (!cfg_extended_vending || (!cfg_show_broadcast_info && !cfg_show_item_vending)) return;
 	sd = *sd_ptr; if (!sd) return;
 	d = getFromMSD(sd, VEND_DATA_ID);
 	if (!d||d->vend_coin==0) return;
@@ -166,7 +191,8 @@ static void hook_vending_purchase_pre(struct map_session_data **sd_ptr, int *aid
 		} else {
 			int k, lc=0;
 			for (k=0;k<sd->status.inventorySize;k++)
-				if (sd->status.inventory[k].nameid==vc&&sd->status.inventory[k].amount>0&&!sd->status.inventory[k].bound)
+				if (sd->status.inventory[k].nameid==vc&&sd->status.inventory[k].amount>0&&
+				    (cfg_ex_buying_bound || !sd->status.inventory[k].bound))
 					lc+=sd->status.inventory[k].amount;
 			if (z>lc||z<0) { clif->buyvending(sd,idx,amount,1); return; }
 			if (pc->inventoryblank(vsd)<=0) { clif->buyvending(sd,idx,amount,4); return; }
@@ -191,7 +217,8 @@ static void hook_vending_purchase_pre(struct map_session_data **sd_ptr, int *aid
 		int remaining=(int)z, k;
 		struct item ci;
 		for (k=0;k<sd->status.inventorySize&&remaining>0;k++) {
-			if (sd->status.inventory[k].nameid==vc&&sd->status.inventory[k].amount>0&&!sd->status.inventory[k].bound) {
+			if (sd->status.inventory[k].nameid==vc&&sd->status.inventory[k].amount>0&&
+			    (cfg_ex_buying_bound || !sd->status.inventory[k].bound)) {
 				int del=(sd->status.inventory[k].amount>remaining)?remaining:sd->status.inventory[k].amount;
 				pc->delitem(sd,k,del,0,DELITEM_SOLD,LOG_TYPE_VENDING); remaining-=del;
 			}
@@ -232,15 +259,9 @@ static void hook_vending_purchase_pre(struct map_session_data **sd_ptr, int *aid
 	}
 }
 
-static void hook_parse_mapflag_pre(const char **name, const char **w3, const char **w4,
-	const char **start, const char **buffer, const char **filepath, int **retval)
-{
-	if (strcmpi(*name,"vending_cell")==0) hookStop();
-}
-
 /* ---- Lifecycle ---- */
 HPExport void server_preinit(void) {
-	int i; for(i=0;i<(int)HCFG_COUNT;i++) addBattleConf(hcfg[i].name,hcfg_parse,hcfg_return,false);
+	int i; for(i=0;i<(int)HCFG_COUNT;i++) addBattleConf((char *)hcfg[i].name,hcfg_parse,hcfg_return,false);
 }
 
 HPExport void plugin_init(void) {
@@ -248,9 +269,9 @@ HPExport void plugin_init(void) {
 	addAtcommand("vendcoin", vendcoin);
 	addScriptCommand("setvendcoin","i", setvendcoin);
 	addScriptCommand("getvendcoin","",  getvendcoin);
+	addHookPre(skill, check_condition_castbegin, hook_skill_check_condition_castbegin_pre);
 	addHookPre(vending, open,                hook_vending_open_pre);
 	addHookPre(vending, purchase,            hook_vending_purchase_pre);
-	addHookPre(npc,     parse_unknown_mapflag, hook_parse_mapflag_pre);
 	battle->config_read("conf/import/harus_battle.conf", true);
 	ShowStatus("Harus Vending Plugin loaded.\n");
 }

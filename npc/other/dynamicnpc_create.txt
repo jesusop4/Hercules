@@ -37,12 +37,13 @@
 // @name$ contains the name sent by the client
 OnRequest:
 	if (strcmp(@name$, "GOLDPCCAFE") == 0) {
-		if (!calldynamicnpc("GoldPC_NPC")) {
-			dynamicnpccreateresult(DYNAMICNPC_RESULT_DUPLICATED);
-			end;
-		}
-
 		dynamicnpccreateresult(DYNAMICNPC_RESULT_SUCCESS);
+		if (#_gpc_swap == 0) {
+			set #_gpc_zeny, Zeny;
+		}
+		set #_gpc_swap, 1;
+		set Zeny, #GOLDPCPOINTS;
+		callshop "GoldPCItems", 1;
 		end;
 	}
 
