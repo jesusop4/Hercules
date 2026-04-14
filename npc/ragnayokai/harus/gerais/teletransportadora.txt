@@ -9,7 +9,7 @@ set @sdung,	1;	// Exibir calabouços no menu? (Nota 1)
 	mes "Olá "+strcharinfo(0)+", seja bem-vindo ao Serviço de Teletransporte!";
 	mes "Para onde você gostaria de ir?";
 	next;
-	switch (select (((@lwarp)?"Último Destino":"")+"","Cidades",""+((@sdung)?"Outros Lugares":""),"Castelos","Zoológico"))
+	switch (select (((@lwarp)?"Último Destino":"")+","+"Cidades",""+((@sdung)?"Outros Lugares":""),"Castelos","Zoológico"))
 	{
 		case 1:
 			if (lwarpx)
@@ -27,13 +27,13 @@ set @sdung,	1;	// Exibir calabouços no menu? (Nota 1)
 		
 		case 2:	
 			mes "[Teletransportadora]";
-			mes "Selecione o seu destino:";
+			 mes "Selecione o seu destino:";
 			next;
 			switch (select ("Prontera","Alberta","Aldebaran","Amatsu","Ayothaya","Brasilis","Comodo","Einbech","Einbroch","Esplendor","Geffen","Gonryun",
-							"Hugel","Izlude","Jawaii","Juno","Lighthalzen","Louyang","Lutie","Manuka","Morroc","Moscovia","Ilha Esquecida","Niflheim",
-							"Payon","Rachel","Umbala","Veins"))
+								"Hugel","Izlude","Jawaii","Juno","Lighthalzen","Louyang","Lutie","Manuka","Morroc","Moscovia","Ilha Esquecida","Niflheim",
+								"Payon","Rachel","Umbala","Veins"))
 			{
-			
+				
 				case 1: callsub F_DoWarp, "prontera", 156, 191;	
 				case 2: callsub F_DoWarp, "alberta", 192, 147;
 				case 3: callsub F_DoWarp, "aldebaran", 140, 131;
@@ -69,12 +69,12 @@ set @sdung,	1;	// Exibir calabouços no menu? (Nota 1)
 			mes "Selecione o seu destino:";
 			next;
 			switch (select ("Monastério","Lago do Abismo","Labirinto de Tatames","Formigueiro Infernal","Labirinto do Santuário Ancestral","Ilha de Byalan","Caverna de Comodo","Torre do Relógio","Mina de Carvão",
-							"Calabouço da Mina","Gefenia","Calabouço de Geffen","Glast Heim","Santuário de Xi Wang Mu","Labirinto da Floresta","Caverna de Gelo","Ruínas de Juperos","Fábrica de Robôs","Biolaboratório de Somatologia",
-							"A Tumba Real","Calabouço de Magma","Floresta Encantada","Campos de Niflheim","Santuário de Odin","Caverna dos Orcs","Caverna de Payon","Esgoto de Prontera",
-							"Pirâmide","Santuário de Rachel","Esfinge","Navio Fantasma","Torre de Thanatos","Vulcão de Thor","Fábrica de Brinquedos","Ilha da Tartaruga","Loja de Carpintaria","Caverna das Cataratas",
-							"Poringlândia","Praia das Focas"))
+								"Calabouço da Mina","Gefenia","Calabouço de Geffen","Glast Heim","Santuário de Xi Wang Mu","Labirinto da Floresta","Caverna de Gelo","Ruínas de Juperos","Fábrica de Robôs","Biolaboratório de Somatologia",
+								"A Tumba Real","Calabouço de Magma","Floresta Encantada","Campos de Niflheim","Santuário de Odin","Caverna dos Orcs","Caverna de Payon","Esgoto de Prontera",
+								"Pirâmide","Santuário de Rachel","Esfinge","Navio Fantasma","Torre de Thanatos","Vulcão de Thor","Fábrica de Brinquedos","Ilha da Tartaruga","Loja de Carpintaria","Caverna das Cataratas",
+								"Poringlândia","Praia das Focas"))
 			{
-			
+				
 				case 1: callsub F_DoWarp, "nameless_n", 164, 184;
 				case 2: callsub F_DoWarp, "abyss_01", 264, 271;
 				case 3: callsub F_DoWarp, "ama_dun01", 229, 10;
@@ -147,7 +147,7 @@ set @sdung,	1;	// Exibir calabouços no menu? (Nota 1)
 				
 				}
 				
-				case 2:	
+					case 2:	
 				mes "[Teletransportadora]";
 				mes "Selecione o Castelo de Prontera:";
 				next;
@@ -161,7 +161,7 @@ set @sdung,	1;	// Exibir calabouços no menu? (Nota 1)
 				
 				}
 				
-				case 3:	
+					case 3:	
 				mes "[Teletransportadora]";
 				mes "Selecione o Castelo de Aldebaran:";
 				next;
@@ -175,7 +175,7 @@ set @sdung,	1;	// Exibir calabouços no menu? (Nota 1)
 				
 				}
 				
-				case 4:	
+					case 4:	
 				mes "[Teletransportadora]";
 				mes "Selecione o Castelo de Payon:";
 				next;
@@ -189,7 +189,7 @@ set @sdung,	1;	// Exibir calabouços no menu? (Nota 1)
 				
 				}
 				
-				case 5:	
+					case 5:	
 				mes "[Teletransportadora]";
 				mes "Selecione o Castelo de Schwartzwald:";
 				next;
@@ -203,7 +203,7 @@ set @sdung,	1;	// Exibir calabouços no menu? (Nota 1)
 				
 				}
 				
-				case 6:	
+					case 6:	
 				mes "[Teletransportadora]";
 				mes "Selecione o Castelo de Arunafeltz:";
 				next;
@@ -265,6 +265,8 @@ moscovia,225,191,5	duplicate(cWarp)	Teletransportadora#25	721
 louyang,107,207,3	duplicate(cWarp)	Teletransportadora#15-2	721
 */
 
+prontera,158,193,4	duplicate(Warper)	Teletransportadora#prt	664
+new_1-3,81,175,4	duplicate(Warper)	Teletransportadora#prt	664
 -	script	Warper	-1,{
 function Go; function Disp; function Pick;
 
@@ -272,30 +274,15 @@ function Go; function Disp; function Pick;
 //	Main Menu:
 // --------------------------------------------------
 
-menu	"Último Destino ^777777["+lastwarp$+"]^000000",-,
-	" ~ Cidades",Towns, " ~ Campos",Fields, " ~ Cavernas",Dungeons,
-	" ~ Castelos",Castles;
+menu	"^00CC00[»]^000000 Ultimo Destino ^777777["+lastwarp$+"]^000000",-,
+	"^0088FF[»]^000000 Cidades",Towns, "^0088FF[»]^000000 Campos",Fields, "^0088FF[»]^000000 Cavernas",Dungeons,
+	"^0088FF[»]^000000 Castelos",Castles;
 
 	if (lastwarp$ == "") dispbottom "You have not warped anywhere yet.";
 		else warp lastwarp$,lastwarpx,lastwarpy;
 	close;
 
 // ------------------- Functions -------------------
-// * Go("<map>",<x>,<y>);
-//	~ Warps directly to a map.
-// * Disp("<Menu Option>",<first option>,<last option>);
-// * Pick("<map_prefix>"{,<index offset>});
-//	~ Dynamic menu and map selection.
-// * Disp("","<Option 1>:<Option 2>:<etc.>");
-// * Pick("","<map1>","<map2>","<etc.>");
-//	~ Manual menu and map selection.
-//
-// Other notes:
-//   ~ Array @c[] holds all (x,y) coordinates.
-//   ~ Use @c[2] EXCEPT when maps begin dynamically
-//	  at 0: use @c[0] and Pick() offset 1.
-// --------------------------------------------------
-
 function Go {
 	warp getarg(0),getarg(1,0),getarg(2,0);
 	getmapxy(lastwarp$,lastwarpx,lastwarpy,0);
@@ -321,14 +308,14 @@ function Pick {
 // --------------------------------------------------
 	Towns:
 // --------------------------------------------------
-menu	"Prontera",T1, "Alberta",T2, "Aldebaran",T3, "Amatsu",T4, "Ayothaya",T5,
-	"Brasilis",T6, "Comodo",T7, "Dewata",T33, "Eclage",T34, "Einbech",T8, 
-	"Einbroch",T9, "El Dicastes",T10, "Geffen",T11, "Gonryun",T12, "Hugel",T13,
-	"Izlude",T14, "Jawaii",T15, "Lighthalzen",T16, "Louyang",T17, "Lutie",T18,
-	"Malangdo",T35, "Malaya",T36, "Manuk",T19, "Midgarts Expedition Camp",T20,
-	"Mora",T21, "Morroc",T22, "Moscovia",T23, "Nameless Island",T24,
-	"Niflheim",T25, "Payon",T26, "Rachel",T27, "Splendide",T28, "Thor Camp",T29,
-	"Umbala",T30, "Veins",T31, "Yuno",T32;
+menu	"^00CC00[»]^000000 Prontera",T1, "^00CC00[»]^000000 Alberta",T2, "^00CC00[»]^000000 Aldebaran",T3, "^00CC00[»]^000000 Amatsu",T4, "^00CC00[»]^000000 Ayothaya",T5,
+	"^00CC00[»]^000000 Brasilis",T6, "^00CC00[»]^000000 Comodo",T7, "^00CC00[»]^000000 Dewata",T33, "^00CC00[»]^000000 Eclage",T34, "^00CC00[»]^000000 Einbech",T8,
+	"^00CC00[»]^000000 Einbroch",T9, "^00CC00[»]^000000 El Dicastes",T10, "^00CC00[»]^000000 Geffen",T11, "^00CC00[»]^000000 Gonryun",T12, "^00CC00[»]^000000 Hugel",T13,
+	"^00CC00[»]^000000 Izlude",T14, "^00CC00[»]^000000 Jawaii",T15, "^00CC00[»]^000000 Lighthalzen",T16, "^00CC00[»]^000000 Louyang",T17, "^00CC00[»]^000000 Lutie",T18,
+	"^00CC00[»]^000000 Malangdo",T35, "^00CC00[»]^000000 Malaya",T36, "^00CC00[»]^000000 Manuk",T19, "^00CC00[»]^000000 Midgarts Expedition Camp",T20,
+	"^00CC00[»]^000000 Mora",T21, "^00CC00[»]^000000 Morroc",T22, "^00CC00[»]^000000 Moscovia",T23, "^00CC00[»]^000000 Nameless Island",T24,
+	"^00CC00[»]^000000 Niflheim",T25, "^00CC00[»]^000000 Payon",T26, "^00CC00[»]^000000 Rachel",T27, "^00CC00[»]^000000 Splendide",T28, "^00CC00[»]^000000 Thor Camp",T29,
+	"^00CC00[»]^000000 Umbala",T30, "^00CC00[»]^000000 Veins",T31, "^00CC00[»]^000000 Yuno",T32;
 
 T1: Go("prontera",155,183);
 T2: Go("alberta",28,234);
@@ -370,16 +357,16 @@ T36: Go("malaya",212,206);
 // --------------------------------------------------
 	Fields:
 // --------------------------------------------------
-menu	"Amatsu Fields",F1, "Ayothaya Fields",F2, "Bifrost Fields", F3,
-	"Brasilis Fields",F4, "Comodo Fields",F5, "Dewata Fields",F26,
-	"Eclage Fields",F27, "Einbroch Fields",F6, "El Dicastes Fields",F7,
-	"Geffen Fields",F8, "Gonryun Fields",F9, "Hugel Fields",F10,
-	"Lighthalzen Fields",F11, "Louyang Field",F12, "Lutie Field",F13,
-	"Malaya Fields",F28, "Manuk Fields",F14, "Mjolnir Fields",F15,
-	"Moscovia Fields",F16, "Niflheim Fields",F17, "Payon Forests",F18,
-	"Prontera Fields",F19, "Rachel Fields",F20, "Sograt Deserts",F21,
-	"Splendide Fields",F22, "Umbala Fields",F23, "Veins Fields",F24,
-	"Yuno Fields",F25;
+menu	"^0088FF[»]^000000 Campos de Amatsu",F1, "^0088FF[»]^000000 Campos de Ayothaya",F2, "^0088FF[»]^000000 Campos de Bifrost",F3,
+	"^0088FF[»]^000000 Campos de Brasilis",F4, "^0088FF[»]^000000 Campos de Comodo",F5, "^0088FF[»]^000000 Campos de Dewata",F26,
+	"^0088FF[»]^000000 Campos de Eclage",F27, "^0088FF[»]^000000 Campos de Einbroch",F6, "^0088FF[»]^000000 Campos de El Dicastes",F7,
+	"^0088FF[»]^000000 Campos de Geffen",F8, "^0088FF[»]^000000 Campos de Gonryun",F9, "^0088FF[»]^000000 Campos de Hugel",F10,
+	"^0088FF[»]^000000 Campos de Lighthalzen",F11, "^0088FF[»]^000000 Louyang",F12, "^0088FF[»]^000000 Campos de Lutie",F13,
+	"^0088FF[»]^000000 Campos de Malaya",F28, "^0088FF[»]^000000 Campos de Manuk",F14, "^0088FF[»]^000000 Campos de Mjolnir",F15,
+	"^0088FF[»]^000000 Campos de Moscovia",F16, "^0088FF[»]^000000 Campos de Niflheim",F17, "^0088FF[»]^000000 Floresta de Payon",F18,
+	"^0088FF[»]^000000 Campos de Prontera",F19, "^0088FF[»]^000000 Campos de Rachel",F20, "^0088FF[»]^000000 Deserto de Sograt",F21,
+	"^0088FF[»]^000000 Campos de Splendide",F22, "^0088FF[»]^000000 Campos de Umbala",F23, "^0088FF[»]^000000 Campos de Veins",F24,
+	"^0088FF[»]^000000 Campos de Yuno",F25;
 
 F1: setarray @c[2],190,197;
 	Disp("Amatsu Field",1,1); Pick("ama_fild");
@@ -441,19 +428,19 @@ F28: setarray @c[2],40,272,207,180;
 // --------------------------------------------------
 	Dungeons:
 // --------------------------------------------------
-menu	"Abyss Lakes",D1, "Amatsu Dungeon",D2, "Anthell",D3,
-	"Ayothaya Dungeon",D4, "Beach Dungeon",D5, "Bio Labs",D6,
-	"Brasilis Dungeon",D7, "Byalan Dungeon",D8, "Clock Tower",D9,
-	"Coal Mines",D10, "Culvert",D11, "Cursed Abbey",D12, "Dewata Dungeon",D41,
-	"Einbroch Dungeon",D13, "Endless Tower",D14, "Gefenia",D15,
-	"Geffen Dungeon",D16, "Glast Heim",D17, "Gonryun Dungeon",D18,
-	"Guild Dungeons",GD, "Hidden Dungeon",D19, "Ice Dungeon",D20,
-	"Juperos",D21, "Kiel Dungeon",D22, "Louyang Dungeon",D23,
-	"Magma Dungeon",D24, "Malangdo Dungeon",D42, "Moscovia Dungeon",D25,
-	"Nidhogg's Dungeon",D26, "Odin Temple",D27, "Orc Dungeon",D28, "Payon Dungeon",D29,
-	"Pyramids",D30, "Rachel Sanctuary",D31, "Scaraba Hole",D32, "Sealed Shrine",D33,
-	"Sphinx",D34, "Sunken Ship",D35, "Thanatos Tower",D36, "Thor Volcano",D37,
-	"Toy Factory",D38, "Turtle Dungeon",D39, "Umbala Dungeon",D40;
+menu	"^FF8800[»]^000000 Abyss Lakes",D1, "^FF8800[»]^000000 Amatsu Dungeon",D2, "^FF8800[»]^000000 Anthell",D3,
+	"^FF8800[»]^000000 Ayothaya Dungeon",D4, "^FF8800[»]^000000 Beach Dungeon",D5, "^FF8800[»]^000000 Bio Labs",D6,
+	"^FF8800[»]^000000 Brasilis Dungeon",D7, "^FF8800[»]^000000 Byalan Dungeon",D8, "^FF8800[»]^000000 Clock Tower",D9,
+	"^FF8800[»]^000000 Coal Mines",D10, "^FF8800[»]^000000 Culvert",D11, "^FF8800[»]^000000 Cursed Abbey",D12, "^FF8800[»]^000000 Dewata Dungeon",D41,
+	"^FF8800[»]^000000 Einbroch Dungeon",D13, "^FF8800[»]^000000 Endless Tower",D14, "^FF8800[»]^000000 Gefenia",D15,
+	"^FF8800[»]^000000 Geffen Dungeon",D16, "^FF8800[»]^000000 Glast Heim",D17, "^FF8800[»]^000000 Gonryun Dungeon",D18,
+	"^FF8800[»]^000000 Guild Dungeons",GD, "^FF8800[»]^000000 Hidden Dungeon",D19, "^FF8800[»]^000000 Ice Dungeon",D20,
+	"^FF8800[»]^000000 Juperos",D21, "^FF8800[»]^000000 Kiel Dungeon",D22, "^FF8800[»]^000000 Louyang Dungeon",D23,
+	"^FF8800[»]^000000 Magma Dungeon",D24, "^FF8800[»]^000000 Malangdo Dungeon",D42, "^FF8800[»]^000000 Moscovia Dungeon",D25,
+	"^FF8800[»]^000000 Nidhogg's Dungeon",D26, "^FF8800[»]^000000 Odin Temple",D27, "^FF8800[»]^000000 Orc Dungeon",D28, "^FF8800[»]^000000 Payon Dungeon",D29,
+	"^FF8800[»]^000000 Pyramids",D30, "^FF8800[»]^000000 Rachel Sanctuary",D31, "^FF8800[»]^000000 Scaraba Hole",D32, "^FF8800[»]^000000 Sealed Shrine",D33,
+	"^FF8800[»]^000000 Sphinx",D34, "^FF8800[»]^000000 Sunken Ship",D35, "^FF8800[»]^000000 Thanatos Tower",D36, "^FF8800[»]^000000 Thor Volcano",D37,
+	"^FF8800[»]^000000 Toy Factory",D38, "^FF8800[»]^000000 Turtle Dungeon",D39, "^FF8800[»]^000000 Umbala Dungeon",D40;
 
 D1: setarray @c[2],261,272,275,270,116,27;
 	Disp("Abyss Lakes",1,3); Pick("abyss_");
@@ -550,8 +537,8 @@ GD: setarray @c[2],119,93,39,161,50,44,116,45,199,195,200,124;
 // --------------------------------------------------
 	Castles:
 // --------------------------------------------------
-menu	"Aldebaran Castles",C1, "Geffen Castles",C2, "Payon Castles",C3,
-	"Prontera Castles",C4, "Arunafeltz Castles",C5, "Schwaltzvalt Castles",C6;
+menu	"^FF00FF[»]^000000 Aldebaran Castles",C1, "^FF00FF[»]^000000 Geffen Castles",C2, "^FF00FF[»]^000000 Payon Castles",C3,
+	"^FF00FF[»]^000000 Prontera Castles",C4, "^FF00FF[»]^000000 Arunafeltz Castles",C5, "^FF00FF[»]^000000 Schwaltzvalt Castles",C6;
 
 C1: setarray @c[2],48,83,95,249,142,85,239,242,264,90;
 	Disp("","Neuschwanstein:Hohenschwangau:Nuenberg:Wuerzburg:Rothenburg");
@@ -574,3 +561,4 @@ C6: setarray @c[2],293,100,288,252,97,196,137,90,71,315;
 }
 
 prontera,158,193,4	duplicate(Warper)	Teletransportadora#prt	664
+new_1-3,81,175,4	duplicate(Warper)	Teletransportadora#prt	664

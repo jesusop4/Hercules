@@ -5,12 +5,12 @@ prontera,153,193,6	script	 #hG1-1::HealerG	569 ,{
 	}
 	set #curadelay,gettimetick(2)+5;
 	if(getbrokenid(1)==null) {
-		dispbottom "[Curandeira]: Você não tem itens para consertar!";
+		dispbottom "[Curandeira]: Vocï¿½ nï¿½o tem itens para consertar!";
 	} else {
 		repairall;
 	}
 	percentheal 100,100;
-	dispbottom "[Curandeira]: Vida e SP restaurados! Bom jogo!";
+	dispbottom "[Curandeira]: Vida e SP restaurados!";
 	end;
 
 OnInit:
@@ -28,12 +28,12 @@ callfunc "curand";
 }
 function	script	curand	{
 	if(getbrokenid(1)==null) {
-		dispbottom "[Curandeira]: Você não tem itens para consertar!";
+		dispbottom "[Curandeira]: Vocï¿½ nï¿½o tem itens para consertar!";
 	} else {
 		repairall;
 	}
 	percentheal 100,100;
-	dispbottom "[Curandeira]: Vida e SP restaurados! Bom jogo!";
+	dispbottom "[Curandeira]: Vida e SP restaurados!";
 	end;
 }
 
