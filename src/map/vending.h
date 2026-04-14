@@ -46,6 +46,7 @@ struct vending_interface {
 	void (*open) (struct map_session_data* sd, const char* message, const uint8* data, int count);
 	void (*list) (struct map_session_data* sd, unsigned int id);
 	void (*purchase) (struct map_session_data* sd, int aid, unsigned int uid, const struct CZ_PURCHASE_ITEM_FROMMC *data, int count);
+	int (*resolve_currency_item) (int nameid);
 	bool (*search) (struct map_session_data* sd, int nameid);
 	bool (*searchall) (struct map_session_data* sd, const struct s_search_store_search* s);
 };

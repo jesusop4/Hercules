@@ -780,4 +780,20 @@ void itemdb_defaults(void);
 
 HPShared struct itemdb_interface *itemdb;
 
+/**
+ * Extended Vending system [Lilith]
+ **/
+#define MAX_ITEM_VENDING_DB 100
+#define ITEMID_ZENY battle_config.item_zeny
+#define ITEMID_CASH battle_config.item_cash
+
+struct s_item_vend_db {
+	int nameid;
+};
+
+extern struct s_item_vend_db item_vending_db[MAX_ITEM_VENDING_DB];
+extern int item_vending_db_count;
+
+void itemdb_read_item_vending(void);
+
 #endif /* MAP_ITEMDB_H */

@@ -8311,8 +8311,49 @@ static int skill_castend_nodamage_id(struct block_list *src, struct block_list *
 				if ( !pc_can_give_items(sd) )
 					clif->skill_fail(sd, skill_id, USESKILL_FAIL_LEVEL, 0, 0);
 				else {
-					sd->state.prevend = sd->state.workinprogress = 3;
-					clif->openvendingreq(sd,2+skill_lv);
+					sd->state.workinprogress = 3;
+					sd->vend_loot = 0;
+					sd->vend_lvl = skill_lv;
+					if (battle_config.extended_vending) {
+						int c = 0, d = 0, i;
+						if (battle_config.item_zeny)
+							d++;
+						if (battle_config.item_cash)
+							d++;
+						for (i = 0; i < item_vending_db_count; i++) {
+							int nameid = item_vending_db[i].nameid;
+							if (itemdb->exists(nameid) != NULL &&
+								nameid != ITEMID_ZENY && nameid != ITEMID_CASH)
+								c++;
+						}
+						c += d;
+						if (c > 1) {
+							clif->vend(sd, sd->vend_lvl);
+						} else {
+							sd->state.prevend = 1;
+							if (c) {
+								struct item_data *id;
+								char output[256];
+								int first_item = battle_config.item_zeny ? battle_config.item_zeny :
+								                 battle_config.item_cash ? battle_config.item_cash : 0;
+								if (first_item == 0 && item_vending_db_count > 0)
+									first_item = item_vending_db[0].nameid;
+								id = itemdb->exists(first_item);
+								if (id != NULL) {
+									sd->vend_loot = id->nameid;
+									sprintf(output, msg_sd(sd, 1596), itemdb_name(sd->vend_loot));
+									clif->messagecolor_self(sd->fd, COLOR_CYAN, output);
+								}
+								clif->openvendingreq(sd, 2 + sd->vend_lvl);
+							} else {
+								sd->vend_loot = 0;
+								clif->openvendingreq(sd, 2 + sd->vend_lvl);
+							}
+						}
+					} else {
+						sd->state.prevend = 1;
+						clif->openvendingreq(sd, 2 + skill_lv);
+					}
 				}
 			}
 			break;

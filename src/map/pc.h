@@ -493,6 +493,8 @@ END_ZEROED_BLOCK;
 	int partyspy; // [Syrus22]
 	unsigned int vended_id;
 	unsigned int vender_id;
+	int vend_loot;
+	int vend_lvl;
 	int vend_num;
 	char message[MESSAGE_SIZE];
 	struct s_vending vending[MAX_VENDING];
@@ -896,6 +898,7 @@ struct autotrade_vending {
 	struct item list[MAX_VENDING];
 	struct s_vending vending[MAX_VENDING];
 	unsigned char vend_num;
+	int vend_loot;
 	struct hplugin_data_store *hdata; ///< HPM Plugin Data Store
 };
 

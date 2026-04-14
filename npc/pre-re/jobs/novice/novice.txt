@@ -2712,36 +2712,36 @@ new_3-3,95,30,4	duplicate(NovHoffman)	Trainer#nv3	4_M_02
 new_4-3,95,30,4	duplicate(NovHoffman)	Trainer#nv4	4_M_02
 new_5-3,95,30,4	duplicate(NovHoffman)	Trainer#nv5	4_M_02
 
-new_1-3,96,174,3	script	Test Examiner#nv1::NovKeyman	4_M_03,{
-	mes "[Keyman]";
-	mes "Good!!";
-	mes "Now you know how to fight";
-	mes "against monsters, don't you?";
-	mes "Would you like to move";
-	mes "to the next course?";
-	next;
-	switch(select("Yes", "No")) {
-	case 1:
-		mes "[Keyman]";
-		mes "I hope you will be";
-		mes "a good fighter in the";
-		mes "future. Bon voyage.";
-		close2;
-		warp "new_1-4",99,10;
-		return
-		end;
-	case 2:
-		mes "[Keyman]";
-		mes "I see...";
-		mes "It can't hurt to practice until you're more comfortable with the basics of battle.";
-		close;
-	}
-}
-
-new_2-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv2	4_M_03
-new_3-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv3	4_M_03
-new_4-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv4	4_M_03
-new_5-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv5	4_M_03
+//new_1-3,96,174,3	script	Test Examiner#nv1::NovKeyman	4_M_03,{
+//	mes "[Keyman]";
+//	mes "Good!!";
+//	mes "Now you know how to fight";
+//	mes "against monsters, don't you?";
+//	mes "Would you like to move";
+//	mes "to the next course?";
+//	next;
+//	switch(select("Yes", "No")) {
+//	case 1:
+//		mes "[Keyman]";
+//		mes "I hope you will be";
+//		mes "a good fighter in the";
+//		mes "future. Bon voyage.";
+//		close2;
+//		warp "new_1-4",99,10;
+//		return
+//		end;
+//	case 2:
+//		mes "[Keyman]";
+//		mes "I see...";
+//		mes "It can't hurt to practice until you're more comfortable with the basics of battle.";
+//		close;
+//	}
+//}
+//
+//new_2-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv2	4_M_03
+//new_3-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv3	4_M_03
+//new_4-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv4	4_M_03
+//new_5-3,96,174,3	duplicate(NovKeyman)	Test Examiner#nv5	4_M_03
 
 //== Potato Merchant =======================================
 new_1-2,28,185,4	shop	Potato Merchant	4_F_01,516:15

@@ -3328,7 +3328,49 @@ static void do_init_itemdb(bool minimal)
 		battle_config.feature_roulette = 0;
 	VECTOR_INIT(clif->attendance_data);
 	clif->pAttendanceDB();
+
+	// Extended Vending system [Lilith]
+	itemdb_read_item_vending();
 }
+
+/**
+ * Extended Vending system [Lilith]
+ * Reads db/item_vending.txt
+ **/
+struct s_item_vend_db item_vending_db[MAX_ITEM_VENDING_DB];
+int item_vending_db_count = 0;
+
+void itemdb_read_item_vending(void)
+{
+	FILE *fp;
+	char line[1024];
+	int count = 0;
+
+	fp = fopen("db/item_vending.txt", "r");
+	if (fp == NULL) {
+		ShowWarning("itemdb_read_item_vending: File not found 'db/item_vending.txt'.\n");
+		return;
+	}
+
+	item_vending_db_count = 0;
+	while (fgets(line, sizeof(line), fp)) {
+		int nameid;
+		if (line[0] == '/' && line[1] == '/')
+			continue;
+		if (sscanf(line, "%d", &nameid) != 1)
+			continue;
+		if (nameid <= 0)
+			continue;
+		if (count >= MAX_ITEM_VENDING_DB)
+			break;
+		item_vending_db[count].nameid = nameid;
+		count++;
+	}
+	fclose(fp);
+	item_vending_db_count = count;
+	ShowStatus("Done reading '"CL_WHITE"%d"CL_RESET"' entries in '"CL_WHITE"db/item_vending.txt"CL_RESET"'.\n", count);
+}
+
 void itemdb_defaults(void)
 {
 	itemdb = &itemdb_s;

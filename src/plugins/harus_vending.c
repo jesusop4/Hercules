@@ -121,7 +121,7 @@ static int hook_skill_check_condition_castbegin_pre(struct map_session_data **sd
 {
 	struct map_session_data *sd;
 
-	if (!cfg_extended_vending || !sd_ptr || !*sd_ptr || !skill_id)
+	if (!cfg_extended_vending || battle->bc->extended_vending || !sd_ptr || !*sd_ptr || !skill_id)
 		return 0;
 
 	sd = *sd_ptr;
@@ -140,7 +140,7 @@ static void hook_vending_open_pre(struct map_session_data **sd_ptr, const char *
 	struct map_session_data *sd;
 	struct vend_pdata *d;
 	static char new_msg[MESSAGE_SIZE];
-	if (!cfg_extended_vending || (!cfg_show_broadcast_info && !cfg_show_item_vending)) return;
+	if (!cfg_extended_vending || battle->bc->extended_vending || (!cfg_show_broadcast_info && !cfg_show_item_vending)) return;
 	sd = *sd_ptr; if (!sd) return;
 	d = getFromMSD(sd, VEND_DATA_ID);
 	if (!d||d->vend_coin==0) return;
@@ -159,7 +159,7 @@ static void hook_vending_purchase_pre(struct map_session_data **sd_ptr, int *aid
 	int64 z;
 	struct s_vending vend[MAX_VENDING];
 
-	if (!cfg_extended_vending) return;
+	if (!cfg_extended_vending || battle->bc->extended_vending) return;
 	sd = *sd_ptr; vsd = map->id2sd(*aid);
 	if (!sd||!vsd||!vsd->state.vending||vsd->bl.id==sd->bl.id) return;
 	vd = getFromMSD(vsd, VEND_DATA_ID);

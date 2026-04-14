@@ -613,3 +613,26 @@ void HCache_defaults(void)
 	HCache->recompile_time = 0;
 	HCache->enabled = false;
 }
+
+/**
+ * Extended Vending system [Lilith]
+ * Formats a number with comma separators.
+ **/
+char *GetComma(unsigned long n)
+{
+	static char retbuf[30];
+	char *p = &retbuf[sizeof(retbuf)-1];
+	int i = 0;
+
+	*p = '\0';
+
+	do {
+		if (i % 3 == 0 && i != 0)
+			*--p = ',';
+		*--p = '0' + n % 10;
+		n /= 10;
+		i++;
+	} while (n != 0);
+
+	return p;
+}

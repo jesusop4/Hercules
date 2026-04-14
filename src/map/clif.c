@@ -4214,6 +4214,58 @@ static void clif_arrow_create_list(struct map_session_data *sd)
 	}
 }
 
+/**
+ * Extended Vending system [Lilith]
+ * Shows currency selection dialog using MAKINGARROW_LIST packet.
+ **/
+static int clif_vend(struct map_session_data *sd, int skill_lv)
+{
+	int fd, c = 0, i;
+
+	nullpo_ret(sd);
+	fd = sd->fd;
+
+	int len = MAX_ITEM_VENDING_DB * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+	WFIFOHEAD(fd, len);
+	struct PACKET_ZC_MAKINGARROW_LIST *p = WFIFOP(fd, 0);
+	p->packetType = HEADER_ZC_MAKINGARROW_LIST;
+
+	// Add item_zeny if configured
+	if (battle_config.item_zeny) {
+		int view = itemdb_viewid(battle_config.item_zeny);
+		p->items[c].itemId = (view > 0) ? view : battle_config.item_zeny;
+		c++;
+	}
+
+	// Add item_cash if configured
+	if (battle_config.item_cash) {
+		int view = itemdb_viewid(battle_config.item_cash);
+		p->items[c].itemId = (view > 0) ? view : battle_config.item_cash;
+		c++;
+	}
+
+	// Add items from item_vending_db
+	for (i = 0; i < item_vending_db_count; i++) {
+		int nameid = item_vending_db[i].nameid;
+		if (nameid != ITEMID_ZENY && nameid != ITEMID_CASH) {
+			int view = itemdb_viewid(nameid);
+			p->items[c].itemId = (view > 0) ? view : nameid;
+			c++;
+		}
+	}
+
+	len = c * sizeof(struct PACKET_ZC_MAKINGARROW_LIST_sub) + sizeof(struct PACKET_ZC_MAKINGARROW_LIST);
+	p->packetLength = len;
+	WFIFOSET(fd, len);
+
+	if (c > 0) {
+		sd->menuskill_id = MC_VENDING;
+		sd->menuskill_val = 2 + skill_lv;
+	}
+
+	return c;
+}
+
 /// Notifies the client, about the result of an status change request (ZC_STATUS_CHANGE_ACK).
 /// 00bc <status id>.W <result>.B <value>.B
 /// status id:
@@ -14209,6 +14261,26 @@ static void clif_parse_SelectArrow(int fd, struct map_session_data *sd)
 		case AC_MAKINGARROW:
 			skill->arrow_create(sd, itemId);
 			break;
+		case MC_VENDING:
+			if (itemId == 0) {
+				sd->state.prevend = sd->state.workinprogress = 0;
+				sd->vend_loot = 0;
+				break;
+			}
+			if (!pc_can_give_items(sd) || itemdb->exists(itemId) == NULL) {
+				sd->state.prevend = 0;
+				sd->vend_loot = 0;
+				sd->state.workinprogress = 0;
+				clif->skill_fail(sd, MC_VENDING, USESKILL_FAIL_LEVEL, 0, 0);
+			} else {
+				char output[256];
+				sd->vend_loot = itemId;
+				sd->state.prevend = 1;
+				clif->openvendingreq(sd, sd->menuskill_val);
+				sprintf(output, msg_sd(sd, 1594), itemdb_name(itemId));
+				clif->messagecolor_self(sd->fd, COLOR_CYAN, output);
+			}
+			break;
 		case SA_CREATECON:
 			skill->produce_mix(sd, SA_CREATECON, itemId, 0, 0, 0, 1);
 			break;
@@ -15456,7 +15528,7 @@ static void clif_parse_OpenVending(int fd, struct map_session_data *sd)
 	const uint8 *data = RFIFOP(fd, 85);
 
 	if (!flag)
-		sd->state.prevend = sd->state.workinprogress = 0;
+		sd->state.prevend = sd->state.workinprogress = 0, sd->vend_loot = 0;
 
 	if (pc_ismuted(&sd->sc, MANNER_NOROOM))
 		return;
@@ -26705,6 +26777,7 @@ void clif_defaults(void)
 	clif->sitting = clif_sitting;
 	clif->standing = clif_standing;
 	clif->arrow_create_list = clif_arrow_create_list;
+	clif->vend = clif_vend; // Extended Vending [Lilith]
 	clif->refresh_storagewindow = clif_refresh_storagewindow;
 	clif->refresh = clif_refresh;
 	clif->fame_blacksmith = clif_fame_blacksmith;

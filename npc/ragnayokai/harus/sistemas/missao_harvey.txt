@@ -1,0 +1,928 @@
+/*---------------------------------------------
+ ¦¦¦¦¦¦¦¦  ¦¦¦       ¦¦¦¦¦¦¦¦  ¦¦¦  ¦¦¦    ¦¦¦
+ ¦¦        ¦¦¦       ¦¦¦       ¦¦¦  ¦¦¦¦¦¦ ¦¦¦
+ ¦¦¦¦¦¦¦¦  ¦¦¦       ¦¦¦¦¦¦¦   ¦¦¦  ¦¦¦  ¦¦¦¦¦
+ ¦¦        ¦¦¦       ¦¦¦       ¦¦¦  ¦¦¦   ¦¦¦¦
+ ¦¦¦¦¦¦¦¦  ¦¦¦¦¦¦¦¦  ¦¦¦       ¦¦¦  ¦¦¦    ¦¦¦
+----------------------------------------------*/
+
+-	pointshop	m_shop	-1,#PTMISSAO,33203:50
+
+prontera,164,189,4	script	Sistema de Caça#1	468,{ 
+
+	mes "[ ^3CB371Hades^000000 ]";
+	mes "Krishshshshsh, sério que você pretende caçar monstros sendo fraco desse jeito?";
+	mes "^FF8C00Ao finalizar cada missão você receberá pontos de Missão^000000"; //Manual de Combate ( removido devido a exploits )
+	next;
+	switch(select("^3CB371[»]^000000 Visualizar Missões","^3CB371[»]^000000 Coletar Recompensas","^3CB371[»]^000000 Trocar Pontos","^3CB371[»]^000000 Cancelar")){
+	case 1:
+	mes "[ ^3CB371Hades^000000 ]";
+	mes "Vou listar pra você os monstros com recompensas.";
+	mes "Escolha quais deles você irá caçar:";
+	next;
+	switch(select("^3CB371[»]^000000 Ver suas Missões","^3CB371[»]^000000 Nível 1 ao 20","^3CB371[»]^000000 Nível 21 ao 50","^3CB371[»]^000000 Nível 51 ao 70","^3CB371[»]^000000 Nível 71 ao 90","^3CB371[»]^000000 Nível 91 ao 99 [Repetitiva]")){
+	case 1:
+		goto OnQueue;
+	end;
+	case 2:
+	if (BaseLevel < 1 || (BaseLevel > 20)) {
+		mes "[ ^3CB371Hades^000000 ]";
+		mes "Vejo que você não tem mais level para essas missões, não se preocupe, ainda poderá receber suas recompensas.";
+		end;
+		}
+	switch(select("^3CB371[»]^000000 "+strmobinfo(1,.mob1)+" "+(mob1_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob2)+" "+(mob2_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob3)+" "+(mob3_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob4)+" "+(mob4_completo == 0?"":"^FF8C00[Completo]^000000")+"")){
+		case 1:
+		if (mob1_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob1+"/"+.reqmob1+" " + strmobinfo(1,.mob1) + "'s!";
+		set mob1_ativo,1;
+		end;
+		case 2:
+		if (mob2_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob2+"/"+.reqmob2+" " + strmobinfo(1,.mob2) + "'s!";
+		set mob2_ativo,1;
+		end;
+		case 3:
+		if (mob3_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob3+"/"+.reqmob3+" " + strmobinfo(1,.mob3) + "'s!";
+		set mob3_ativo,1;
+		end;
+		case 4:
+		if (mob4_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob4+"/"+.reqmob4+" " + strmobinfo(1,.mob4) + "'s!";
+		set mob4_ativo,1;
+		end;
+	}
+	end;
+	case 3:
+	if (BaseLevel < 21 || (BaseLevel > 50)) {
+		mes "[ ^3CB371Hades^000000 ]";
+		mes "Vejo que você não tem mais level para essas missões, não se preocupe, ainda poderá receber suas recompensas.";
+		end;
+		}
+	switch(select("^3CB371[»]^000000 "+strmobinfo(1,.mob5)+" "+(mob5_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob6)+" "+(mob6_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob7)+" "+(mob7_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob8)+" "+(mob8_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob9)+" "+(mob9_completo == 0?"":"^FF8C00[Completo]^000000")+"")){
+		case 1:
+		if (mob5_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob5+"/"+.reqmob5+" " + strmobinfo(1,.mob5) + "'s!";
+		set mob5_ativo,1;
+		end;
+		case 2:
+		if (mob6_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob6+"/"+.reqmob6+" " + strmobinfo(1,.mob6) + "'s!";
+		set mob6_ativo,1;
+		end;
+		case 3:
+		if (mob7_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob7+"/"+.reqmob7+" " + strmobinfo(1,.mob7) + "'s!";
+		set mob7_ativo,1;
+		end;
+		case 4:
+		if (mob8_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob8+"/"+.reqmob8+" " + strmobinfo(1,.mob8) + "'s!";
+		set mob8_ativo,1;
+		end;
+		case 5:
+		if (mob9_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob9+"/"+.reqmob9+" " + strmobinfo(1,.mob9) + "'s!";
+		set mob9_ativo,1;
+		end;
+	}
+	end;
+	case 4:
+	if (BaseLevel < 51 || (BaseLevel > 70)) {
+		mes "[ ^3CB371Hades^000000 ]";
+		mes "Vejo que você não tem mais level para essas missões, não se preocupe, ainda poderá receber suas recompensas.";
+		end;
+		}
+	switch(select("^3CB371[»]^000000 "+strmobinfo(1,.mob10)+" "+(mob10_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob11)+" "+(mob11_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob12)+" "+(mob12_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob13)+" "+(mob13_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob14)+" "+(mob14_completo == 0?"":"^FF8C00[Completo]^000000")+"")){
+		case 1:
+		if (mob10_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob10+"/"+.reqmob10+" " + strmobinfo(1,.mob10) + "'s!";
+		set mob10_ativo,1;
+		end;
+		case 2:
+		if (mob11_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob11+"/"+.reqmob11+" " + strmobinfo(1,.mob11) + "'s!";
+		set mob11_ativo,1;
+		end;
+		case 3:
+		if (mob12_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob12+"/"+.reqmob12+" " + strmobinfo(1,.mob12) + "'s!";
+		set mob12_ativo,1;
+		end;
+		case 4:
+		if (mob13_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob13+"/"+.reqmob13+" " + strmobinfo(1,.mob13) + "'s!";
+		set mob13_ativo,1;
+		end;
+		case 5:
+		if (mob14_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob14+"/"+.reqmob14+" " + strmobinfo(1,.mob14) + "'s!";
+		set mob14_ativo,1;
+		end;
+	}
+	end;
+	case 5:
+	if (BaseLevel < 71 || (BaseLevel > 90)) {
+		mes "[ ^3CB371Hades^000000 ]";
+		mes "Vejo que você não tem mais level para essas missões, não se preocupe, ainda poderá receber suas recompensas.";
+		end;
+		}
+	switch(select("^3CB371[»]^000000 "+strmobinfo(1,.mob15)+" "+(mob15_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob16)+" "+(mob16_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob17)+" "+(mob17_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob18)+" "+(mob18_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob19)+" "+(mob19_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob20)+" "+(mob20_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob21)+" "+(mob21_completo == 0?"":"^FF8C00[Completo]^000000")+"")){
+		case 1:
+		if (mob15_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob15+"/"+.reqmob15+" " + strmobinfo(1,.mob15) + "'s!";
+		set mob15_ativo,1;
+		end;
+		case 2:
+		if (mob16_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob16+"/"+.reqmob16+" " + strmobinfo(1,.mob16) + "'s!";
+		set mob16_ativo,1;
+		end;
+		case 3:
+		if (mob17_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob17+"/"+.reqmob17+" " + strmobinfo(1,.mob17) + "'s!";
+		set mob17_ativo,1;
+		end;
+		case 4:
+		if (mob18_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob18+"/"+.reqmob18+" " + strmobinfo(1,.mob18) + "'s!";
+		set mob18_ativo,1;
+		end;
+		case 5:
+		if (mob19_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob19+"/"+.reqmob19+" " + strmobinfo(1,.mob19) + "'s!";
+		set mob19_ativo,1;
+		end;
+		case 6:
+		if (mob20_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob20+"/"+.reqmob20+" " + strmobinfo(1,.mob20) + "'s!";
+		set mob20_ativo,1;
+		end;
+		case 7:
+		if (mob21_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob21+"/"+.reqmob21+" " + strmobinfo(1,.mob21) + "'s!";
+		set mob21_ativo,1;
+		end;
+	}
+	end;
+	case 6:
+	if (BaseLevel < 91 || (BaseLevel > 99)) {
+		mes "[ ^3CB371Hades^000000 ]";
+		mes "Vejo que você não tem mais level para essas missões, não se preocupe, ainda poderá receber suas recompensas.";
+		end;
+		}
+	switch(select("^3CB371[»]^000000 "+strmobinfo(1,.mob22)+" "+(mob22_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob23)+" "+(mob23_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob24)+" "+(mob24_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob25)+" "+(mob25_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob26)+" "+(mob26_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob27)+" "+(mob27_completo == 0?"":"^FF8C00[Completo]^000000")+"","^3CB371[»]^000000 "+strmobinfo(1,.mob28)+" "+(mob28_completo == 0?"":"^FF8C00[Completo]^000000")+"")){
+		case 1:
+		//if (mob22_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob22+"/"+.reqmob22+" " + strmobinfo(1,.mob22) + "'s!";
+		set mob22_ativo,1;
+		end;
+		case 2:
+		//if (mob23_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob23+"/"+.reqmob23+" " + strmobinfo(1,.mob23) + "'s!";
+		set mob23_ativo,1;
+		end;
+		case 3:
+		//if (mob24_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob24+"/"+.reqmob24+" " + strmobinfo(1,.mob24) + "'s!";
+		set mob24_ativo,1;
+		end;
+		case 4:
+		//if (mob25_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob25+"/"+.reqmob25+" " + strmobinfo(1,.mob25) + "'s!";
+		set mob25_ativo,1;
+		end;
+		case 5:
+		//if (mob26_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob26+"/"+.reqmob26+" " + strmobinfo(1,.mob26) + "'s!";
+		set mob26_ativo,1;
+		end;
+		case 6:
+		//if (mob27_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob27+"/"+.reqmob27+" " + strmobinfo(1,.mob27) + "'s!";
+		set mob27_ativo,1;
+		end;
+		case 7:
+		//if (mob28_completou >= 1) goto OnCompletou;
+		dispbottom "[Sistema de Caça] Você derrotou "+mob28+"/"+.reqmob28+" " + strmobinfo(1,.mob28) + "'s!";
+		set mob28_ativo,1;
+		end;
+	}
+	end;
+	}
+	end;
+	case 2:
+	if (mob1 >= .reqmob1){
+		set #PTMISSAO, #PTMISSAO + 2; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob1_completou,1;
+		set mob1,mob1 -.reqmob1;
+		getexp .EXP1_20,.JEXP1_20;
+	}
+	else if (mob2 >= .reqmob2){
+		set #PTMISSAO, #PTMISSAO + 2; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob2_completou,1;
+		set mob2,mob2 -.reqmob2;
+		getexp .EXP1_20,.JEXP1_20;
+	}
+	else if (mob3 >= .reqmob3){
+		set #PTMISSAO, #PTMISSAO + 2; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob3_completou,1;
+		set mob3,mob3 -.reqmob3;
+		getexp .EXP1_20,.JEXP1_20;
+	}
+	else if (mob4 >= .reqmob4){
+		set #PTMISSAO, #PTMISSAO + 2; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob4_completou,1;
+		set mob4,mob4 -.reqmob4;
+		getexp .EXP1_20,.JEXP1_20;
+	}
+	else if (mob5 >= .reqmob5){
+		set #PTMISSAO, #PTMISSAO + 4; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob5_completou,1;
+		set mob5,mob5 -.reqmob5;
+		getexp .EXP21_50,.JEXP21_50;
+	}
+	else if (mob6 >= .reqmob6){
+		set #PTMISSAO, #PTMISSAO + 4; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob6_completou,1;
+		set mob6,mob4 -.reqmob6;
+		getexp .EXP21_50,.JEXP21_50;
+	}
+	else if (mob7 >= .reqmob7){
+		set #PTMISSAO, #PTMISSAO + 4; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob7_completou,1;
+		set mob7,mob7 -.reqmob7;
+		getexp .EXP21_50,.JEXP21_50;
+	}
+	else if (mob8 >= .reqmob8){
+		set #PTMISSAO, #PTMISSAO + 4; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob8_completou,1;
+		set mob8,mob8 -.reqmob8;
+		getexp .EXP21_50,.JEXP21_50;
+	}
+	else if (mob9 >= .reqmob9){
+		set #PTMISSAO, #PTMISSAO + 4; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob9_completou,1;
+		set mob9,mob9 -.reqmob9;
+		getexp .EXP21_50,.JEXP21_50;
+	}
+	else if (mob10 >= .reqmob10){
+		set #PTMISSAO, #PTMISSAO + 6; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob10_completou,1;
+		set mob10,mob10 -.reqmob10;
+		getexp .EXP51_70,.JEXP51_70;
+	}
+	else if (mob11 >= .reqmob11){
+		set #PTMISSAO, #PTMISSAO + 6; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob11_completou,1;
+		set mob11,mob11 -.reqmob11;
+		getexp .EXP51_70,.JEXP51_70;
+	}
+	else if (mob12 >= .reqmob12){
+		set #PTMISSAO, #PTMISSAO + 6; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob12_completou,1;
+		set mob12,mob12 -.reqmob12;
+		getexp .EXP51_70,.JEXP51_70;
+	}
+	else if (mob13 >= .reqmob13){
+		set #PTMISSAO, #PTMISSAO + 6; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob13_completou,1;
+		set mob13,mob13 -.reqmob13;
+		getexp .EXP51_70,.JEXP51_70;
+	}
+	else if (mob14 >= .reqmob14){
+		set #PTMISSAO, #PTMISSAO + 6; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob14_completou,1;
+		set mob14,mob14 -.reqmob14;
+		getexp .EXP51_70,.JEXP51_70;
+	}
+	else if (mob15 >= .reqmob15){
+		set #PTMISSAO, #PTMISSAO + 8; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob15_completou,1;
+		set mob15,mob15 -.reqmob15;
+		getexp .EXP71_90,.JEXP71_90;
+	}
+	else if (mob16 >= .reqmob16){
+		set #PTMISSAO, #PTMISSAO + 8; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob16_completou,1;
+		set mob16,mob16 -.reqmob16;
+		getexp .EXP71_90,.JEXP71_90;
+	}
+	else if (mob17 >= .reqmob17){
+		set #PTMISSAO, #PTMISSAO + 8; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob17_completou,1;
+		set mob17,mob17 -.reqmob17;
+		getexp .EXP71_90,.JEXP71_90;
+	}
+	else if (mob18 >= .reqmob18){
+		set #PTMISSAO, #PTMISSAO + 8; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob18_completou,1;
+		set mob18,mob18 -.reqmob18;
+		getexp .EXP71_90,.JEXP71_90;
+	}
+	else if (mob19 >= .reqmob19){
+		set #PTMISSAO, #PTMISSAO + 8; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob19_completou,1;
+		set mob19,mob19 -.reqmob19;
+		getexp .EXP71_90,.JEXP71_90;
+	}
+	else if (mob20 >= .reqmob20){
+		set #PTMISSAO, #PTMISSAO + 8; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob20_completou,1;
+		set mob20,mob20 -.reqmob20;
+		getexp .EXP71_90,.JEXP71_90;
+	}
+	else if (mob21 >= .reqmob21){
+		set #PTMISSAO, #PTMISSAO + 8; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob21_completou,1;
+		set mob21,mob21 -.reqmob21;
+		getexp .EXP71_90,.JEXP71_90;
+	}
+	else if (mob22 >= .reqmob22){
+		set #PTMISSAO, #PTMISSAO + 10; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob22_completo,0;
+		set mob22,mob22 -.reqmob22;
+		getexp .EXP91_99,.JEXP91_99;
+		query_sql "UPDATE `saga_participation` SET `pontos` = `pontos` +1 WHERE `char_id`='"+getcharid(0)+"'";
+	}
+	else if (mob23 >= .reqmob23){
+		set #PTMISSAO, #PTMISSAO + 10; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob23_completo,0;
+		set mob23,mob23 -.reqmob23;
+		getexp .EXP91_99,.JEXP91_99;
+		query_sql "UPDATE `saga_participation` SET `pontos` = `pontos` +1 WHERE `char_id`='"+getcharid(0)+"'";
+	}
+	else if (mob24 >= .reqmob24){
+		set #PTMISSAO, #PTMISSAO + 10; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob24_completo,0;
+		set mob24,mob24 -.reqmob24;
+		getexp .EXP91_99,.JEXP91_99;
+		query_sql "UPDATE `saga_participation` SET `pontos` = `pontos` +1 WHERE `char_id`='"+getcharid(0)+"'";
+	}
+	else if (mob25 >= .reqmob25){
+		set #PTMISSAO, #PTMISSAO + 10; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob25_completo,0;
+		set mob25,mob25 -.reqmob25;
+		getexp .EXP91_99,.JEXP91_99;
+		query_sql "UPDATE `saga_participation` SET `pontos` = `pontos` +1 WHERE `char_id`='"+getcharid(0)+"'";
+	}
+	else if (mob26 >= .reqmob26){
+		set #PTMISSAO, #PTMISSAO + 10; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob26_completo,0;
+		set mob26,mob26 -.reqmob26;
+		getexp .EXP91_99,.JEXP91_99;
+		query_sql "UPDATE `saga_participation` SET `pontos` = `pontos` +1 WHERE `char_id`='"+getcharid(0)+"'";
+	}
+	else if (mob27 >= .reqmob27){
+		set #PTMISSAO, #PTMISSAO + 10; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob27_completo,0;
+		set mob27,mob27 -.reqmob27;
+		getexp .EXP91_99,.JEXP91_99;
+		query_sql "UPDATE `saga_participation` SET `pontos` = `pontos` +1 WHERE `char_id`='"+getcharid(0)+"'";
+	}
+	else if (mob28 >= .reqmob28){
+		set #PTMISSAO, #PTMISSAO + 10; dispbottom "[SweeT Missões] - Agora você tem "+#PTMISSAO+"x Pontos de Missões.";
+		set mob28_completo,0;
+		set mob28,mob28 -.reqmob28;
+		getexp .EXP91_99,.JEXP91_99;
+		query_sql "UPDATE `saga_participation` SET `pontos` = `pontos` +1 WHERE `char_id`='"+getcharid(0)+"'";
+	} else {
+		mes "[ ^3CB371Hades^000000 ]";
+		mes "Volte quando terminar de caçar os seus monstros!";
+		end;
+	}
+	end;
+	case 3:
+	close2;
+	callshop "m_shop",0;
+	end;
+	case 4:
+	end;
+}
+	end;
+
+OnStatusM:
+end;
+
+OnInit:
+// - Configurações
+
+// Configuração de Experiência
+	bindatcmd "missao", strnpcinfo(0)+"::OnQueue", 0,99;
+
+	.EXP1_20 = 700;   // < ~ EXP Base 1 a 20
+	.JEXP1_20 = 300;  // < ~ EXP Job 1 a 20
+
+	.EXP21_50 = 7000;   // < ~ EXP Base 21 a 50
+	.JEXP21_50 = 2000;  // < ~ EXP Job 21 a 50
+
+	.EXP51_70 = 35000;   // < ~ EXP Base 51 a 70
+	.JEXP51_70 = 20000;  // < ~ EXP Job 51 a 70
+
+	.EXP71_90 = 500000;   // < ~ EXP Base 71 a 90
+	.JEXP71_90 = 250000;  // < ~ EXP Job 71 a 90
+
+	.EXP91_99 = 1000000;   // < ~ EXP Base 91 a 99
+	.JEXP91_99 = 150000;  // < ~ EXP Job 91 a 99
+
+// - 1 ao 20
+	.mob1 = 1052; .reqmob1 = 20;
+	.mob2 = 1014; .reqmob2 = 20;
+	.mob3 = 1015; .reqmob3 = 20;
+	.mob4 = 1024; .reqmob4 = 20;
+
+// - 21 ao 50
+	.mob5 = 1018; .reqmob5 = 50;
+	.mob6 = 1031; .reqmob6 = 50;
+	.mob7 = 1019; .reqmob7 = 50;
+	.mob8 = 1249; .reqmob8 = 50;
+	.mob9 = 1069; .reqmob9 = 50;
+
+// - 51 ao 70
+	.mob10 = 1127; .reqmob10 = 100;
+	.mob11 = 1165; .reqmob11 = 100;
+	.mob12 = 1102; .reqmob12 = 100;
+	.mob13 = 1261; .reqmob13 = 100;
+	.mob14 = 1032; .reqmob14 = 100;
+
+// - 71 ao 90
+	.mob15 = 1257; .reqmob15 = 150;
+	.mob16 = 1201; .reqmob16 = 150;
+	.mob17 = 1117; .reqmob17 = 150;
+	.mob18 = 1192; .reqmob18 = 150;
+	.mob19 = 1209; .reqmob19 = 150;
+	.mob20 = 1140; .reqmob20 = 150;
+	.mob21 = 1207; .reqmob21 = 150;
+
+// - 91 ao 99
+	.mob22 = 1061; .reqmob22 = 200;
+	.mob23 = 1065; .reqmob23 = 200;
+	.mob24 = 1269; .reqmob24 = 200;
+	.mob25 = 1195; .reqmob25 = 200;
+	.mob26 = 1202; .reqmob26 = 200;
+	.mob27 = 1412; .reqmob27 = 200;
+	.mob28 = 1366; .reqmob28 = 200;
+
+end;
+OnQueue:
+if (BaseLevel > 91) {
+if(mob1_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob1+"/"+.reqmob1+" " + strmobinfo(1,.mob1) + "'s!"; }
+if(mob2_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob2+"/"+.reqmob2+" " + strmobinfo(1,.mob2) + "'s!"; }
+if(mob3_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob3+"/"+.reqmob3+" " + strmobinfo(1,.mob3) + "'s!"; }
+if(mob4_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob4+"/"+.reqmob4+" " + strmobinfo(1,.mob4) + "'s!"; }
+if(mob5_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob5+"/"+.reqmob5+" " + strmobinfo(1,.mob5) + "'s!"; }
+if(mob6_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob6+"/"+.reqmob6+" " + strmobinfo(1,.mob6) + "'s!"; }
+if(mob7_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob7+"/"+.reqmob7+" " + strmobinfo(1,.mob7) + "'s!"; }
+if(mob8_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob8+"/"+.reqmob8+" " + strmobinfo(1,.mob8) + "'s!"; }
+if(mob9_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob9+"/"+.reqmob9+" " + strmobinfo(1,.mob9) + "'s!"; }
+if(mob10_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob10+"/"+.reqmob10+" " + strmobinfo(1,.mob10) + "'s!"; }
+if(mob11_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob11+"/"+.reqmob11+" " + strmobinfo(1,.mob11) + "'s!"; }
+if(mob12_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob12+"/"+.reqmob12+" " + strmobinfo(1,.mob12) + "'s!"; }
+if(mob13_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob13+"/"+.reqmob13+" " + strmobinfo(1,.mob13) + "'s!"; }
+if(mob14_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob14+"/"+.reqmob14+" " + strmobinfo(1,.mob14) + "'s!"; }
+if(mob15_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob15+"/"+.reqmob15+" " + strmobinfo(1,.mob15) + "'s!"; }
+if(mob16_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob16+"/"+.reqmob16+" " + strmobinfo(1,.mob16) + "'s!"; }
+if(mob17_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob17+"/"+.reqmob17+" " + strmobinfo(1,.mob17) + "'s!"; }
+if(mob18_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob18+"/"+.reqmob18+" " + strmobinfo(1,.mob18) + "'s!"; }
+if(mob19_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob19+"/"+.reqmob19+" " + strmobinfo(1,.mob19) + "'s!"; }
+if(mob20_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob20+"/"+.reqmob20+" " + strmobinfo(1,.mob20) + "'s!"; }
+if(mob21_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob21+"/"+.reqmob21+" " + strmobinfo(1,.mob21) + "'s!"; }
+if(mob22_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob22+"/"+.reqmob22+" " + strmobinfo(1,.mob22) + "'s!"; }
+if(mob23_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob23+"/"+.reqmob23+" " + strmobinfo(1,.mob23) + "'s!"; }
+if(mob24_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob24+"/"+.reqmob24+" " + strmobinfo(1,.mob24) + "'s!"; }
+if(mob25_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob25+"/"+.reqmob25+" " + strmobinfo(1,.mob25) + "'s!"; }
+if(mob26_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob26+"/"+.reqmob26+" " + strmobinfo(1,.mob26) + "'s!"; }
+if(mob27_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob27+"/"+.reqmob27+" " + strmobinfo(1,.mob27) + "'s!"; }
+if(mob28_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob28+"/"+.reqmob28+" " + strmobinfo(1,.mob28) + "'s!"; }
+end;
+}
+
+if (BaseLevel > 71) {
+if(mob1_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob1+"/"+.reqmob1+" " + strmobinfo(1,.mob1) + "'s!"; }
+if(mob2_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob2+"/"+.reqmob2+" " + strmobinfo(1,.mob2) + "'s!"; }
+if(mob3_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob3+"/"+.reqmob3+" " + strmobinfo(1,.mob3) + "'s!"; }
+if(mob4_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob4+"/"+.reqmob4+" " + strmobinfo(1,.mob4) + "'s!"; }
+if(mob5_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob5+"/"+.reqmob5+" " + strmobinfo(1,.mob5) + "'s!"; }
+if(mob6_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob6+"/"+.reqmob6+" " + strmobinfo(1,.mob6) + "'s!"; }
+if(mob7_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob7+"/"+.reqmob7+" " + strmobinfo(1,.mob7) + "'s!"; }
+if(mob8_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob8+"/"+.reqmob8+" " + strmobinfo(1,.mob8) + "'s!"; }
+if(mob9_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob9+"/"+.reqmob9+" " + strmobinfo(1,.mob9) + "'s!"; }
+if(mob10_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob10+"/"+.reqmob10+" " + strmobinfo(1,.mob10) + "'s!"; }
+if(mob11_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob11+"/"+.reqmob11+" " + strmobinfo(1,.mob11) + "'s!"; }
+if(mob12_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob12+"/"+.reqmob12+" " + strmobinfo(1,.mob12) + "'s!"; }
+if(mob13_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob13+"/"+.reqmob13+" " + strmobinfo(1,.mob13) + "'s!"; }
+if(mob14_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob14+"/"+.reqmob14+" " + strmobinfo(1,.mob14) + "'s!"; }
+if(mob15_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob15+"/"+.reqmob15+" " + strmobinfo(1,.mob15) + "'s!"; }
+if(mob16_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob16+"/"+.reqmob16+" " + strmobinfo(1,.mob16) + "'s!"; }
+if(mob17_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob17+"/"+.reqmob17+" " + strmobinfo(1,.mob17) + "'s!"; }
+if(mob18_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob18+"/"+.reqmob18+" " + strmobinfo(1,.mob18) + "'s!"; }
+if(mob19_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob19+"/"+.reqmob19+" " + strmobinfo(1,.mob19) + "'s!"; }
+if(mob20_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob20+"/"+.reqmob20+" " + strmobinfo(1,.mob20) + "'s!"; }
+if(mob21_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob21+"/"+.reqmob21+" " + strmobinfo(1,.mob21) + "'s!"; }
+end;
+} 
+
+if (BaseLevel > 51) {
+if(mob1_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob1+"/"+.reqmob1+" " + strmobinfo(1,.mob1) + "'s!"; }
+if(mob2_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob2+"/"+.reqmob2+" " + strmobinfo(1,.mob2) + "'s!"; }
+if(mob3_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob3+"/"+.reqmob3+" " + strmobinfo(1,.mob3) + "'s!"; }
+if(mob4_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob4+"/"+.reqmob4+" " + strmobinfo(1,.mob4) + "'s!"; }
+if(mob5_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob5+"/"+.reqmob5+" " + strmobinfo(1,.mob5) + "'s!"; }
+if(mob6_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob6+"/"+.reqmob6+" " + strmobinfo(1,.mob6) + "'s!"; }
+if(mob7_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob7+"/"+.reqmob7+" " + strmobinfo(1,.mob7) + "'s!"; }
+if(mob8_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob8+"/"+.reqmob8+" " + strmobinfo(1,.mob8) + "'s!"; }
+if(mob9_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob9+"/"+.reqmob9+" " + strmobinfo(1,.mob9) + "'s!"; }
+if(mob10_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob10+"/"+.reqmob10+" " + strmobinfo(1,.mob10) + "'s!"; }
+if(mob11_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob11+"/"+.reqmob11+" " + strmobinfo(1,.mob11) + "'s!"; }
+if(mob12_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob12+"/"+.reqmob12+" " + strmobinfo(1,.mob12) + "'s!"; }
+if(mob13_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob13+"/"+.reqmob13+" " + strmobinfo(1,.mob13) + "'s!"; }
+if(mob14_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob14+"/"+.reqmob14+" " + strmobinfo(1,.mob14) + "'s!"; }
+end;
+} 
+
+if (BaseLevel > 21) {
+if(mob1_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob1+"/"+.reqmob1+" " + strmobinfo(1,.mob1) + "'s!"; }
+if(mob2_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob2+"/"+.reqmob2+" " + strmobinfo(1,.mob2) + "'s!"; }
+if(mob3_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob3+"/"+.reqmob3+" " + strmobinfo(1,.mob3) + "'s!"; }
+if(mob4_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob4+"/"+.reqmob4+" " + strmobinfo(1,.mob4) + "'s!"; }
+if(mob5_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob5+"/"+.reqmob5+" " + strmobinfo(1,.mob5) + "'s!"; }
+if(mob6_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob6+"/"+.reqmob6+" " + strmobinfo(1,.mob6) + "'s!"; }
+if(mob7_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob7+"/"+.reqmob7+" " + strmobinfo(1,.mob7) + "'s!"; }
+if(mob8_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob8+"/"+.reqmob8+" " + strmobinfo(1,.mob8) + "'s!"; }
+if(mob9_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob9+"/"+.reqmob9+" " + strmobinfo(1,.mob9) + "'s!"; }
+end;
+}
+
+if (BaseLevel >= 1) {
+if(mob1_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob1+"/"+.reqmob1+" " + strmobinfo(1,.mob1) + "'s!"; }
+if(mob2_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob2+"/"+.reqmob2+" " + strmobinfo(1,.mob2) + "'s!"; }
+if(mob3_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob3+"/"+.reqmob3+" " + strmobinfo(1,.mob3) + "'s!"; }
+if(mob4_ativo > 0){
+dispbottom "[Sistema de Caça] Você derrotou "+mob4+"/"+.reqmob4+" " + strmobinfo(1,.mob4) + "'s!"; }
+end;
+}
+
+end;
+OnCompletou:
+		mes "[ ^3CB371Hades^000000 ]";
+		mes "Você já completou está missão!";
+end;
+
+OnNPCKillEvent:
+if( killedrid == .mob1 ){
+	if(mob1_ativo > 0){
+	mob1++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob1+"/"+.reqmob1+" " + strmobinfo(1,.mob1) + "'s!";
+		if (mob1 >= .reqmob1){
+		set mob1_ativo,0;
+		set mob1_completo,1;
+		}
+	}
+}
+if( killedrid == .mob2 ){
+	if(mob2_ativo > 0){
+	mob2++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob2+"/"+.reqmob2+" " + strmobinfo(1,.mob2) + "'s!";
+		if (mob2 >= .reqmob2){
+		set mob2_ativo,0;
+		set mob2_completo,1;
+		}
+	}
+}
+if( killedrid == .mob3 ){
+	if(mob3_ativo > 0){
+	mob3++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob3+"/"+.reqmob3+" " + strmobinfo(1,.mob3) + "'s!";
+		if (mob3 >= .reqmob3){
+		set mob3_ativo,0;
+		set mob3_completo,1;
+		}
+	}
+}
+if( killedrid == .mob4 ){
+	if(mob4_ativo > 0){
+	mob4++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob4+"/"+.reqmob4+" " + strmobinfo(1,.mob4) + "'s!";
+		if (mob4 >= .reqmob4){
+		set mob4_ativo,0;
+		set mob4_completo,1;
+		}
+	}
+}
+if( killedrid == .mob5 ){
+	if(mob5_ativo > 0){
+	mob5++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob5+"/"+.reqmob5+" " + strmobinfo(1,.mob5) + "'s!";
+		if (mob5 >= .reqmob5){
+		set mob5_ativo,0;
+		set mob5_completo,1;
+		}
+	}
+}
+if( killedrid == .mob6 ){
+	if(mob6_ativo > 0){
+	mob6++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob6+"/"+.reqmob6+" " + strmobinfo(1,.mob6) + "'s!";
+		if (mob6 >= .reqmob6){
+		set mob6_ativo,0;
+		set mob6_completo,1;
+		}
+	}
+}
+if( killedrid == .mob7 ){
+	if(mob7_ativo > 0){
+	mob7++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob7+"/"+.reqmob7+" " + strmobinfo(1,.mob7) + "'s!";
+		if (mob7 >= .reqmob7){
+		set mob7_ativo,0;
+		set mob7_completo,1;
+		}
+	}
+}
+if( killedrid == .mob8 ){
+	if(mob8_ativo > 0){
+	mob8++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob8+"/"+.reqmob8+" " + strmobinfo(1,.mob8) + "'s!";
+		if (mob8 >= .reqmob8){
+		set mob8_ativo,0;
+		set mob8_completo,1;
+		}
+	}
+}
+if( killedrid == .mob9 ){
+	if(mob9_ativo > 0){
+	mob9++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob9+"/"+.reqmob9+" " + strmobinfo(1,.mob9) + "'s!";
+		if (mob9 >= .reqmob9){
+		set mob9_ativo,0;
+		set mob9_completo,1;
+		}
+	}
+}
+if( killedrid == .mob10 ){
+	if(mob10_ativo > 0){
+	mob10++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob10+"/"+.reqmob10+" " + strmobinfo(1,.mob10) + "'s!";
+		if (mob10 >= .reqmob10){
+		set mob10_ativo,0;
+		set mob10_completo,1;
+		}
+	}
+}
+if( killedrid == .mob11 ){
+	if(mob11_ativo > 0){
+	mob11++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob11+"/"+.reqmob11+" " + strmobinfo(1,.mob11) + "'s!";
+		if (mob11 >= .reqmob11){
+		set mob11_ativo,0;
+		set mob11_completo,1;
+		}
+	}
+}
+if( killedrid == .mob12 ){
+	if(mob12_ativo > 0){
+	mob12++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob12+"/"+.reqmob12+" " + strmobinfo(1,.mob12) + "'s!";
+		if (mob12 >= .reqmob12){
+		set mob12_ativo,0;
+		set mob12_completo,1;
+		}
+	}
+}
+if( killedrid == .mob13 ){
+	if(mob13_ativo > 0){
+	mob13++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob13+"/"+.reqmob13+" " + strmobinfo(1,.mob13) + "'s!";
+		if (mob13 >= .reqmob13){
+		set mob13_ativo,0;
+		set mob13_completo,1;
+		}
+	}
+}
+if( killedrid == .mob14 ){
+	if(mob14_ativo > 0){
+	mob14++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob14+"/"+.reqmob14+" " + strmobinfo(1,.mob14) + "'s!";
+		if (mob14 >= .reqmob14){
+		set mob14_ativo,0;
+		set mob14_completo,1;
+		}
+	}
+}
+if( killedrid == .mob15 ){
+	if(mob15_ativo > 0){
+	mob15++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob15+"/"+.reqmob15+" " + strmobinfo(1,.mob15) + "'s!";
+		if (mob15 >= .reqmob15){
+		set mob15_ativo,0;
+		set mob15_completo,1;
+		}
+	}
+}
+if( killedrid == .mob16 ){
+	if(mob16_ativo > 0){
+	mob16++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob16+"/"+.reqmob16+" " + strmobinfo(1,.mob16) + "'s!";
+		if (mob16 >= .reqmob16){
+		set mob16_ativo,0;
+		set mob16_completo,1;
+		}
+	}
+}
+if( killedrid == .mob17 ){
+	if(mob17_ativo > 0){
+	mob17++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob17+"/"+.reqmob17+" " + strmobinfo(1,.mob17) + "'s!";
+		if (mob17 >= .reqmob17){
+		set mob17_ativo,0;
+		set mob17_completo,1;
+		}
+	}
+}
+if( killedrid == .mob18 ){
+	if(mob18_ativo > 0){
+	mob18++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob18+"/"+.reqmob18+" " + strmobinfo(1,.mob18) + "'s!";
+		if (mob18 >= .reqmob18){
+		set mob18_ativo,0;
+		set mob18_completo,1;
+		}
+	}
+}
+if( killedrid == .mob19 ){
+	if(mob19_ativo > 0){
+	mob19++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob19+"/"+.reqmob19+" " + strmobinfo(1,.mob19) + "'s!";
+		if (mob19 >= .reqmob19){
+		set mob19_ativo,0;
+		set mob19_completo,1;
+		}
+	}
+}
+if( killedrid == .mob20 ){
+	if(mob20_ativo > 0){
+	mob20++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob20+"/"+.reqmob20+" " + strmobinfo(1,.mob20) + "'s!";
+		if (mob20 >= .reqmob20){
+		set mob20_ativo,0;
+		set mob20_completo,1;
+		}
+	}
+}
+if( killedrid == .mob21 ){
+	if(mob21_ativo > 0){
+	mob21++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob21+"/"+.reqmob21+" " + strmobinfo(1,.mob21) + "'s!";
+		if (mob21 >= .reqmob21){
+		set mob21_ativo,0;
+		set mob21_completo,1;
+		}
+	}
+}
+if( killedrid == .mob22 ){
+	if(mob22_ativo > 0){
+	mob22++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob22+"/"+.reqmob22+" " + strmobinfo(1,.mob22) + "'s!";
+		if (mob22 >= .reqmob22){
+		set mob22_ativo,0;
+		set mob22_completo,1;
+		}
+	}
+}
+if( killedrid == .mob23 ){
+	if(mob23_ativo > 0){
+	mob23++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob23+"/"+.reqmob23+" " + strmobinfo(1,.mob23) + "'s!";
+		if (mob23 >= .reqmob23){
+		set mob23_ativo,0;
+		set mob23_completo,1;
+		}
+	}
+}
+if( killedrid == .mob24 ){
+	if(mob24_ativo > 0){
+	mob24++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob24+"/"+.reqmob24+" " + strmobinfo(1,.mob24) + "'s!";
+		if (mob24 >= .reqmob24){
+		set mob24_ativo,0;
+		set mob24_completo,1;
+		}
+	}
+}
+if( killedrid == .mob25 ){
+	if(mob25_ativo > 0){
+	mob25++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob25+"/"+.reqmob25+" " + strmobinfo(1,.mob25) + "'s!";
+		if (mob25 >= .reqmob25){
+		set mob25_ativo,0;
+		set mob25_completo,1;
+		}
+	}
+}
+if( killedrid == .mob26 ){
+	if(mob26_ativo > 0){
+	mob26++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob26+"/"+.reqmob26+" " + strmobinfo(1,.mob26) + "'s!";
+		if (mob26 >= .reqmob26){
+		set mob26_ativo,0;
+		set mob26_completo,1;
+		}
+	}
+}
+if( killedrid == .mob27 ){
+	if(mob27_ativo > 0){
+	mob27++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob27+"/"+.reqmob27+" " + strmobinfo(1,.mob27) + "'s!";
+		if (mob27 >= .reqmob27){
+		set mob27_ativo,0;
+		set mob27_completo,1;
+		}
+	}
+}
+if( killedrid == .mob28 ){
+	if(mob28_ativo > 0){
+	mob28++;
+	dispbottom "[Sistema de Caça] Você derrotou "+mob28+"/"+.reqmob28+" " + strmobinfo(1,.mob28) + "'s!";
+		if (mob28 >= .reqmob28){
+		set mob28_ativo,0;
+		set mob28_completo,1;
+		}
+	}
+}
+end;
+}

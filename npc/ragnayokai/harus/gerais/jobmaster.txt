@@ -1,33 +1,32 @@
-prontera,156,196,5	script	Mestra das Classes	811,{
-
+prontera,156,196,5	script	Mestra das Classes::JobMaster	743,{
 	if(BaseLevel && JobLevel > 1){
 	javirou:
-	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+	mes "^016B14["+strnpcinfo(1)+"]^000000";
 	if (Class > 22 && Class < 26 || Class > 4007 && Class < 4023 || Class > 4029 && Class < 4046 || Class > 4046 && Class <= 4049)
 	{
 		mes "Que bom te ver de novo "+strcharinfo(0)+"!";
-		mes "O dia está lindo, não acha?";
+		mes "O dia est� lindo, n�o acha?";
 		close;
 	}
 	if (SkillPoint)
 	{
-		mes "Você precisa utilizar todos os seus pontos de habilidade antes de mudar de classe.";
+		mes "Voc� precisa utilizar todos os seus pontos de habilidade antes de mudar de classe.";
 		close;
 	}
 	if (!Class || Class == 4023)
 	{
 		callsub F_ReqBaseJobLevel, 10, 0;
-		mes "Olá "+strcharinfo(0)+", vejo que você é apenas um "+jobname(Class)+"!";
-		mes "Você está apto a mudar de classe. Qual deseja se tornar?";
+		mes "Ol� "+strcharinfo(0)+", vejo que voc� � apenas um "+jobname(Class)+"!";
+		mes "Voc� est� apto a mudar de classe. Qual deseja se tornar?";
 		next;
 		if (!Class)
 		{
-			select ("Espadachim:Mago:Arqueiro:Noviço:Mercador:Gatuno:Taekwon:Justiceiro:Ninja:Super Aprendiz");
+			select ("Espadachim:Mago:Arqueiro:Novi�o:Mercador:Gatuno:Taekwon:Justiceiro:Ninja:Super Aprendiz");
 			set .@chg, ((@menu == 7) ? 4046 : ((@menu == 8 || @menu == 9) ? (16+@menu) : ((@menu == 10) ? 23 : @menu)));
 		}
 		else
 		{
-			select ("Mini Espadachim:Mini Mago:Mini Arqueiro:Mini Noviço:Mini Mercador:Mini Gatuno:Mini Super Aprendiz");
+			select ("Mini Espadachim:Mini Mago:Mini Arqueiro:Mini Novi�o:Mini Mercador:Mini Gatuno:Mini Super Aprendiz");
 			set .@chg, ((@menu == 7) ? 4045 : (4023+@menu));
 		}
 		callsub F_ChangeJob, set (lastjob1, .@chg);
@@ -35,7 +34,7 @@ prontera,156,196,5	script	Mestra das Classes	811,{
 	else if (Class > 0 && (Class < 7 || Class == 4046))
 	{
 		callsub F_ReqBaseJobLevel, 40, 0;
-		mes "Vejo que você voltou; e mais forte!";
+		mes "Vejo que voc� voltou; e mais forte!";
 		mes "Pois bem, que classe deseja seguir agora?";
 		switch (Class)
 		{
@@ -77,30 +76,30 @@ prontera,156,196,5	script	Mestra das Classes	811,{
 	else if (Class > 6 && Class < 22)
 	{
 		callsub F_ReqBaseJobLevel, 50, 1;
-		mes "Vejo que você está bastante forte!";
+		mes "Vejo que voc� est� bastante forte!";
 		mes "Gostaria de renascer?";
 		next;
-		if (select ("Não:Sim") == 1)
+		if (select ("N�o:Sim") == 1)
 			close;
 		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
 		jobchange 4001;
 		resetlvl(1);
-		mes "Você ganhará 100 Pontos de Atributo, e algumas habilidades";
+		mes "Voc� ganhar� 100 Pontos de Atributo, e algumas habilidades";
 		mes "para ajudar-lhe em sua jornada.";
 		close;
 	}
 	else if (Class == 4001)
 	{
 		callsub F_ReqBaseJobLevel, 10, 0;
-		mes "Você voltou tão rápido e está evoluindo muito ^^ ...";
+		mes "Voc� voltou t�o r�pido e est� evoluindo muito ^^ ...";
 		next;
 		callsub F_ChangeJob, (lastjob1+4001);
 	}
 	else if (Class > 4001 && Class < 4008)
 	{
 		callsub F_ReqBaseJobLevel, 40, 0;
-		mes "Você está quase chegando ao grau máximo de evolução.";
-		mes "E então...";
+		mes "Voc� est� quase chegando ao grau m�ximo de evolu��o.";
+		mes "E ent�o...";
 		next;
 		callsub F_ChangeJob, (lastjob+4001);
 	}
@@ -108,7 +107,7 @@ prontera,156,196,5	script	Mestra das Classes	811,{
 	if (Class > 4023 && Class < 4030)
 	{
 		callsub F_ReqBaseJobLevel, 40, 0;
-		mes "Vejo que você voltou; e mais forte!";
+		mes "Vejo que voc� voltou; e mais forte!";
 		mes "Pois bem, que classe deseja seguir agora?";
 		next;
 		switch (Class)
@@ -145,26 +144,26 @@ prontera,156,196,5	script	Mestra das Classes	811,{
 	}
 			
 	F_ChangeJob:
-		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "^016B14["+strnpcinfo(1)+"]^000000";
 		if (BaseLevel < 45 && (getarg(0) == 23 || getarg(0) == 4045))
 		{
-			mes "Você precisa ter pelo menos Nível de Base 45 para poder mudar de classe.";
+			mes "Voc� precisa ter pelo menos N�vel de Base 45 para poder mudar de classe.";
 			close;
 		}
-		mes "Você tem certeza que deseja se tornar "+jobname(getarg(0))+"?";
-		if (select ("Não:Sim") == 1)
+		mes "Voc� tem certeza que deseja se tornar "+jobname(getarg(0))+"?";
+		if (select ("N�o:Sim") == 1)
 			close;
 		next;
 		jobchange getarg(0);
-		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-		mes "Parabéns, agora você é um ^0000cd"+jobname(getarg(0))+"^000000!";
+			mes "^016B14["+strnpcinfo(1)+"]^000000";
+		mes "Parab�ns, agora voc� � um ^0000cd"+jobname(getarg(0))+"^000000!";
 		close;
 	return;
 	
 	F_ReqBaseJobLevel:
 		if (((getarg(1))?BaseLevel:99) < 99 || JobLevel < getarg(0))
 		{
-			mes "Você precisa ter pelo menos "+((getarg(1,0))?"Nível de Base 99 e ":"")+"Nível de Classe "+getarg(0)+" para poder mudar de classe.";
+			mes "Voc� precisa ter pelo menos "+((getarg(1,0))?"N�vel de Base 99 e ":"")+"N�vel de Classe "+getarg(0)+" para poder mudar de classe.";
 			close;
 		}
 	return;
@@ -178,31 +177,38 @@ prontera,156,196,5	script	Mestra das Classes	811,{
 	callsub javirou;
 	end;
 	}
-	mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-	mes "Olá "+strcharinfo(0)+".";
-	mes "Vejo que você é um ^0000cdAprendiz^000000...";
+		mes "^016B14["+strnpcinfo(1)+"]^000000";
+	mes "Ol� "+strcharinfo(0)+".";
+	mes "Vejo que voc� � um ^0000cdAprendiz^000000...";
 	mes "Level de Base e Classe 1!";
 	mes "Deseja se tornar um Mini-Aprendiz?";
-	switch(select("Não:Sim")){
+	switch(select("N�o:Sim")){
 		
 		case 1:
 		next;
-		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
+			mes "^016B14["+strnpcinfo(1)+"]^000000";
 		mes "Lembre-se para se tornar um ^0000cdMini-Aprendiz^000000...";
-		mes "você precisar ser aprendiz com ^FF0000Level de Base e Classe 1^000000!";
+		mes "voc� precisar ser aprendiz com ^FF0000Level de Base e Classe 1^000000!";
 		close;
 		
 		case 2:
 		next;
-		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-		mes "Você tem certeza de sua escolha?";
-		if(select("Não:Sim")==1) close;
+			mes "^016B14["+strnpcinfo(1)+"]^000000";
+		mes "Voc� tem certeza de sua escolha?";
+		if(select("N�o:Sim")==1) close;
 		next;
-		mes "[^010849===^000000 ^016B14"+strnpcinfo(1)+"^000000 ^010849===^000000]";
-		mes "Parabéns, agora você é um ^0000cdMini-Aprendiz^000000!";
+			mes "^016B14["+strnpcinfo(1)+"]^000000";
+		mes "Parab�ns, agora voc� � um ^0000cdMini-Aprendiz^000000!";
 		jobchange 4023;
 		close;
 		
 
 }
+
+OnInit:
+	waitingroom "Mestra das Classes",0;
+	end;
 }
+
+//Campo inicial
+new_1-3,86,175,4	duplicate(JobMaster)	Mestra das Classes#newmap1	743

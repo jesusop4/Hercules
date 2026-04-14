@@ -108,4 +108,6 @@ void HCache_defaults(void);
 
 HPShared struct HCache_interface *HCache;
 
+char *GetComma(unsigned long n);
+
 #endif /* COMMON_UTILS_H */

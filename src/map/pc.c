@@ -12078,25 +12078,28 @@ static void pc_autotrade_load(void)
 {
 	char *data;
 
-	if (SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `account_id`,`char_id`,`sex`,`title` FROM `%s`",map->autotrade_merchants_db))
+	if (SQL_ERROR == SQL->Query(map->mysql_handle, "SELECT `account_id`,`char_id`,`sex`,`title`,IFNULL(`extended_vending_item`,0) FROM `%s`",map->autotrade_merchants_db))
 		Sql_ShowDebug(map->mysql_handle);
 
 	while (SQL_SUCCESS == SQL->NextRow(map->mysql_handle)) {
 		struct map_session_data *sd;
 		int account_id, char_id;
 		char title[MESSAGE_SIZE];
+		int vend_item = 0;
 		unsigned char sex;
 
 		SQL->GetData(map->mysql_handle, 0, &data, NULL); account_id = atoi(data);
 		SQL->GetData(map->mysql_handle, 1, &data, NULL); char_id = atoi(data);
 		SQL->GetData(map->mysql_handle, 2, &data, NULL); sex = atoi(data);
 		SQL->GetData(map->mysql_handle, 3, &data, NULL); safestrncpy(title, data, sizeof(title));
+		SQL->GetData(map->mysql_handle, 4, &data, NULL); vend_item = atoi(data);
 
 		CREATE(sd, struct map_session_data, 1);
 
 		pc->setnewpc(sd, account_id, char_id, 0, 0, sex, 0);
 
 		safestrncpy(sd->message, title, MESSAGE_SIZE);
+		sd->vend_loot = vend_item;
 		sd->state.standalone = 1;
 		sd->group = pcg->get_dummy_group();
 
@@ -12176,12 +12179,13 @@ static void pc_autotrade_update(struct map_session_data *sd, enum e_pc_autotrade
 
 			SQL->EscapeStringLen(map->mysql_handle, title, sd->message, strnlen(sd->message, MESSAGE_SIZE));
 
-			if (SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s` (`account_id`,`char_id`,`sex`,`title`) VALUES ('%d','%d','%d','%s')",
+			if (SQL_ERROR == SQL->Query(map->mysql_handle, "INSERT INTO `%s` (`account_id`,`char_id`,`sex`,`title`,`extended_vending_item`) VALUES ('%d','%d','%d','%s','%d')",
 										map->autotrade_merchants_db,
 										sd->status.account_id,
 										sd->status.char_id,
 										sd->status.sex,
-										title
+										title,
+										sd->vend_loot
 										))
 				Sql_ShowDebug(map->mysql_handle);
 		}
@@ -12218,6 +12222,7 @@ static void pc_autotrade_prepare(struct map_session_data *sd)
 	CREATE(data, struct autotrade_vending, 1);
 
 	memcpy(data->vending, sd->vending, sizeof(sd->vending));
+	data->vend_loot = sd->vend_loot;
 
 	for(i = 0; i < sd->vend_num; i++) {
 		if( sd->vending[i].amount ) {
@@ -12249,6 +12254,7 @@ static void pc_autotrade_prepare(struct map_session_data *sd)
 	pc->setnewpc(sd, account_id, char_id, 0, 0, sex, 0);
 
 	safestrncpy(sd->message, title, MESSAGE_SIZE);
+	sd->vend_loot = data->vend_loot;
 	sd->state.standalone = 1;
 	sd->group = pcg->get_dummy_group();
 
@@ -12291,6 +12297,7 @@ static void pc_autotrade_populate(struct map_session_data *sd)
 	}
 
 	sd->vend_num = cursor;
+	sd->vend_loot = data->vend_loot;
 
 	pc->autotrade_update(sd,PAUC_START);
 

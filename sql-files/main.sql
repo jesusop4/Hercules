@@ -117,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `autotrade_merchants` (
   `char_id` INT NOT NULL DEFAULT '0',
   `sex` TINYINT NOT NULL DEFAULT '0',
   `title` VARCHAR(80) NOT NULL DEFAULT 'Buy From Me!',
+  `extended_vending_item` INT NOT NULL DEFAULT '0',
   PRIMARY KEY (`account_id`,`char_id`)
 ) ENGINE=MyISAM;
 
