@@ -222,7 +222,8 @@ OnInit:
 	sellitem Booby_Trap;
 }
 
-//== Ninja Shops ===========================================
+//== Ninja Shops =========================================== (que_ng map not available)
+/*
 que_ng,72,31,2	trader	Boonji#nin	4_M_01,{
 OnInit:
 	sellitem Shuriken;
@@ -252,6 +253,7 @@ OnInit:
 		sellitem Special_Ninja_Suit;
 	}
 }
+*/
 
 //== Ayothaya ==============================================
 ayo_in01,18,182,1	trader	Tool Dealer#ayo	4_F_THAISHAMAN,{
@@ -543,7 +545,8 @@ OnInit:
 	sellitem Red_Potion;
 }
 
-//== Official Gunslingers shops ============================
+//== Official Gunslingers shops ============================ (que_ng map not available)
+/*
 que_ng,179,91,3	trader	Chivas Lugal	4_M_HUMERCHANT,{
 OnInit:
 	sellitem Branch;
@@ -562,6 +565,7 @@ OnInit:
 	sellitem Silver_Bullet;
 	sellitem Shell_Of_Blood;
 }
+*/
 
 //== Geffen ================================================
 geffen_in,26,178,4	trader	Armor Dealer#gef	1_F_01,{

@@ -1,17 +1,17 @@
 //==============================================================
-// @lootconfig â€” Sistema Avancado de Autoloot
+// @lootconfig » Sistema Avancado de Autoloot
 // Alias: @lc
 //
 // Variaveis permanentes por personagem (escalares, sem arrays):
-//   LOOT_ON         â€” 0/1 autoloot ligado
-//   LOOT_RATE       â€” 0-100 taxa (%)
-//   LOOT_ACT        â€” grupo ativo (0=nenhum, 1-10)
-//   LOOT_NM0$..9$   â€” nomes dos grupos (gerenciados pelo C)
-//   LOOT_GP0$..9$   â€” itens de cada grupo (gerenciados pelo C)
+//   LOOT_ON         » 0/1 autoloot ligado
+//   LOOT_RATE       » 0-100 taxa (%)
+//   LOOT_ACT        » grupo ativo (0=nenhum, 1-10)
+//   LOOT_NM0$..9$   » nomes dos grupos (gerenciados pelo C)
+//   LOOT_GP0$..9$   » itens de cada grupo (gerenciados pelo C)
 //==============================================================
 
 //--------------------------------------------------------------
-// F_LootApply â€” aplica configuracao atual ao autoloot
+// F_LootApply » aplica configuracao atual ao autoloot
 //--------------------------------------------------------------
 function	script	F_LootApply	{
 	autolootgrpsetactive(LOOT_ACT);
@@ -35,7 +35,7 @@ OnRequest:
 	set @_lc_son$, (LOOT_ON ? "^00AA00LIGADO^000000" : "^AA0000DESLIGADO^000000");
 	set @_lc_actname$, (LOOT_ACT >= 1 ? autolootgrpname(LOOT_ACT) : "");
 	set @_lc_actcnt,   (LOOT_ACT >= 1 ? autolootgrpcount(LOOT_ACT) : 0);
-	mes "^4040BF======== @lootconfig ========^000000";
+	mes "^4040BF Configuração AutoLoot ^000000";
 	mes "Autoloot: " + @_lc_son$ + "  |  Taxa: ^0070FF" + LOOT_RATE + "%^000000";
 	if (LOOT_ACT >= 1 && @_lc_actname$ != "") {
 		mes "Lista ativa: ^8800FF" + @_lc_actname$ + "^000000 (" + @_lc_actcnt + " itens)";
@@ -44,10 +44,9 @@ OnRequest:
 	}
 	next;
 	set @_lc_sel, select(
-		(LOOT_ON ? "Desligar Autoloot" : "Ligar Autoloot"),
-		"Configurar Taxa de Drop",
-		"Gerenciar Listas de Loot",
-		"Fechar"
+		(LOOT_ON ? "^00CC00[»]^000000 Desligar Autoloot" : "^00CC00[»]^000000 Ligar Autoloot"),
+		"^0088FF[»]^000000 Configurar Taxa de Drop",
+		"^0088FF[»]^000000 Gerenciar Listas de Loot"
 	);
 	if (@_lc_sel == 1) goto L_Toggle;
 	if (@_lc_sel == 2) goto L_SetRate;
@@ -58,14 +57,14 @@ OnRequest:
 L_Toggle:
 	set LOOT_ON, (LOOT_ON ? 0 : 1);
 	callfunc "F_LootApply";
-	mes "^4040BF======== @lootconfig ========^000000";
+	mes "^4040BF Configuração AutoLoot ^000000";
 	mes "Autoloot " + (LOOT_ON ? "^00AA00LIGADO^000000" : "^AA0000DESLIGADO^000000") + "!";
 	next;
 	goto OnRequest;
 
 //-- Taxa de Drop ---------------------------------------------------
 L_SetRate:
-	mes "^4040BF===== Taxa de Drop =====^000000";
+	mes "^4040BF Taxa de Drop ^000000";
 	mes "Taxa atual: ^0070FF" + LOOT_RATE + "%^000000";
 	mes "";
 	mes "Itens com taxa <= X% sao coletados automaticamente.";
@@ -75,7 +74,7 @@ L_SetRate:
 	input @_lc_rate, 0, 100;
 	set LOOT_RATE, @_lc_rate;
 	callfunc "F_LootApply";
-	mes "^4040BF===== Taxa de Drop =====^000000";
+	mes "^4040BF Taxa de Drop ^000000";
 	mes "Taxa ajustada para ^0070FF" + LOOT_RATE + "%^000000.";
 	next;
 	goto OnRequest;
@@ -92,7 +91,7 @@ L_Groups:
 			set @_lc_gcnt_all, @_lc_gcnt_all + 1;
 			if (@_lc_gmenu$ != "") set @_lc_gmenu$, @_lc_gmenu$ + ":";
 			if (LOOT_ACT == @_lc_gi) {
-				set @_lc_gmenu$, @_lc_gmenu$ + "[ATIVA] " + @_lc_gname_cur$ + " (" + autolootgrpcount(@_lc_gi) + " itens)";
+				set @_lc_gmenu$, @_lc_gmenu$ + "^00CC00[ATIVA]^000000 " + @_lc_gname_cur$ + " (" + autolootgrpcount(@_lc_gi) + " itens)";
 			} else {
 				set @_lc_gmenu$, @_lc_gmenu$ + @_lc_gname_cur$ + " (" + autolootgrpcount(@_lc_gi) + " itens)";
 			}
@@ -102,18 +101,18 @@ L_Groups:
 	set @_lc_new_pos, 0;
 	if (@_lc_gcnt_all < 10) {
 		if (@_lc_gmenu$ != "") set @_lc_gmenu$, @_lc_gmenu$ + ":";
-		set @_lc_gmenu$, @_lc_gmenu$ + "+ Criar nova lista";
+		set @_lc_gmenu$, @_lc_gmenu$ + "^00CC00[+]^000000 Criar nova lista";
 		set @_lc_new_pos, @_lc_gcnt_all + 1;
 	}
 	if (@_lc_gmenu$ != "") set @_lc_gmenu$, @_lc_gmenu$ + ":";
-	set @_lc_gmenu$, @_lc_gmenu$ + "[ Voltar ]";
+	set @_lc_gmenu$, @_lc_gmenu$ + "^0088FF[»]^000000 Voltar";
 	set @_lc_back_pos, @_lc_gcnt_all + (@_lc_new_pos > 0 ? 1 : 0) + 1;
 
-	mes "^4040BF===== Listas de Loot =====^000000";
+	mes "^4040BF Listas de Loot ^000000";
 	if (@_lc_gcnt_all == 0) {
 		mes "Nenhuma lista criada ainda.";
 	} else {
-		mes "[ATIVA] indica a lista carregada no autoloot.";
+		mes "^00CC00 [ATIVA] ^000000 indica a lista carregada no autoloot.";
 	}
 	next;
 	set @_lc_gsel, select(@_lc_gmenu$);
@@ -136,7 +135,7 @@ L_NewGroup:
 		next;
 		goto L_Groups;
 	}
-	mes "^4040BF===== Nova Lista =====^000000";
+	mes "^4040BF Nova Lista ^000000";
 	mes "Digite o nome da nova lista:";
 	next;
 	input @_lc_newname$;
@@ -154,31 +153,31 @@ L_GroupMenu:
 	set @_lc_gnam$,  autolootgrpname(@_lc_grp);
 	set @_lc_gcnt2,  autolootgrpcount(@_lc_grp);
 	set @_lc_gisact, (LOOT_ACT == @_lc_grp ? 1 : 0);
-	mes "^4040BF===== " + @_lc_gnam$ + " =====^000000";
+	mes "^000000 " + @_lc_gnam$ + " ^000000";
 	mes "Itens: ^0070FF" + @_lc_gcnt2 + "/20^000000  |  " + (@_lc_gisact ? "^00AA00ATIVA^000000" : "^888888inativa^000000");
 	next;
-	set @_lc_gm$, (@_lc_gisact ? "Desativar lista" : "Ativar lista");
-	set @_lc_gm$, @_lc_gm$ + ":Adicionar item";
+	set @_lc_gm$, (@_lc_gisact ? "^FF0000[»]^000000 Desativar lista" : "^00CC00[»]^000000 Ativar lista");
+	set @_lc_gm$, @_lc_gm$ + ":^00CC00[»]^000000 Adicionar item";
 	set @_lc_gm_p, 2;
 	set @_lc_gm_remove, 0;
 	set @_lc_gm_view, 0;
 	if (@_lc_gcnt2 > 0) {
 		set @_lc_gm_p, @_lc_gm_p + 1;
 		set @_lc_gm_remove, @_lc_gm_p;
-		set @_lc_gm$, @_lc_gm$ + ":Remover item";
+		set @_lc_gm$, @_lc_gm$ + ":^FF0000[»]^000000 Remover item";
 		set @_lc_gm_p, @_lc_gm_p + 1;
 		set @_lc_gm_view, @_lc_gm_p;
-		set @_lc_gm$, @_lc_gm$ + ":Ver itens";
+		set @_lc_gm$, @_lc_gm$ + ":^0088FF[»]^000000 Ver itens";
 	}
 	set @_lc_gm_p, @_lc_gm_p + 1;
 	set @_lc_gm_rename, @_lc_gm_p;
-	set @_lc_gm$, @_lc_gm$ + ":Renomear lista";
+	set @_lc_gm$, @_lc_gm$ + ":^FF0000[»]^000000 Renomear lista";
 	set @_lc_gm_p, @_lc_gm_p + 1;
 	set @_lc_gm_delete, @_lc_gm_p;
-	set @_lc_gm$, @_lc_gm$ + ":Excluir lista";
+	set @_lc_gm$, @_lc_gm$ + ":^FF0000[»]^000000 Excluir lista";
 	set @_lc_gm_p, @_lc_gm_p + 1;
 	set @_lc_gm_back, @_lc_gm_p;
-	set @_lc_gm$, @_lc_gm$ + ":[ Voltar ]";
+	set @_lc_gm$, @_lc_gm$ + ":^0088FF[»]^000000 Voltar";
 
 	set @_lc_grpsel, select(@_lc_gm$);
 
@@ -196,12 +195,12 @@ L_ToggleGroup:
 	if (@_lc_gisact) {
 		set LOOT_ACT, 0;
 		callfunc "F_LootApply";
-		mes "^4040BF======== @lootconfig ========^000000";
+		mes "^4040BF Configuração AutoLoot ^000000";
 		mes "Lista ^8800FF" + @_lc_gnam$ + "^000000 desativada.";
 	} else {
 		set LOOT_ACT, @_lc_grp;
 		callfunc "F_LootApply";
-		mes "^4040BF======== @lootconfig ========^000000";
+		mes "^4040BF Configuração AutoLoot ^000000";
 		mes "Lista ^8800FF" + @_lc_gnam$ + "^000000 ativada!";
 		if (@_lc_gcnt2 == 0)
 			mes "^FF8800Dica: a lista esta vazia. Adicione itens.^000000";
@@ -218,7 +217,7 @@ L_AddItem:
 		next;
 		goto L_GroupMenu;
 	}
-	mes "^4040BF===== Adicionar Item =====^000000";
+	mes "^4040BF Adicionar Item ^000000";
 	mes "Digite o ID do item a adicionar:";
 	mes "^888888(ex: 501 para Porcao Vermelha)^000000";
 	next;
@@ -250,7 +249,7 @@ L_AddItem:
 
 //-- Remover Item ---------------------------------------------------
 L_RemoveItem:
-	mes "^4040BF===== Remover Item =====^000000";
+	mes "^4040BF Remover Item ^000000";
 	mes "Selecione o item a remover:";
 	next;
 	set @_lc_rmmenu$, "";
@@ -274,7 +273,7 @@ L_RemoveItem:
 
 //-- Ver Itens ------------------------------------------------------
 L_ViewItems:
-	mes "^4040BF===== Itens em " + @_lc_gnam$ + " =====^000000";
+	mes "^4040BF Itens em " + @_lc_gnam$ + " ^000000";
 	set @_lc_vi, 0;
 	while (@_lc_vi < @_lc_gcnt2) {
 		set @_lc_vid, autolootgrpget(@_lc_grp, @_lc_vi);
@@ -286,7 +285,7 @@ L_ViewItems:
 
 //-- Renomear Lista -------------------------------------------------
 L_RenameGroup:
-	mes "^4040BF===== Renomear Lista =====^000000";
+	mes "^4040BF Renomear Lista ^000000";
 	mes "Nome atual: ^8800FF" + @_lc_gnam$ + "^000000";
 	mes "Digite o novo nome:";
 	next;
@@ -305,11 +304,11 @@ L_RenameGroup:
 
 //-- Excluir Lista --------------------------------------------------
 L_DeleteGroup:
-	mes "^4040BF===== Excluir Lista =====^000000";
+	mes "^4040BF Excluir Lista ^000000";
 	mes "Tem certeza que deseja excluir ^8800FF" + @_lc_gnam$ + "^000000?";
 	mes "^FF0000Esta acao nao pode ser desfeita!^000000";
 	next;
-	set @_lc_delsel, select("Sim, excluir", "Nao, cancelar");
+	set @_lc_delsel, select("^00CC00[»]^000000 Sim", "^FF0000[»]^000000 Cancelar");
 	if (@_lc_delsel == 2) goto L_GroupMenu;
 	autolootgrpclear(@_lc_grp);
 	autolootgrpsave();
@@ -320,4 +319,10 @@ L_DeleteGroup:
 	mes "Lista ^8800FF" + @_lc_gnam$ + "^000000 excluida.";
 	next;
 	goto L_Groups;
+
+//-- Registro dos atcommands ----------------------------------------
+OnInit:
+	bindatcmd "lootconfig", strnpcinfo(3)+"::OnRequest";
+	bindatcmd "lc", strnpcinfo(3)+"::OnRequest";
+	end;
 }

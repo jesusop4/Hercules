@@ -1,0 +1,301 @@
+prontera,150,180,4	script	Brendon	985,{
+
+	mes "^9900FF[Brendon]^000000";
+	mes "Missões de Caça";
+	next;
+
+	if (countitem(6219) == 0) {
+		mes "Você não possui o Emblema do Éden.";
+		mes "Visite o Noviço em para obtê-lo.";
+		mes "Vou te transportar até lá!";
+		close2;
+		warp "new_1-3", 89, 168;
+		end;
+	}
+
+	// Já tem missão ativa
+	if (#eden_mob_id) {
+		mes "Você já possui uma missão ativa!";
+		callsub S_ShowProgress;
+		next;
+
+		if (#eden_kills >= #eden_kill_count) {
+			mes "Missão completa! O que deseja fazer?";
+			next;
+			switch(select("^FF0000[�]^000000 Entregar missão", "^FF0000[�]^000000 Abandonar missão", "^FF0000[�]^000000 Fechar")) {
+				case 1:
+					getexp #eden_exp, 0;
+					set #eden_mob_id, 0;
+					set #eden_kills, 0;
+					set #eden_kill_count, 0;
+					set #eden_exp, 0;
+					mes "^9900FF[Brendon]^000000";
+					mes "Recompensa recebida!";
+					close;
+				case 2:
+					set #eden_mob_id, 0;
+					set #eden_kills, 0;
+					set #eden_kill_count, 0;
+					set #eden_exp, 0;
+					mes "^9900FF[Brendon]^000000";
+					mes "Missão abandonada.";
+					close;
+				case 3:
+					close;
+			}
+		}
+
+		switch(select("^FF0000[�]^000000 Abandonar missão", "^FF0000[�]^000000 Fechar")) {
+			case 1:
+				set #eden_mob_id, 0;
+				set #eden_kills, 0;
+				set #eden_kill_count, 0;
+				set #eden_exp, 0;
+				mes "^9900FF[Brendon]^000000";
+				mes "Missão abandonada.";
+				close;
+			case 2:
+				close;
+		}
+	}
+
+	switch(select(
+	"^0088FF[�]^000000 Level 11-25",
+	"^0088FF[�]^000000 Level 26-40",
+	"^0088FF[�]^000000 Level 41-55",
+	"^0088FF[�]^000000 Level 56-70",
+	"^0088FF[�]^000000 Level 71-85",
+	"^0088FF[�]^000000 Level 86-90",
+	"^0088FF[�]^000000 Level 91-99",
+	"^FF0000[�]^000000 Sair")) {
+
+//////////////////////////////////////////////////
+// 11 - 25
+//////////////////////////////////////////////////
+case 1:
+	switch(select(
+	"Zangão ^0088FF[x20]^000000",
+	"Familiar ^0088FF[x20]^000000",
+	"Condor ^0088FF[x20]^000000",
+	"Esporo ^0088FF[x20]^000000",
+	"PecoPeco ^0088FF[x20]^000000",
+	"Rabo de Verme ^0088FF[x20]^000000",
+	"Ovo de Besouro-Ladrão ^0088FF[x20]^000000",
+	"Rocker ^0088FF[x20]^000000",
+	"Kukre ^0088FF[x20]^000000",
+	"Esporo Venenoso ^0088FF[x20]^000000")) {
+
+		case 1: callsub S_Start,1002,20,1900,"Zangão"; break;
+		case 2: callsub S_Start,1031,20,2800,"Familiar"; break;
+		case 3: callsub S_Start,1009,20,600,"Condor"; break;
+		case 4: callsub S_Start,1014,20,6600,"Esporo"; break;
+		case 5: callsub S_Start,1025,20,15900,"PecoPeco"; break;
+		case 6: callsub S_Start,1015,20,5900,"Rabo de Verme"; break;
+		case 7: callsub S_Start,1048,20,800,"Ovo Besouro"; break;
+		case 8: callsub S_Start,1034,20,2500,"Rocker"; break;
+		case 9: callsub S_Start,1082,20,15200,"Kukre"; break;
+		case 10: callsub S_Start,1077,20,18600,"Esporo Venenoso"; break;
+	}
+	end;
+
+//////////////////////////////////////////////////
+// 26 - 40
+//////////////////////////////////////////////////
+case 2:
+	switch(select(
+	"Salgueiro Ancião ^0088FF[x50]^000000",
+	"Sapo de Thara ^0088FF[x50]^000000",
+	"Besouro-Ladrão Macho ^0088FF[x50]^000000",
+	"Muka ^0088FF[x50]^000000",
+	"Fumacento ^0088FF[x50]^000000",
+	"Cornutus ^0088FF[x50]^000000",
+	"Esporo Venenoso ^0088FF[x50]^000000",
+	"Koko ^0088FF[x50]^000000",
+	"Eggyra ^0088FF[x50]^000000",
+	"Magnólia ^0088FF[x50]^000000")) {
+
+		case 1: callsub S_Start,1061,50,40750,"Salgueiro"; break;
+		case 2: callsub S_Start,1095,50,54750,"Thara"; break;
+		case 3: callsub S_Start,1046,50,55750,"Besouro"; break;
+		case 4: callsub S_Start,1118,50,68250,"Muka"; break;
+		case 5: callsub S_Start,1056,50,33500,"Fumacento"; break;
+		case 6: callsub S_Start,1120,50,60000,"Cornutus"; break;
+		case 7: callsub S_Start,1077,50,46500,"Esporo Ven."; break;
+		case 8: callsub S_Start,1102,50,30000,"Koko"; break;
+		case 9: callsub S_Start,1116,50,53750,"Eggyra"; break;
+		case 10: callsub S_Start,1053,50,98250,"Magnólia"; break;
+	}
+	end;
+
+//////////////////////////////////////////////////
+// 41 - 55
+//////////////////////////////////////////////////
+case 3:
+	switch(select(
+	"Guerreiro Orc ^0088FF[x80]^000000",
+	"Munak ^0088FF[x80]^000000",
+	"Múmia ^0088FF[x80]^000000",
+	"Réquiem ^0088FF[x80]^000000",
+	"Sohee ^0088FF[x80]^000000",
+	"Zenorc ^0088FF[x80]^000000",
+	"Bongun ^0088FF[x80]^000000",
+	"Soldadinho ^0088FF[x80]^000000",
+	"Presente ^0088FF[x80]^000000",
+	"Senhora Orc ^0088FF[x80]^000000")) {
+
+		case 1: callsub S_Start,1152,80,163200,"Orc"; break;
+		case 2: callsub S_Start,1110,80,240400,"Munak"; break;
+		case 3: callsub S_Start,1041,80,320000,"Múmia"; break;
+		case 4: callsub S_Start,1098,80,320000,"Réquiem"; break;
+		case 5: callsub S_Start,1178,80,295600,"Sohee"; break;
+		case 6: callsub S_Start,1179,80,386800,"Zenorc"; break;
+		case 7: callsub S_Start,1111,80,169600,"Bongun"; break;
+		case 8: callsub S_Start,1613,80,440000,"Soldado"; break;
+		case 9: callsub S_Start,1616,80,445200,"Presente"; break;
+		case 10: callsub S_Start,1153,80,257600,"Orc Lady"; break;
+	}
+	end;
+
+//////////////////////////////////////////////////
+// 56 - 70
+//////////////////////////////////////////////////
+case 4:
+	switch(select(
+	"Sorrateiro ^0088FF[x110]^000000","Marduk ^0088FF[x110]^000000","Petite ^0088FF[x110]^000000","Orc Arqueiro ^0088FF[x110]^000000","Punk ^0088FF[x110]^000000",
+	"Grand Orc ^0088FF[x110]^000000","Gárgula ^0088FF[x110]^000000","Carat ^0088FF[x110]^000000","Grand Peco ^0088FF[x110]^000000","Bode ^0088FF[x110]^000000",
+	"Harpia ^0088FF[x110]^000000","Soldado ^0088FF[x110]^000000","Mi Gao ^0088FF[x110]^000000")) {
+
+		case 1: callsub S_Start,1268,110,1097800,"Sorrateiro"; break;
+		case 2: callsub S_Start,1140,110,680900,"Marduk"; break;
+		case 3: callsub S_Start,1238,110,922350,"Petite"; break;
+		case 4: callsub S_Start,1189,110,950950,"Orc Arq"; break;
+		case 5: callsub S_Start,1137,110,934450,"Punk"; break;
+		case 6: callsub S_Start,1210,110,1989900,"Grand Orc"; break;
+		case 7: callsub S_Start,1259,110,907500,"Gárgula"; break;
+		case 8: callsub S_Start,1265,110,1059300,"Carat"; break;
+		case 9: callsub S_Start,1239,110,1312850,"Grand Peco"; break;
+		case 10: callsub S_Start,1125,110,1846350,"Bode"; break;
+		case 11: callsub S_Start,1302,110,1959100,"Harpia"; break;
+		case 12: callsub S_Start,1623,110,711150,"Soldado"; break;
+		case 13: callsub S_Start,1515,110,1518000,"Mi Gao"; break;
+	}
+	end;
+
+//////////////////////////////////////////////////
+// 71 - 85
+//////////////////////////////////////////////////
+case 5:
+	switch(select(
+	"Bathory ^0088FF[x150]^000000","Druida ^0088FF[x150]^000000","Pesana ^0088FF[x150]^000000","Alma ^0088FF[x150]^000000","Punk ^0088FF[x150]^000000",
+	"Relógio ^0088FF[x150]^000000","Raydric Arq ^0088FF[x150]^000000","Lavadeira ^0088FF[x150]^000000","Coelho ^0088FF[x150]^000000",
+	"Dríade ^0088FF[x150]^000000","Árvore ^0088FF[x150]^000000","Jing ^0088FF[x150]^000000","Ferus ^0088FF[x110]^000000")) {
+
+		case 1: callsub S_Start,1312,150,1877250,"Bathory"; break;
+		case 2: callsub S_Start,1035,150,2167500,"Druida"; break;
+		case 3: callsub S_Start,1316,150,3065250,"Pesana"; break;
+		case 4: callsub S_Start,1198,150,1649250,"Alma"; break;
+		case 5: callsub S_Start,1137,150,1274250,"Punk"; break;
+		case 6: callsub S_Start,1194,150,2557500,"Relógio"; break;
+		case 7: callsub S_Start,1257,150,2268750,"Raydric"; break;
+		case 8: callsub S_Start,1300,150,2690250,"Lavadeira"; break;
+		case 9: callsub S_Start,1370,150,2986500,"Coelho"; break;
+		case 10: callsub S_Start,1301,150,2072250,"Dríade"; break;
+		case 11: callsub S_Start,1303,150,3008250,"Árvore"; break;
+		case 12: callsub S_Start,1518,150,1232250,"Jing"; break;
+		case 13: callsub S_Start,1554,110,3712500,"Ferus"; break;
+	}
+	end;
+
+//////////////////////////////////////////////////
+// 86 - 90
+//////////////////////////////////////////////////
+case 6:
+	switch(select(
+	"Deviruchi ^0088FF[x200]^000000","Alarme ^0088FF[x200]^000000","Tritão ^0088FF[x200]^000000","Aquecedor ^0088FF[x200]^000000","Congelador ^0088FF[x200]^000000",
+	"Pungus ^0088FF[x200]^000000","Furador ^0088FF[x200]^000000","Ninfa ^0088FF[x200]^000000","Loli ^0088FF[x200]^000000","Tamruan ^0088FF[x200]^000000",
+	"Minérios ^0088FF[x200]^000000","Dimik ^0088FF[x200]^000000","Venatu ^0088FF[x200]^000000","Remover ^0088FF[x200]^000000")) {
+
+		case 1: callsub S_Start,1109,200,2662000,"Deviruchi"; break;
+		case 2: callsub S_Start,1193,200,3987000,"Alarme"; break;
+		case 3: callsub S_Start,1262,200,4500000,"Tritão"; break;
+		case 4: callsub S_Start,1382,200,3766000,"Aquecedor"; break;
+		case 5: callsub S_Start,1383,200,3665000,"Congelador"; break;
+		case 6: callsub S_Start,1371,200,3148000,"Pungus"; break;
+		case 7: callsub S_Start,1372,200,3215000,"Furador"; break;
+		case 8: callsub S_Start,1519,200,3945000,"Ninfa"; break;
+		case 9: callsub S_Start,1374,200,6641000,"Loli"; break;
+		case 10: callsub S_Start,1405,200,3812000,"Tamruan"; break;
+		case 11: callsub S_Start,1832,200,1799000,"Minérios"; break;
+		case 12: callsub S_Start,2049,200,6400000,"Dimik"; break;
+		case 13: callsub S_Start,2047,200,4500000,"Venatu"; break;
+		case 14: callsub S_Start,2046,200,3982000,"Remover"; break;
+	}
+	end;
+
+//////////////////////////////////////////////////
+// 91 - 99
+//////////////////////////////////////////////////
+case 7:
+	switch(select(
+	"Medusa ^0088FF[x250]^000000","Abismo ^0088FF[x250]^000000","Golem ^0088FF[x250]^000000","Lava ^0088FF[x250]^000000","Shinobi ^0088FF[x250]^000000",
+	"Ninfa ^0088FF[x250]^000000","Dullahan ^0088FF[x250]^000000","Ursinho ^0088FF[x250]^000000","Acidus ^0088FF[x250]^000000")) {
+
+		case 1: callsub S_Start,1148,250,8595000,"Medusa"; break;
+		case 2: callsub S_Start,1219,250,10586250,"Abismo"; break;
+		case 3: callsub S_Start,1385,250,7260000,"Golem"; break;
+		case 4: callsub S_Start,1386,250,8087500,"Lava"; break;
+		case 5: callsub S_Start,1401,250,6212500,"Shinobi"; break;
+		case 6: callsub S_Start,1519,250,4931250,"Ninfa"; break;
+		case 7: callsub S_Start,1431,250,5646250,"Dullahan"; break;
+		case 8: callsub S_Start,1582,250,7363750,"Ursinho"; break;
+		case 9: callsub S_Start,1715,250,35053750,"Acidus"; break;
+	}
+	end;
+
+	case 8:
+		close;
+	}
+
+//////////////////////////////////////////////////
+// START
+//////////////////////////////////////////////////
+S_Start:
+	set #eden_mob_id, getarg(0);
+	set #eden_kill_count, getarg(1);
+	set #eden_kills, 0;
+	set #eden_exp, getarg(2);
+
+	mes "Missão iniciada:";
+	mes "Mate ^FF0000"+getarg(1)+" "+getarg(3)+"^000000";
+	close;
+
+//////////////////////////////////////////////////
+// PROGRESSO
+//////////////////////////////////////////////////
+S_ShowProgress:
+	set .@faltam, #eden_kill_count - #eden_kills;
+
+	mes "Faltam: "+.@faltam;
+	return;
+
+//////////////////////////////////////////////////
+// TRACK
+//////////////////////////////////////////////////
+OnNPCKillEvent:
+	if (killedrid == #eden_mob_id) {
+		set #eden_kills, #eden_kills + 1;
+
+		set .@faltam, #eden_kill_count - #eden_kills;
+
+		dispbottom "[Missões] "+#eden_kills+"/"+#eden_kill_count+" | Faltam: "+.@faltam;
+
+		if (#eden_kills >= #eden_kill_count) {
+			dispbottom "[Missões] Missão completa!";
+		}
+	}
+	end;
+
+OnInit:
+	waitingroom "Missões de Caça", 0;
+	end;
+}

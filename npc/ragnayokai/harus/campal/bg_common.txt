@@ -42,8 +42,15 @@ OnInit:
 	if( $BG_Index >= .BG_Count ) set $BG_Index,0; // Restart Rotation
 	set .BG_Arena$,.BG_Arenas$[$BG_Index];
 	set .Ready, 1;
+	set $BG_Queue_Size, 0;
+	deletearray $BG_Queue_AID;
 	donpcevent "BG_Queue_Join::OnDoHappyHour";
 	initnpctimer; // Rotation if BG don't start... Comment if you don't want to use this method
+	bindatcmd "entrarbg", strnpcinfo(3)+"::OnEntrarbg";
+	end;
+
+OnEntrarbg:
+	callfunc "ShieldInGame";
 	end;
 
 OnRotate:
@@ -63,6 +70,8 @@ OnTimer30000: // Rotation if BG don't start... Comment if you don't want to use 
 		set $BG_Index,0; // Restart Rotation
 
 	set .BG_Arena$,.BG_Arenas$[$BG_Index];
+	set $BG_Queue_Size, 0;
+	deletearray $BG_Queue_AID;
 	initnpctimer; // Rotation if BG don't start... Comment if you don't want to use this method
 
 	// Trigger the Event - Maybe people is waiting...
@@ -70,7 +79,7 @@ OnJoinEvent:
 	if( $@BG_Status == 2 )
 		end; // BG Ending... Must wait until OnRotate is called
 
-	set .@Queue_Count, bg_queue_data(.BG_Queue,0);
+	set .@Queue_Count, $BG_Queue_Size;
 	switch( $@BG_Status )
 	{
 	case 0: // Idle - Ready to Start
@@ -84,15 +93,29 @@ OnJoinEvent:
 			donpcevent .BG_Arena$ + "::OnBuildTeams";
 
 			// Fill Teams with Queue Members			
-			if( .BG_Arenas$[$BG_Index] == "Tierra_TI" )
-					bg_queue2teams .BG_Queue,.BG_Max[$BG_Index],.TeamMode,$@BG_Team1,$@BG_Team2;
-				bg_queue2teams .BG_Queue,.BG_Max[$BG_Index],.TeamMode,$@BG_Team1,$@BG_Team2;
+			// Distribui jogadores nos times via attachrid + bg_join
+			set .@qi, 0;
+			set .@t1, 0; set .@t2, 0;
+			while( .@qi < $BG_Queue_Size ) {
+				if( attachrid($BG_Queue_AID[.@qi]) ) {
+					if( .@t1 <= .@t2 ) {
+						bg_join_team $@BG_Team1;
+						set .@t1, .@t1 + 1;
+					} else {
+						bg_join_team $@BG_Team2;
+						set .@t2, .@t2 + 1;
+					}
+				}
+				set .@qi, .@qi + 1;
+			}
+			detachrid;
+			set $BG_Queue_Size, 0;
+			deletearray $BG_Queue_AID;
 
-			stopnpctimer; // Rotation if BG don't start... Comment if you don't want to use this method
+			stopnpctimer;
 
 			set $@BG_Status,1;
-			set .@msg$, "Batalha Campal -- " + .BG_Names$[$BG_Index] + " -- Iniciada!";
-			announce .@msg$,0,.BG_Color$[$BG_Index];
+			announce "Batalha Campal -- " + .BG_Names$[$BG_Index] + " -- Iniciada!", 0, .BG_Color$[$BG_Index];
 
 			donpcevent .BG_Arena$ + "::OnReady";
 		}
@@ -102,25 +125,7 @@ OnJoinEvent:
 			announce .@msg$,0,.BG_Color$[$BG_Index];
 		}
 		break;
-	case 1: // Running - Others can join
-		if( .@Queue_Count > 0 )
-		{
-			if( .BG_Arena$ == "Tierra_TI" )
-			{
-				bg_balance_teams .BG_Queue,.BG_Max[$BG_Index],$@BG_Team1,$@BG_Team2;
-				set .@BG_Count1, bg_get_data($@BG_Team1,0);
-				set .@BG_Count2, bg_get_data($@BG_Team2,0);
-				set .@msg$, "Batalha Campal -- " + .BG_Names$[$BG_Index] + " -- Axl: " + .@BG_Count1 + "/" + .BG_Max[$BG_Index] + ", Trash: " + .@BG_Count2 + "/" + .BG_Max[$BG_Index] + " (Em andamento) Use @entrarbg para participar!";
-			}
-			else
-			{
-				bg_balance_teams .BG_Queue,.BG_Max[$BG_Index],$@BG_Team1,$@BG_Team2;
-				set .@BG_Count1, bg_get_data($@BG_Team1,0);
-				set .@BG_Count2, bg_get_data($@BG_Team2,0);
-				set .@msg2$, "Batalha Campal -- " + .BG_Names$[$BG_Index] + " -- Axl: " + .@BG_Count1 + "/" + .BG_Max[$BG_Index] + ", Trash: " + .@BG_Count2 + "/" + .BG_Max[$BG_Index] + " (Em andamento) Use @entrarbg para participar!";
-			}
-			mapannounce "bat_room",.@msg2$,0,.BG_Color$[$BG_Index];
-		}
+	case 1: // BG em andamento - join direto ja tratado em ShieldInGame
 		break;
 	}
 	end;
@@ -250,7 +255,16 @@ OnClock2100:
 			mes "[^010849===^000000 ^016B14Batalha Campal^000000 ^010849===^000000]";
 			mes "Registro removido com SUCESSO!";
 			close2;
-			bg_queue_leave getvariableofnpc(.BG_Queue,"BG_Queue_Join");
+			set .@myaid, getcharid(3);
+			set .@qi, 0;
+			set .@found, 0;
+			while( .@qi < $BG_Queue_Size ) {
+				if( $BG_Queue_AID[.@qi] == .@myaid ) set .@found, 1;
+				if( .@found && .@qi < $BG_Queue_Size - 1 )
+					set $BG_Queue_AID[.@qi], $BG_Queue_AID[.@qi + 1];
+				set .@qi, .@qi + 1;
+			}
+			if( .@found ) set $BG_Queue_Size, $BG_Queue_Size - 1;
 			end;
 		case 3:
 			callfunc "Pontos Kafra";

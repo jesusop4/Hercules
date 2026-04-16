@@ -14,7 +14,7 @@ $e7 = [char]0xE7  # ç
 $bb = [char]0xBB  # »
 
 $lines = @(
-"prontera,156,196,5`tscript`tMestra das Classes::JobMaster`t743,{",
+"prontera,156,196,5`tscript`tMestre das Classes::JobMaster`t743,{",
 "${T}if(BaseLevel && JobLevel > 1){",
 "${T}javirou:",
 "${T}mes `"^016B14[`"+strnpcinfo(1)+`"]^000000`";",
@@ -222,12 +222,12 @@ $lines = @(
 "}",
 "",
 "OnInit:",
-"${T}waitingroom `"Mestra das Classes`",0;",
+"${T}waitingroom `"Mestre das Classes`",0;",
 "${T}end;",
 "}",
 "",
 "//Campo inicial",
-"new_1-3,86,175,4${T}duplicate(JobMaster)${T}Mestra das Classes#newmap1${T}743"
+"new_1-3,86,175,4${T}duplicate(JobMaster)${T}Mestre das Classes#newmap1${T}743"
 )
 
 $content = $lines -join $NL

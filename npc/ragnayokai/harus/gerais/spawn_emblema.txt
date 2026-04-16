@@ -1,0 +1,14 @@
+﻿//== Training Ground Mobs ==================================
+new_1-3,0,0,0,0	monster	Poring	1002,15,0,0,0
+new_1-3,0,0,0,0	monster	Poring	1002,15,0,0,0
+new_1-3,0,0,0,0	monster	Poring	1002,15,0,0,0
+new_1-3,0,0,0,0	monster	Drops	1113,15,0,0,0
+new_1-3,0,0,0,0	monster	Drops	1113,15,0,0,0
+new_1-3,0,0,0,0	monster	Drops	1113,15,0,0,0
+new_1-3,0,0,0,0	monster	Lunatic	1063,15,0,0,0
+new_1-3,0,0,0,0	monster	Lunatic	1063,15,0,0,0
+new_1-3,0,0,0,0	monster	Lunatic	1063,15,0,0,0
+new_1-3,0,0,0,0	monster	Lunatic	1063,15,0,0,0
+new_1-3,0,0,0,0	monster	Fabre	1184,15,0,0,0
+new_1-3,0,0,0,0	monster	Fabre	1184,15,0,0,0
+new_1-3,0,0,0,0	monster	Fabre	1184,15,0,0,0

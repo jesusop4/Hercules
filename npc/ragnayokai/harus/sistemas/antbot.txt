@@ -3,12 +3,12 @@ if(getgmlevel() < 80) end;
 OnWhisperGlobal:
 	if(compare(@whispervar0$,"!ver"))
 query_sql "SELECT `userid` from `login` WHERE `suspbot` >= 20", .@user$;
-		mes "O usuário:^FFFF00 "+@user$[0];
-		mes "^000000O usuário:^FFFF00 "+@user$[1];
-		mes "^000000O usuário:^FFFF00 "+@user$[2];
-		mes "^000000O usuário:^FFFF00 "+@user$[3];
-		mes "^000000O usuário:^FFFF00 "+@user$[4];
-		mes "^000000São suspeitos de BOT";
+		mes "O usuï¿½rio:^FFFF00 "+@user$[0];
+		mes "^000000O usuï¿½rio:^FFFF00 "+@user$[1];
+		mes "^000000O usuï¿½rio:^FFFF00 "+@user$[2];
+		mes "^000000O usuï¿½rio:^FFFF00 "+@user$[3];
+		mes "^000000O usuï¿½rio:^FFFF00 "+@user$[4];
+		mes "^000000Sï¿½o suspeitos de BOT";
 		close;
 }
 
@@ -19,13 +19,13 @@ function	script	ShieldInGame	{
 	if(#delayglobal > gettimetick(2))
 			{
 				set .@tempoMF,#delayglobal - gettimetick(2);
-				message strcharinfo(0),"HAHA tentando escapar do Campo de Batalha né? Fica de molho ai ...";
+				message strcharinfo(0),"HAHA tentando escapar do Campo de Batalha nï¿½? Fica de molho ai ...";
 				message strcharinfo(0),"Tempo restante: "+(.@tempoMF/60)+" Minuto(s).";
 				close;
 			}
 			if( BaseLevel < 99 )
 			{
-				message strcharinfo(0),"Level minimo requerido para participar da BG é 99.";
+				message strcharinfo(0),"Level minimo requerido para participar da BG ï¿½ 99.";
 				close;
 			}
 /*
@@ -44,7 +44,7 @@ function	script	ShieldInGame	{
 				Class != 4021 &&
 				Class != 4049)
 			{
-				message strcharinfo(0),"A entrada de sua classe não é permitida na batalha campal.";
+				message strcharinfo(0),"A entrada de sua classe nï¿½o ï¿½ permitida na batalha campal.";
 				close;
 			}
 */
@@ -54,24 +54,48 @@ function	script	ShieldInGame	{
 	set @n4, rand(1,9);
 	set @numero, @n1*1000+@n2*100+@n3*10+@n4;
 
-		mes "[Checagem Automática]";
+		mes "[Checagem Automï¿½tica]";
 		mes "Quais numeros aparecem aqui?";
 		mes "---->[ "+@n1+" "+@n2+" "+@n3+" "+@n4+" ]<----";
 			input @respnum;
 		if(@respnum == @numero){
-		mes "[Checagem Automática]"; 
-		mes "Você acertou as respostas!";
+		mes "[Checagem Automï¿½tica]"; 
+		mes "Vocï¿½ acertou as respostas!";
 		mes "Desculpe o inconveniente.";
 		message strcharinfo(0),"Registrado com SUCESSO!";
-		message strcharinfo(0),"Aguarde alguns segundos até ser recallado para a Arena.";
-		bg_queue_join getvariableofnpc(.BG_Queue,"BG_Queue_Join");
+		message strcharinfo(0),"Aguarde alguns segundos atï¿½ ser recallado para a Arena.";
+		// Entrar no BG ou na fila customizada
+		if( $@BG_Status == 1 ) {
+			// BG em andamento - entrar direto no time com menos jogadores
+			set .@c1, bg_get_data($@BG_Team1, 0);
+			set .@c2, bg_get_data($@BG_Team2, 0);
+			if( .@c1 <= .@c2 )
+				bg_join_team $@BG_Team1;
+			else
+				bg_join_team $@BG_Team2;
+		} else {
+			// Adicionar na fila
+			set .@myaid, getcharid(3);
+			set .@qi, 0;
+			while( .@qi < $BG_Queue_Size ) {
+				if( $BG_Queue_AID[.@qi] == .@myaid ) {
+					message strcharinfo(0),"Voce ja esta na fila BG!";
+					end;
+				}
+				set .@qi, .@qi + 1;
+			}
+			set $BG_Queue_AID[$BG_Queue_Size], .@myaid;
+			set $BG_Queue_Size, $BG_Queue_Size + 1;
+			message strcharinfo(0),"Registrado! Fila: " + $BG_Queue_Size + " jogador(es).";
+			donpcevent "BG_Queue_Join::OnJoinEvent";
+		}
 		close;
 		
 }
 	if(@respnum != @numero){
 	set @suspbot, 1;
-	mes "Você NÃO acertou as respostas!";
-	/*Expressão sql que salva um log da resposta em +1, sugerindo quantas vezes a "pessoa" errou*/
+	mes "Vocï¿½ Nï¿½O acertou as respostas!";
+	/*Expressï¿½o sql que salva um log da resposta em +1, sugerindo quantas vezes a "pessoa" errou*/
 	query_sql "UPDATE `login` SET `suspbot`=`suspbot`+"+@suspbot+" WHERE `account_id`='"+ getcharid(3) +"'";
 	close;
 	}

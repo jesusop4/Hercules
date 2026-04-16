@@ -1323,3 +1323,18 @@ region_13
 //
 //mymap	1250
 //mymap-2
+eden
+vip
+guild_vs2
+gefg_cas03
+aldeg_cas05
+payg_cas04
+prtg_cas02
+arug_cas03
+arug_cas02
+arug_cas01
+schg_cas03
+schg_cas02
+bat_c01
+bat_b01
+schg_cas01

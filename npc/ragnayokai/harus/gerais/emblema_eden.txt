@@ -1,0 +1,142 @@
+new_1-3,81,175,4	script	Noviço	729,{
+
+	mes "^9900FF[Noviço]^000000";
+	mes "Bem-vindo ao treinamento!";
+	next;
+
+	// Já tem o item
+	if (countitem(6219) > 0) {
+		mes "Você já possui o Emblema do Éden.";
+		mes "Deseja ir até Brendon em Prontera?";
+		switch(select("Ir para Prontera", "Ficar aqui")) {
+			case 1:
+				close2;
+				warp "prontera", 152, 178;
+				end;
+			case 2:
+				close;
+		}
+	}
+
+	// Missão em andamento
+	if (#eden_badge_quest == 1) {
+
+		mes "Progresso:";
+		mes "Poring: ^00FF00"+#eden_poring+"^000000 / 5";
+		mes "Fabre: ^00FF00"+#eden_fabre+"^000000 / 5";
+		mes "Drops: ^00FF00"+#eden_drops+"^000000 / 5";
+		next;
+
+		if (#eden_poring >= 5 && #eden_fabre >= 5 && #eden_drops >= 5) {
+			mes "Parabéns!";
+			mes "Missão completa!";
+			next;
+
+			getitem 6219, 1;
+
+			set #eden_badge_quest, 0;
+			set #eden_poring, 0;
+			set #eden_fabre, 0;
+			set #eden_drops, 0;
+
+			mes "^9900FF[Noviço]^000000";
+			mes "Deseja ir para Prontera?";
+			switch(select("Ir para Prontera", "Ficar aqui")) {
+				case 1:
+					close2;
+					warp "prontera", 150, 180;
+					end;
+				case 2:
+					close;
+			}
+		}
+
+		switch(select("Continuar","Cancelar missão")) {
+			case 1:
+				close;
+
+			case 2:
+				set #eden_badge_quest, 0;
+				set #eden_poring, 0;
+				set #eden_fabre, 0;
+				set #eden_drops, 0;
+
+				mes "Missão cancelada.";
+				close;
+		}
+	}
+
+	// Nova missão
+	mes "Para entrar no Sistema de Caça,";
+	mes "você precisa completar uma missão:";
+	next;
+
+	mes "Mate:";
+	mes "  ^FF00005x Poring^000000";
+	mes "  ^FF00005x Fabre^000000";
+	mes "  ^FF00005x Drops^000000";
+	next;
+
+	if (select("Aceitar","Não") == 1) {
+
+		set #eden_badge_quest, 1;
+		set #eden_poring, 0;
+		set #eden_fabre, 0;
+		set #eden_drops, 0;
+
+		if (#eden_starter_given == 0) {
+			getitem 5055, 1;
+			getitem 2112, 1;
+			getitem 13041, 1;
+			getitem 2510, 1;
+			getitem 2352, 1;
+			getitem 2414, 1;
+			getitem 12208, 2;
+			getitem 12215, 10;
+			getitem 12216, 10;
+			getitem 501, 400;
+			getitem 12323, 50;
+			getitem 12324, 20;
+			set #eden_starter_given, 1;
+		}
+
+		mes "Boa sorte!";
+		close;
+	}
+
+	close;
+
+OnInit:
+	waitingroom "Missão Inicial", 0;
+	end;
+
+OnNPCKillEvent:
+
+	if (#eden_badge_quest != 1)
+		end;
+
+	// PORING (1002)
+	if (killedrid == 1002 && #eden_poring < 5) {
+		set #eden_poring, #eden_poring + 1;
+		dispbottom "[Noviço] Poring: "+#eden_poring+"/5";
+	}
+
+	// FABRE (1184)
+	else if (killedrid == 1184 && #eden_fabre < 5) {
+		set #eden_fabre, #eden_fabre + 1;
+		dispbottom "[Noviço] Fabre: "+#eden_fabre+"/5";
+	}
+
+	// DROPS (1113)
+	else if (killedrid == 1113 && #eden_drops < 5) {
+		set #eden_drops, #eden_drops + 1;
+		dispbottom "[Noviço] Drops: "+#eden_drops+"/5";
+	}
+
+	// Aviso quando completar tudo
+	if (#eden_poring >= 5 && #eden_fabre >= 5 && #eden_drops >= 5) {
+		dispbottom "^00FF00[Noviço]^000000 Missão completa! Fale com o NPC.";
+	}
+
+	end;
+}

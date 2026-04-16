@@ -308,115 +308,42 @@ OnTimer25000:
 
 // Battleground Therapist
 // *********************************************************************
+function	script	RushTherapist	{
+	sc_start SC_MAGNIFICAT,360000,5;
+	sc_start SC_GLORIA,360000,5;
+	sc_start SC_IMPOSITIO,360000,5;
+	sc_start SC_ENDURE,360000,10;
+	sc_start SC_ANGELUS,360000,10;
+	sc_start SC_INCREASEAGI,360000,10;
+	repairall;
+	percentheal 100,100;
+	emotion 51;
+	end;
+}
 
 rush_cas01,198,230,6	script	Therapist in battle#rh1	95,{
-		sc_start SC_MAGNIFICAT,360000,5;
-		sc_start SC_GLORIA,360000,5;
-		sc_start SC_IMPOSITIO,360000,5;
-		sc_start SC_ENDURE,360000,10;
-		sc_start SC_ANGELUS,360000,10;
-		sc_start SC_BLESSING,360000,10;
-		sc_start SC_INCREASEAGI,360000,10;
-		repairall;
-		percentheal 100,100;
-		emotion 51;
-		end;
+	callfunc "RushTherapist";
 }
-
 rush_cas01,198,226,6	script	Therapist in battle#rh2	95,{
-		sc_start SC_MAGNIFICAT,360000,5;
-		sc_start SC_GLORIA,360000,5;
-		sc_start SC_IMPOSITIO,360000,5;
-		sc_start SC_ENDURE,360000,10;
-		sc_start SC_ANGELUS,360000,10;
-		sc_start SC_BLESSING,360000,10;
-		sc_start SC_INCREASEAGI,360000,10;
-		repairall;
-		percentheal 100,100;
-		emotion 51;
-		end;
+	callfunc "RushTherapist";
 }
-
 rush_cas02,142,50,6	script	Therapist in battle#rh3	95,{
-		sc_start SC_MAGNIFICAT,360000,5;
-		sc_start SC_GLORIA,360000,5;
-		sc_start SC_IMPOSITIO,360000,5;
-		sc_start SC_ENDURE,360000,10;
-		sc_start SC_ANGELUS,360000,10;
-		sc_start SC_BLESSING,360000,10;
-		sc_start SC_INCREASEAGI,360000,10;
-		repairall;
-		percentheal 100,100;
-		emotion 51;
-		end;
+	callfunc "RushTherapist";
 }
-
 rush_cas02,142,46,6	script	Therapist in battle#rh4	95,{
-		sc_start SC_MAGNIFICAT,360000,5;
-		sc_start SC_GLORIA,360000,5;
-		sc_start SC_IMPOSITIO,360000,5;
-		sc_start SC_ENDURE,360000,10;
-		sc_start SC_ANGELUS,360000,10;
-		sc_start SC_BLESSING,360000,10;
-		sc_start SC_INCREASEAGI,360000,10;
-		repairall;
-		percentheal 100,100;
-		emotion 51;
-		end;
+	callfunc "RushTherapist";
 }
-
 rush_cas03,60,17,4	script	Therapist in battle#rh5	95,{
-		sc_start SC_MAGNIFICAT,360000,5;
-		sc_start SC_GLORIA,360000,5;
-		sc_start SC_IMPOSITIO,360000,5;
-		sc_start SC_ENDURE,360000,10;
-		sc_start SC_ANGELUS,360000,10;
-		sc_start SC_BLESSING,360000,10;
-		sc_start SC_INCREASEAGI,360000,10;
-		repairall;
-		percentheal 100,100;
-		emotion 51;
-		end;
+	callfunc "RushTherapist";
 }
-
 rush_cas03,64,17,4	script	Therapist in battle#rh6	95,{
-		sc_start SC_MAGNIFICAT,360000,5;
-		sc_start SC_GLORIA,360000,5;
-		sc_start SC_IMPOSITIO,360000,5;
-		sc_start SC_ENDURE,360000,10;
-		sc_start SC_ANGELUS,360000,10;
-		sc_start SC_BLESSING,360000,10;
-		sc_start SC_INCREASEAGI,360000,10;
-		repairall;
-		percentheal 100,100;
-		emotion 51;
-		end;
+	callfunc "RushTherapist";
 }
 rush_cas04,266,292,6	script	Therapist in battle#rh7	95,{
-		sc_start SC_MAGNIFICAT,360000,5;
-		sc_start SC_GLORIA,360000,5;
-		sc_start SC_IMPOSITIO,360000,5;
-		sc_start SC_ENDURE,360000,10;
-		sc_start SC_ANGELUS,360000,10;
-		sc_start SC_BLESSING,360000,10;
-		sc_start SC_INCREASEAGI,360000,10;
-		repairall;
-		percentheal 100,100;
-		emotion 51;
-		end;
+	callfunc "RushTherapist";
 }
 rush_cas04,266,288,6	script	Therapist in battle#rh8	95,{
-		sc_start SC_MAGNIFICAT,360000,5;
-		sc_start SC_GLORIA,360000,5;
-		sc_start SC_IMPOSITIO,360000,5;
-		sc_start SC_ENDURE,360000,10;
-		sc_start SC_ANGELUS,360000,10;
-		sc_start SC_BLESSING,360000,10;
-		sc_start SC_INCREASEAGI,360000,10;
-		repairall;
-		percentheal 100,100;
-		emotion 51;
-		end;
+	callfunc "RushTherapist";
 }
 
 // Warp Portals
